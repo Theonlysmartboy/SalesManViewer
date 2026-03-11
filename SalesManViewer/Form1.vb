@@ -1,6 +1,7 @@
 ﻿Imports System.Net.Http
 Imports System.Text
 Imports Newtonsoft.Json
+Imports SalesManViewer.models
 Imports SalesManViewer.repositories
 
 Public Class Form1
@@ -16,6 +17,7 @@ Public Class Form1
         DgvOnlineProducts.MultiSelect = False
         DgvOnlineProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
     End Sub
+
     'Local tab events
     Private Async Sub BtnUploadSelected_Click(sender As Object, e As EventArgs) Handles BtnUploadSelected.Click
         Try
@@ -46,9 +48,15 @@ Public Class Form1
     End Sub
 
     Private Sub BtnSelectAll_Click(sender As Object, e As EventArgs) Handles BtnSelectAll.Click
+        Dim selectAll As Boolean = BtnSelectAll.Text = "Select All"
         For Each row As DataGridViewRow In DgvLocalProducts.Rows
-            row.Cells("Select").Value = True
+            row.Cells("Select").Value = selectAll
         Next
+        If selectAll Then
+            BtnSelectAll.Text = "Deselect All"
+        Else
+            BtnSelectAll.Text = "Select All"
+        End If
     End Sub
 
     Private Async Sub BtnUploadAll_Click(sender As Object, e As EventArgs) Handles BtnUploadAll.Click
@@ -81,7 +89,6 @@ Public Class Form1
         Finally
             toggleControls(True, btnRefresh, "Refresh")
         End Try
-
     End Sub
 
     'helpers
@@ -97,11 +104,16 @@ Public Class Form1
             chk.HeaderText = "Select"
             chk.Name = "Select"
             chk.Width = 60
+            chk.ReadOnly = False
+            chk.TrueValue = True
+            chk.FalseValue = False
+            chk.ThreeState = False
             DgvLocalProducts.Columns.Insert(0, chk)
-            DgvLocalProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            DgvLocalProducts.MultiSelect = False
-            DgvLocalProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         End If
+        ' Allow editing
+        DgvLocalProducts.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLocalProducts.MultiSelect = False
+        DgvLocalProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
     End Sub
 
     Private Async Function SendProductsToServer(products As List(Of Object)) As Task
@@ -116,6 +128,46 @@ Public Class Form1
             MessageBox.Show(result)
         End Using
     End Function
+
+    Private Sub DgvLocalProducts_CurrentCellDirtyStateChanged(sender As Object, e As EventArgs) Handles DgvLocalProducts.CurrentCellDirtyStateChanged
+        If TypeOf DgvLocalProducts.CurrentCell Is DataGridViewCheckBoxCell Then
+            DgvLocalProducts.CommitEdit(DataGridViewDataErrorContexts.Commit)
+        End If
+    End Sub
+
+    'online tab 
+
+    Private Async Function FetchAllRemoteProducts(lastSync As String) As Task(Of List(Of RemoteProduct))
+        Dim allProducts As New List(Of RemoteProduct)
+        Dim offset As Integer = 0
+        Dim limit As Integer = 20
+        Dim fetched As Integer
+
+        Do
+            Dim chunk As List(Of RemoteProduct) = Await GetRemoteProductsAsync(lastSync, limit, offset)
+            fetched = chunk.Count
+            allProducts.AddRange(chunk)
+            offset += fetched
+        Loop While fetched = limit ' continue if full page retrieved
+
+        Return allProducts
+    End Function
+    Private Async Function GetRemoteProductsAsync(lastSync As String, limit As Integer, offset As Integer) As Task(Of List(Of RemoteProduct))
+        Dim products As New List(Of RemoteProduct)
+        Using client As New HttpClient()
+            Dim url As String = $"http://197.248.220.180:80/salesman-backend/api/products.php?action=sync&lastSync={lastSync}&limit={limit}&offset={offset}"
+            Dim response As HttpResponseMessage = Await client.GetAsync(url)
+            If response.IsSuccessStatusCode Then
+                Dim jsonString As String = Await response.Content.ReadAsStringAsync()
+                Dim apiResponse As ProductApiResponse = JsonConvert.DeserializeObject(Of ProductApiResponse)(jsonString)
+                If apiResponse.success Then
+                    products.AddRange(apiResponse.data)
+                End If
+            End If
+        End Using
+        Return products
+    End Function
+
     'global helpers
     Private Sub toggleControls(status As Boolean, button As Button, text As String)
         btnRefresh.Enabled = status
@@ -124,4 +176,5 @@ Public Class Form1
         BtnSelectAll.Enabled = status
         button.Text = text
     End Sub
+
 End Class
