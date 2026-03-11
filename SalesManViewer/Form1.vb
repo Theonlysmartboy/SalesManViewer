@@ -1,4 +1,5 @@
-﻿Imports System.Net.Http
+﻿Imports System.IO
+Imports System.Net.Http
 Imports System.Text
 Imports Newtonsoft.Json
 Imports SalesManViewer.models
@@ -6,6 +7,7 @@ Imports SalesManViewer.repositories
 
 Public Class Form1
     Private repo As New ProductRepository()
+    Private selectedImagePath As String = ""
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         LoadLocalProducts()
         AddCheckboxColumntoLocalDataGrid()
@@ -194,15 +196,77 @@ Public Class Form1
     End Sub
 
     Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles BtnNew.Click
-
+        For Each ctrl As Control In Me.Controls
+            If TypeOf ctrl Is TextBox Then
+                ctrl.Text = ""
+            End If
+        Next
+        ChkIsActive.Checked = False
+        ChkIsStockItem.Checked = False
+        ChkIsAlternateUnit.Checked = False
+        PcbPreview.Image = Nothing
     End Sub
 
     Private Sub BtnBrowse_Click(sender As Object, e As EventArgs) Handles BtnBrowse.Click
-
+        Dim ofd As New OpenFileDialog()
+        ofd.Title = "Select Product Image"
+        ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp"
+        If ofd.ShowDialog() = DialogResult.OK Then
+            selectedImagePath = ofd.FileName
+            PcbPreview.Image = Image.FromFile(selectedImagePath)
+            PcbPreview.SizeMode = PictureBoxSizeMode.Zoom
+        End If
     End Sub
 
-    Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
-
+    Private Async Sub BtnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
+        Try
+            Dim url As String = "http://197.248.220.180:80/salesman-backend/api/products.php?action=create"
+            Using client As New HttpClient()
+                Dim content As New MultipartFormDataContent()
+                'Product fields
+                content.Add(New StringContent(TxtProductCode.Text), "ProductCode")
+                content.Add(New StringContent(TxtProductName.Text), "ProductName")
+                content.Add(New StringContent(TxtDepartmentCode.Text), "DepartmentCode")
+                content.Add(New StringContent(TxtSupplierPacking.Text), "SupplierPacking")
+                content.Add(New StringContent(TxtSupplierPackingDetails.Text), "SupplierPackingDetails")
+                content.Add(New StringContent(TxtProductUnit.Text), "ProductUnit")
+                content.Add(New StringContent(TxtTagPrice.Text), "TagPrice")
+                content.Add(New StringContent(TxtVatCode.Text), "Product_VAT_Code")
+                content.Add(New StringContent(TxtCostPrice.Text), "Product_Cost_Price")
+                content.Add(New StringContent(TxtProductLastCost.Text), "LastCostPrice")
+                content.Add(New StringContent(TxtProductMargin.Text), "ProductMargin")
+                content.Add(New StringContent(TxtSellingPrice.Text), "Product_Selling_Price")
+                content.Add(New StringContent(TxtMinQuantity.Text), "MinQuantity")
+                content.Add(New StringContent(TxtReorderLevel.Text), "ReorderLevel")
+                content.Add(New StringContent(TxtQuantityToReorder.Text), "QuantityToReOrder")
+                content.Add(New StringContent(TxtSupplierCode.Text), "SupplierCode")
+                content.Add(New StringContent(TxtWeight.Text), "Weight")
+                content.Add(New StringContent(TxtProductQuantity.Text), "ProductQuantity")
+                content.Add(New StringContent(ChkIsAlternateUnit.Checked.ToString()), "isAlternetUnit")
+                content.Add(New StringContent(TxtAlternateUnit.Text), "AlternetUnit")
+                content.Add(New StringContent(TxtUnitValue.Text), "UnitValue")
+                content.Add(New StringContent(TxtAlternateUnitValue.Text), "AlternetUnitValue")
+                content.Add(New StringContent(TxtHsnCode.Text), "HsnCode")
+                content.Add(New StringContent(TxtHsnDesc.Text), "HsnDescription")
+                content.Add(New StringContent(ChkIsActive.Checked.ToString()), "isActive")
+                content.Add(New StringContent(ChkIsStockItem.Checked.ToString()), "isStockItem")
+                content.Add(New StringContent(TxtRemark.Text), "Remark")
+                content.Add(New StringContent(TxtSrNo.Text), "SrNo")
+                'Image upload
+                If Not String.IsNullOrEmpty(selectedImagePath) Then
+                    Dim fileBytes = File.ReadAllBytes(selectedImagePath)
+                    Dim fileContent As New ByteArrayContent(fileBytes)
+                    fileContent.Headers.ContentType =
+                    New Headers.MediaTypeHeaderValue("image/jpeg")
+                    content.Add(fileContent, "image", Path.GetFileName(selectedImagePath))
+                End If
+                Dim response = Await client.PostAsync(url, content)
+                Dim result = Await response.Content.ReadAsStringAsync()
+                MessageBox.Show(result)
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
     End Sub
 
     'helpers
