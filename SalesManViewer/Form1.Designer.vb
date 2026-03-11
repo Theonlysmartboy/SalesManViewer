@@ -24,14 +24,14 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
-        Me.DgvLocalProducts = New System.Windows.Forms.DataGridView()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.BtnUploadSelected = New System.Windows.Forms.Button()
         Me.BtnUploadAll = New System.Windows.Forms.Button()
         Me.BtnSelectAll = New System.Windows.Forms.Button()
+        Me.DgvLocalProducts = New System.Windows.Forms.DataGridView()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
@@ -45,68 +45,68 @@ Partial Class Form1
         Me.BtnSave = New System.Windows.Forms.Button()
         Me.BtnDeleteSingle = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.TextBox3 = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.TextBox4 = New System.Windows.Forms.TextBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.TextBox5 = New System.Windows.Forms.TextBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.TextBox6 = New System.Windows.Forms.TextBox()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.TextBox7 = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.TextBox8 = New System.Windows.Forms.TextBox()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.TextBox9 = New System.Windows.Forms.TextBox()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.TextBox10 = New System.Windows.Forms.TextBox()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.TextBox11 = New System.Windows.Forms.TextBox()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.TextBox12 = New System.Windows.Forms.TextBox()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.TextBox13 = New System.Windows.Forms.TextBox()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.TextBox14 = New System.Windows.Forms.TextBox()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.TextBox15 = New System.Windows.Forms.TextBox()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.TextBox16 = New System.Windows.Forms.TextBox()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.TextBox17 = New System.Windows.Forms.TextBox()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.TextBox18 = New System.Windows.Forms.TextBox()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.TextBox20 = New System.Windows.Forms.TextBox()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.TextBox21 = New System.Windows.Forms.TextBox()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.TextBox22 = New System.Windows.Forms.TextBox()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.TextBox23 = New System.Windows.Forms.TextBox()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.TextBox24 = New System.Windows.Forms.TextBox()
-        Me.Label24 = New System.Windows.Forms.Label()
-        Me.TextBox27 = New System.Windows.Forms.TextBox()
-        Me.Label27 = New System.Windows.Forms.Label()
-        Me.TextBox28 = New System.Windows.Forms.TextBox()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.Label29 = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.ChkIsStockItem = New System.Windows.Forms.CheckBox()
+        Me.ChkIsActive = New System.Windows.Forms.CheckBox()
+        Me.ChkIsAlternateUnit = New System.Windows.Forms.CheckBox()
         Me.BtnBrowse = New System.Windows.Forms.Button()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
+        Me.PcbPreview = New System.Windows.Forms.PictureBox()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.TxtSrNo = New System.Windows.Forms.TextBox()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.TxtRemark = New System.Windows.Forms.TextBox()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.TxtHsnDesc = New System.Windows.Forms.TextBox()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.TxtHsnCode = New System.Windows.Forms.TextBox()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.TxtAlternateUnitValue = New System.Windows.Forms.TextBox()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.TxtUnitValue = New System.Windows.Forms.TextBox()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.TxtAlternateUnit = New System.Windows.Forms.TextBox()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.TxtProductQuantity = New System.Windows.Forms.TextBox()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.TxtWeight = New System.Windows.Forms.TextBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.TxtSupplierCode = New System.Windows.Forms.TextBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.TxtQuantityToReorder = New System.Windows.Forms.TextBox()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.TxtReorderLevel = New System.Windows.Forms.TextBox()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.TxtMinQuantity = New System.Windows.Forms.TextBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.TxtSellingPrice = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.TxtProductMargin = New System.Windows.Forms.TextBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.TxtProductLastCost = New System.Windows.Forms.TextBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.TxtCostPrice = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.TxtVatCode = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.TxtTagPrice = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.TxtProductUnit = New System.Windows.Forms.TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.TxtSupplierDetails = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.TxtSupplierPacking = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.TxtDepartmentCode = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.TxtProductName = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.TxtProductCode = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
-        Me.TabPage2.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         CType(Me.DgvLocalProducts, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage2.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -117,7 +117,7 @@ Partial Class Form1
         Me.TableLayoutPanel5.SuspendLayout()
         Me.TableLayoutPanel6.SuspendLayout()
         Me.Panel1.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PcbPreview, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -137,21 +137,10 @@ Partial Class Form1
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(1176, 535)
+        Me.TabPage1.Size = New System.Drawing.Size(1362, 685)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Local Products"
         Me.TabPage1.UseVisualStyleBackColor = True
-        '
-        'TabPage2
-        '
-        Me.TabPage2.Controls.Add(Me.SplitContainer1)
-        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(1362, 685)
-        Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "Online Products"
-        Me.TabPage2.UseVisualStyleBackColor = True
         '
         'TableLayoutPanel1
         '
@@ -165,7 +154,7 @@ Partial Class Form1
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1170, 529)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1356, 679)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'TableLayoutPanel2
@@ -184,27 +173,15 @@ Partial Class Form1
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 1
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(1164, 31)
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(1350, 41)
         Me.TableLayoutPanel2.TabIndex = 0
-        '
-        'DgvLocalProducts
-        '
-        Me.DgvLocalProducts.AllowUserToAddRows = False
-        Me.DgvLocalProducts.AllowUserToDeleteRows = False
-        Me.DgvLocalProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DgvLocalProducts.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DgvLocalProducts.Location = New System.Drawing.Point(3, 40)
-        Me.DgvLocalProducts.Name = "DgvLocalProducts"
-        Me.DgvLocalProducts.ReadOnly = True
-        Me.DgvLocalProducts.Size = New System.Drawing.Size(1164, 486)
-        Me.DgvLocalProducts.TabIndex = 1
         '
         'btnRefresh
         '
         Me.btnRefresh.Dock = System.Windows.Forms.DockStyle.Top
         Me.btnRefresh.Location = New System.Drawing.Point(3, 3)
         Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(285, 23)
+        Me.btnRefresh.Size = New System.Drawing.Size(331, 23)
         Me.btnRefresh.TabIndex = 0
         Me.btnRefresh.Text = "Refresh"
         Me.btnRefresh.UseVisualStyleBackColor = True
@@ -212,9 +189,9 @@ Partial Class Form1
         'BtnUploadSelected
         '
         Me.BtnUploadSelected.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnUploadSelected.Location = New System.Drawing.Point(294, 3)
+        Me.BtnUploadSelected.Location = New System.Drawing.Point(340, 3)
         Me.BtnUploadSelected.Name = "BtnUploadSelected"
-        Me.BtnUploadSelected.Size = New System.Drawing.Size(285, 23)
+        Me.BtnUploadSelected.Size = New System.Drawing.Size(331, 23)
         Me.BtnUploadSelected.TabIndex = 1
         Me.BtnUploadSelected.Text = "Upload Selected"
         Me.BtnUploadSelected.UseVisualStyleBackColor = True
@@ -222,9 +199,9 @@ Partial Class Form1
         'BtnUploadAll
         '
         Me.BtnUploadAll.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnUploadAll.Location = New System.Drawing.Point(585, 3)
+        Me.BtnUploadAll.Location = New System.Drawing.Point(677, 3)
         Me.BtnUploadAll.Name = "BtnUploadAll"
-        Me.BtnUploadAll.Size = New System.Drawing.Size(285, 23)
+        Me.BtnUploadAll.Size = New System.Drawing.Size(331, 23)
         Me.BtnUploadAll.TabIndex = 2
         Me.BtnUploadAll.Text = "Upload All"
         Me.BtnUploadAll.UseVisualStyleBackColor = True
@@ -232,12 +209,35 @@ Partial Class Form1
         'BtnSelectAll
         '
         Me.BtnSelectAll.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnSelectAll.Location = New System.Drawing.Point(876, 3)
+        Me.BtnSelectAll.Location = New System.Drawing.Point(1014, 3)
         Me.BtnSelectAll.Name = "BtnSelectAll"
-        Me.BtnSelectAll.Size = New System.Drawing.Size(285, 23)
+        Me.BtnSelectAll.Size = New System.Drawing.Size(333, 23)
         Me.BtnSelectAll.TabIndex = 3
         Me.BtnSelectAll.Text = "Select All"
         Me.BtnSelectAll.UseVisualStyleBackColor = True
+        '
+        'DgvLocalProducts
+        '
+        Me.DgvLocalProducts.AllowUserToAddRows = False
+        Me.DgvLocalProducts.AllowUserToDeleteRows = False
+        Me.DgvLocalProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvLocalProducts.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvLocalProducts.Location = New System.Drawing.Point(3, 50)
+        Me.DgvLocalProducts.Name = "DgvLocalProducts"
+        Me.DgvLocalProducts.ReadOnly = True
+        Me.DgvLocalProducts.Size = New System.Drawing.Size(1350, 626)
+        Me.DgvLocalProducts.TabIndex = 1
+        '
+        'TabPage2
+        '
+        Me.TabPage2.Controls.Add(Me.SplitContainer1)
+        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(1362, 685)
+        Me.TabPage2.TabIndex = 1
+        Me.TabPage2.Text = "Online Products"
+        Me.TabPage2.UseVisualStyleBackColor = True
         '
         'SplitContainer1
         '
@@ -394,61 +394,61 @@ Partial Class Form1
         '
         'Panel1
         '
-        Me.Panel1.Controls.Add(Me.CheckBox3)
-        Me.Panel1.Controls.Add(Me.CheckBox2)
-        Me.Panel1.Controls.Add(Me.CheckBox1)
+        Me.Panel1.Controls.Add(Me.ChkIsStockItem)
+        Me.Panel1.Controls.Add(Me.ChkIsActive)
+        Me.Panel1.Controls.Add(Me.ChkIsAlternateUnit)
         Me.Panel1.Controls.Add(Me.BtnBrowse)
-        Me.Panel1.Controls.Add(Me.PictureBox1)
+        Me.Panel1.Controls.Add(Me.PcbPreview)
         Me.Panel1.Controls.Add(Me.Label29)
-        Me.Panel1.Controls.Add(Me.TextBox28)
+        Me.Panel1.Controls.Add(Me.TxtSrNo)
         Me.Panel1.Controls.Add(Me.Label28)
-        Me.Panel1.Controls.Add(Me.TextBox27)
+        Me.Panel1.Controls.Add(Me.TxtRemark)
         Me.Panel1.Controls.Add(Me.Label27)
-        Me.Panel1.Controls.Add(Me.TextBox24)
+        Me.Panel1.Controls.Add(Me.TxtHsnDesc)
         Me.Panel1.Controls.Add(Me.Label24)
-        Me.Panel1.Controls.Add(Me.TextBox23)
+        Me.Panel1.Controls.Add(Me.TxtHsnCode)
         Me.Panel1.Controls.Add(Me.Label23)
-        Me.Panel1.Controls.Add(Me.TextBox22)
+        Me.Panel1.Controls.Add(Me.TxtAlternateUnitValue)
         Me.Panel1.Controls.Add(Me.Label22)
-        Me.Panel1.Controls.Add(Me.TextBox21)
+        Me.Panel1.Controls.Add(Me.TxtUnitValue)
         Me.Panel1.Controls.Add(Me.Label21)
-        Me.Panel1.Controls.Add(Me.TextBox20)
+        Me.Panel1.Controls.Add(Me.TxtAlternateUnit)
         Me.Panel1.Controls.Add(Me.Label20)
-        Me.Panel1.Controls.Add(Me.TextBox18)
+        Me.Panel1.Controls.Add(Me.TxtProductQuantity)
         Me.Panel1.Controls.Add(Me.Label18)
-        Me.Panel1.Controls.Add(Me.TextBox17)
+        Me.Panel1.Controls.Add(Me.TxtWeight)
         Me.Panel1.Controls.Add(Me.Label17)
-        Me.Panel1.Controls.Add(Me.TextBox16)
+        Me.Panel1.Controls.Add(Me.TxtSupplierCode)
         Me.Panel1.Controls.Add(Me.Label16)
-        Me.Panel1.Controls.Add(Me.TextBox15)
+        Me.Panel1.Controls.Add(Me.TxtQuantityToReorder)
         Me.Panel1.Controls.Add(Me.Label15)
-        Me.Panel1.Controls.Add(Me.TextBox14)
+        Me.Panel1.Controls.Add(Me.TxtReorderLevel)
         Me.Panel1.Controls.Add(Me.Label14)
-        Me.Panel1.Controls.Add(Me.TextBox13)
+        Me.Panel1.Controls.Add(Me.TxtMinQuantity)
         Me.Panel1.Controls.Add(Me.Label13)
-        Me.Panel1.Controls.Add(Me.TextBox12)
+        Me.Panel1.Controls.Add(Me.TxtSellingPrice)
         Me.Panel1.Controls.Add(Me.Label12)
-        Me.Panel1.Controls.Add(Me.TextBox11)
+        Me.Panel1.Controls.Add(Me.TxtProductMargin)
         Me.Panel1.Controls.Add(Me.Label11)
-        Me.Panel1.Controls.Add(Me.TextBox10)
+        Me.Panel1.Controls.Add(Me.TxtProductLastCost)
         Me.Panel1.Controls.Add(Me.Label10)
-        Me.Panel1.Controls.Add(Me.TextBox9)
+        Me.Panel1.Controls.Add(Me.TxtCostPrice)
         Me.Panel1.Controls.Add(Me.Label9)
-        Me.Panel1.Controls.Add(Me.TextBox8)
+        Me.Panel1.Controls.Add(Me.TxtVatCode)
         Me.Panel1.Controls.Add(Me.Label8)
-        Me.Panel1.Controls.Add(Me.TextBox7)
+        Me.Panel1.Controls.Add(Me.TxtTagPrice)
         Me.Panel1.Controls.Add(Me.Label7)
-        Me.Panel1.Controls.Add(Me.TextBox6)
+        Me.Panel1.Controls.Add(Me.TxtProductUnit)
         Me.Panel1.Controls.Add(Me.Label6)
-        Me.Panel1.Controls.Add(Me.TextBox5)
+        Me.Panel1.Controls.Add(Me.TxtSupplierDetails)
         Me.Panel1.Controls.Add(Me.Label5)
-        Me.Panel1.Controls.Add(Me.TextBox4)
+        Me.Panel1.Controls.Add(Me.TxtSupplierPacking)
         Me.Panel1.Controls.Add(Me.Label4)
-        Me.Panel1.Controls.Add(Me.TextBox3)
+        Me.Panel1.Controls.Add(Me.TxtDepartmentCode)
         Me.Panel1.Controls.Add(Me.Label3)
-        Me.Panel1.Controls.Add(Me.TextBox2)
+        Me.Panel1.Controls.Add(Me.TxtProductName)
         Me.Panel1.Controls.Add(Me.Label2)
-        Me.Panel1.Controls.Add(Me.TextBox1)
+        Me.Panel1.Controls.Add(Me.TxtProductCode)
         Me.Panel1.Controls.Add(Me.Label1)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(3, 3)
@@ -456,422 +456,35 @@ Partial Class Form1
         Me.Panel1.Size = New System.Drawing.Size(535, 625)
         Me.Panel1.TabIndex = 1
         '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(60, 8)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(72, 13)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Product Code"
-        '
-        'TextBox1
-        '
-        Me.TextBox1.Location = New System.Drawing.Point(4, 24)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox1.TabIndex = 1
-        '
-        'TextBox2
-        '
-        Me.TextBox2.Location = New System.Drawing.Point(182, 24)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox2.TabIndex = 3
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(209, 8)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(75, 13)
-        Me.Label2.TabIndex = 2
-        Me.Label2.Text = "Product Name"
-        '
-        'TextBox3
-        '
-        Me.TextBox3.Location = New System.Drawing.Point(359, 24)
-        Me.TextBox3.Name = "TextBox3"
-        Me.TextBox3.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox3.TabIndex = 5
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(421, 8)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(43, 13)
-        Me.Label3.TabIndex = 4
-        Me.Label3.Text = "D-Code"
-        '
-        'TextBox4
-        '
-        Me.TextBox4.Location = New System.Drawing.Point(182, 63)
-        Me.TextBox4.Name = "TextBox4"
-        Me.TextBox4.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox4.TabIndex = 7
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(197, 47)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(87, 13)
-        Me.Label4.TabIndex = 6
-        Me.Label4.Text = "Supplier Packing"
-        '
-        'TextBox5
-        '
-        Me.TextBox5.Location = New System.Drawing.Point(4, 63)
-        Me.TextBox5.Name = "TextBox5"
-        Me.TextBox5.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox5.TabIndex = 9
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(41, 47)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(122, 13)
-        Me.Label5.TabIndex = 8
-        Me.Label5.Text = "Supplier Packing Details"
-        '
-        'TextBox6
-        '
-        Me.TextBox6.Location = New System.Drawing.Point(359, 63)
-        Me.TextBox6.Name = "TextBox6"
-        Me.TextBox6.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox6.TabIndex = 11
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(398, 47)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(66, 13)
-        Me.Label6.TabIndex = 10
-        Me.Label6.Text = "Product Unit"
-        '
-        'TextBox7
-        '
-        Me.TextBox7.Location = New System.Drawing.Point(4, 102)
-        Me.TextBox7.Name = "TextBox7"
-        Me.TextBox7.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox7.TabIndex = 13
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(60, 86)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(52, 13)
-        Me.Label7.TabIndex = 12
-        Me.Label7.Text = "Tag price"
-        '
-        'TextBox8
-        '
-        Me.TextBox8.Location = New System.Drawing.Point(182, 102)
-        Me.TextBox8.Name = "TextBox8"
-        Me.TextBox8.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox8.TabIndex = 15
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(188, 86)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(96, 13)
-        Me.Label8.TabIndex = 14
-        Me.Label8.Text = "Product VAT Code"
-        '
-        'TextBox9
-        '
-        Me.TextBox9.Location = New System.Drawing.Point(359, 102)
-        Me.TextBox9.Name = "TextBox9"
-        Me.TextBox9.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox9.TabIndex = 17
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(398, 86)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(95, 13)
-        Me.Label9.TabIndex = 16
-        Me.Label9.Text = "Product Cost Price"
-        '
-        'TextBox10
-        '
-        Me.TextBox10.Location = New System.Drawing.Point(4, 141)
-        Me.TextBox10.Name = "TextBox10"
-        Me.TextBox10.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox10.TabIndex = 19
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(41, 125)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(118, 13)
-        Me.Label10.TabIndex = 18
-        Me.Label10.Text = "Product Last Cost Price"
-        '
-        'TextBox11
-        '
-        Me.TextBox11.Location = New System.Drawing.Point(184, 141)
-        Me.TextBox11.Name = "TextBox11"
-        Me.TextBox11.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox11.TabIndex = 21
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(197, 125)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(79, 13)
-        Me.Label11.TabIndex = 20
-        Me.Label11.Text = "Product Margin"
-        '
-        'TextBox12
-        '
-        Me.TextBox12.Location = New System.Drawing.Point(359, 141)
-        Me.TextBox12.Name = "TextBox12"
-        Me.TextBox12.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox12.TabIndex = 23
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(388, 125)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(105, 13)
-        Me.Label12.TabIndex = 22
-        Me.Label12.Text = "Product Selling Price"
-        '
-        'TextBox13
-        '
-        Me.TextBox13.Location = New System.Drawing.Point(4, 180)
-        Me.TextBox13.Name = "TextBox13"
-        Me.TextBox13.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox13.TabIndex = 25
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(41, 164)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(66, 13)
-        Me.Label13.TabIndex = 24
-        Me.Label13.Text = "Min Quantity"
-        '
-        'TextBox14
-        '
-        Me.TextBox14.Location = New System.Drawing.Point(184, 180)
-        Me.TextBox14.Name = "TextBox14"
-        Me.TextBox14.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox14.TabIndex = 27
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(197, 164)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(74, 13)
-        Me.Label14.TabIndex = 26
-        Me.Label14.Text = "Reorder Level"
-        '
-        'TextBox15
-        '
-        Me.TextBox15.Location = New System.Drawing.Point(359, 180)
-        Me.TextBox15.Name = "TextBox15"
-        Me.TextBox15.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox15.TabIndex = 29
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(377, 164)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(87, 13)
-        Me.Label15.TabIndex = 28
-        Me.Label15.Text = "Quantity to Order"
-        '
-        'TextBox16
-        '
-        Me.TextBox16.Location = New System.Drawing.Point(4, 219)
-        Me.TextBox16.Name = "TextBox16"
-        Me.TextBox16.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox16.TabIndex = 31
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(24, 203)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(73, 13)
-        Me.Label16.TabIndex = 30
-        Me.Label16.Text = "Supplier Code"
-        '
-        'TextBox17
-        '
-        Me.TextBox17.Location = New System.Drawing.Point(182, 219)
-        Me.TextBox17.Name = "TextBox17"
-        Me.TextBox17.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox17.TabIndex = 33
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(207, 203)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(41, 13)
-        Me.Label17.TabIndex = 32
-        Me.Label17.Text = "Weight"
-        '
-        'TextBox18
-        '
-        Me.TextBox18.Location = New System.Drawing.Point(359, 219)
-        Me.TextBox18.Name = "TextBox18"
-        Me.TextBox18.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox18.TabIndex = 35
-        '
-        'Label18
-        '
-        Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(373, 203)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(86, 13)
-        Me.Label18.TabIndex = 34
-        Me.Label18.Text = "Product Quantity"
-        '
-        'TextBox20
-        '
-        Me.TextBox20.Location = New System.Drawing.Point(184, 258)
-        Me.TextBox20.Name = "TextBox20"
-        Me.TextBox20.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox20.TabIndex = 39
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(197, 242)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(71, 13)
-        Me.Label20.TabIndex = 38
-        Me.Label20.Text = "Alternate Unit"
-        '
-        'TextBox21
-        '
-        Me.TextBox21.Location = New System.Drawing.Point(359, 258)
-        Me.TextBox21.Name = "TextBox21"
-        Me.TextBox21.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox21.TabIndex = 41
-        '
-        'Label21
-        '
-        Me.Label21.AutoSize = True
-        Me.Label21.Location = New System.Drawing.Point(377, 242)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(54, 13)
-        Me.Label21.TabIndex = 40
-        Me.Label21.Text = "Unt Value"
-        '
-        'TextBox22
-        '
-        Me.TextBox22.Location = New System.Drawing.Point(4, 297)
-        Me.TextBox22.Name = "TextBox22"
-        Me.TextBox22.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox22.TabIndex = 43
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(6, 281)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(101, 13)
-        Me.Label22.TabIndex = 42
-        Me.Label22.Text = "Alternate Unit Value"
-        '
-        'TextBox23
-        '
-        Me.TextBox23.Location = New System.Drawing.Point(184, 297)
-        Me.TextBox23.Name = "TextBox23"
-        Me.TextBox23.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox23.TabIndex = 45
-        '
-        'Label23
-        '
-        Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(197, 281)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(54, 13)
-        Me.Label23.TabIndex = 44
-        Me.Label23.Text = "Hsn Code"
-        '
-        'TextBox24
-        '
-        Me.TextBox24.Location = New System.Drawing.Point(359, 297)
-        Me.TextBox24.Name = "TextBox24"
-        Me.TextBox24.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox24.TabIndex = 47
-        '
-        'Label24
-        '
-        Me.Label24.AutoSize = True
-        Me.Label24.Location = New System.Drawing.Point(371, 281)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(88, 13)
-        Me.Label24.TabIndex = 46
-        Me.Label24.Text = "Hasn Description"
-        '
-        'TextBox27
-        '
-        Me.TextBox27.Location = New System.Drawing.Point(359, 336)
-        Me.TextBox27.Name = "TextBox27"
-        Me.TextBox27.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox27.TabIndex = 53
-        '
-        'Label27
-        '
-        Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(387, 320)
-        Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(44, 13)
-        Me.Label27.TabIndex = 52
-        Me.Label27.Text = "Remark"
-        '
-        'TextBox28
-        '
-        Me.TextBox28.Location = New System.Drawing.Point(4, 375)
-        Me.TextBox28.Name = "TextBox28"
-        Me.TextBox28.Size = New System.Drawing.Size(170, 20)
-        Me.TextBox28.TabIndex = 55
-        '
-        'Label28
-        '
-        Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(24, 359)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(34, 13)
-        Me.Label28.TabIndex = 54
-        Me.Label28.Text = "Sr No"
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(199, 359)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(36, 13)
-        Me.Label29.TabIndex = 56
-        Me.Label29.Text = "Image"
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Location = New System.Drawing.Point(184, 389)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(168, 50)
-        Me.PictureBox1.TabIndex = 57
-        Me.PictureBox1.TabStop = False
+        'ChkIsStockItem
+        '
+        Me.ChkIsStockItem.AutoSize = True
+        Me.ChkIsStockItem.Location = New System.Drawing.Point(184, 323)
+        Me.ChkIsStockItem.Name = "ChkIsStockItem"
+        Me.ChkIsStockItem.Size = New System.Drawing.Size(88, 17)
+        Me.ChkIsStockItem.TabIndex = 61
+        Me.ChkIsStockItem.Text = "Is Stock Item"
+        Me.ChkIsStockItem.UseVisualStyleBackColor = True
+        '
+        'ChkIsActive
+        '
+        Me.ChkIsActive.AutoSize = True
+        Me.ChkIsActive.Location = New System.Drawing.Point(4, 336)
+        Me.ChkIsActive.Name = "ChkIsActive"
+        Me.ChkIsActive.Size = New System.Drawing.Size(67, 17)
+        Me.ChkIsActive.TabIndex = 60
+        Me.ChkIsActive.Text = "Is Active"
+        Me.ChkIsActive.UseVisualStyleBackColor = True
+        '
+        'ChkIsAlternateUnit
+        '
+        Me.ChkIsAlternateUnit.AutoSize = True
+        Me.ChkIsAlternateUnit.Location = New System.Drawing.Point(4, 245)
+        Me.ChkIsAlternateUnit.Name = "ChkIsAlternateUnit"
+        Me.ChkIsAlternateUnit.Size = New System.Drawing.Size(101, 17)
+        Me.ChkIsAlternateUnit.TabIndex = 59
+        Me.ChkIsAlternateUnit.Text = "Is Alternate Unit"
+        Me.ChkIsAlternateUnit.UseVisualStyleBackColor = True
         '
         'BtnBrowse
         '
@@ -882,35 +495,422 @@ Partial Class Form1
         Me.BtnBrowse.Text = "Browse"
         Me.BtnBrowse.UseVisualStyleBackColor = True
         '
-        'CheckBox1
+        'PcbPreview
         '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(4, 245)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(101, 17)
-        Me.CheckBox1.TabIndex = 59
-        Me.CheckBox1.Text = "Is Alternate Unit"
-        Me.CheckBox1.UseVisualStyleBackColor = True
+        Me.PcbPreview.Location = New System.Drawing.Point(184, 389)
+        Me.PcbPreview.Name = "PcbPreview"
+        Me.PcbPreview.Size = New System.Drawing.Size(168, 50)
+        Me.PcbPreview.TabIndex = 57
+        Me.PcbPreview.TabStop = False
         '
-        'CheckBox2
+        'Label29
         '
-        Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(4, 336)
-        Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(67, 17)
-        Me.CheckBox2.TabIndex = 60
-        Me.CheckBox2.Text = "Is Active"
-        Me.CheckBox2.UseVisualStyleBackColor = True
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(199, 359)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(36, 13)
+        Me.Label29.TabIndex = 56
+        Me.Label29.Text = "Image"
         '
-        'CheckBox3
+        'TxtSrNo
         '
-        Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Location = New System.Drawing.Point(184, 323)
-        Me.CheckBox3.Name = "CheckBox3"
-        Me.CheckBox3.Size = New System.Drawing.Size(88, 17)
-        Me.CheckBox3.TabIndex = 61
-        Me.CheckBox3.Text = "Is Stock Item"
-        Me.CheckBox3.UseVisualStyleBackColor = True
+        Me.TxtSrNo.Location = New System.Drawing.Point(4, 375)
+        Me.TxtSrNo.Name = "TxtSrNo"
+        Me.TxtSrNo.Size = New System.Drawing.Size(170, 20)
+        Me.TxtSrNo.TabIndex = 55
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(24, 359)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(34, 13)
+        Me.Label28.TabIndex = 54
+        Me.Label28.Text = "Sr No"
+        '
+        'TxtRemark
+        '
+        Me.TxtRemark.Location = New System.Drawing.Point(359, 336)
+        Me.TxtRemark.Name = "TxtRemark"
+        Me.TxtRemark.Size = New System.Drawing.Size(170, 20)
+        Me.TxtRemark.TabIndex = 53
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.Location = New System.Drawing.Point(387, 320)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(44, 13)
+        Me.Label27.TabIndex = 52
+        Me.Label27.Text = "Remark"
+        '
+        'TxtHsnDesc
+        '
+        Me.TxtHsnDesc.Location = New System.Drawing.Point(359, 297)
+        Me.TxtHsnDesc.Name = "TxtHsnDesc"
+        Me.TxtHsnDesc.Size = New System.Drawing.Size(170, 20)
+        Me.TxtHsnDesc.TabIndex = 47
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Location = New System.Drawing.Point(371, 281)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(82, 13)
+        Me.Label24.TabIndex = 46
+        Me.Label24.Text = "Hsn Description"
+        '
+        'TxtHsnCode
+        '
+        Me.TxtHsnCode.Location = New System.Drawing.Point(184, 297)
+        Me.TxtHsnCode.Name = "TxtHsnCode"
+        Me.TxtHsnCode.Size = New System.Drawing.Size(170, 20)
+        Me.TxtHsnCode.TabIndex = 45
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(197, 281)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(54, 13)
+        Me.Label23.TabIndex = 44
+        Me.Label23.Text = "Hsn Code"
+        '
+        'TxtAlternateUnitValue
+        '
+        Me.TxtAlternateUnitValue.Location = New System.Drawing.Point(4, 297)
+        Me.TxtAlternateUnitValue.Name = "TxtAlternateUnitValue"
+        Me.TxtAlternateUnitValue.Size = New System.Drawing.Size(170, 20)
+        Me.TxtAlternateUnitValue.TabIndex = 43
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(6, 281)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(101, 13)
+        Me.Label22.TabIndex = 42
+        Me.Label22.Text = "Alternate Unit Value"
+        '
+        'TxtUnitValue
+        '
+        Me.TxtUnitValue.Location = New System.Drawing.Point(359, 258)
+        Me.TxtUnitValue.Name = "TxtUnitValue"
+        Me.TxtUnitValue.Size = New System.Drawing.Size(170, 20)
+        Me.TxtUnitValue.TabIndex = 41
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(377, 242)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(56, 13)
+        Me.Label21.TabIndex = 40
+        Me.Label21.Text = "Unit Value"
+        '
+        'TxtAlternateUnit
+        '
+        Me.TxtAlternateUnit.Location = New System.Drawing.Point(184, 258)
+        Me.TxtAlternateUnit.Name = "TxtAlternateUnit"
+        Me.TxtAlternateUnit.Size = New System.Drawing.Size(170, 20)
+        Me.TxtAlternateUnit.TabIndex = 39
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(197, 242)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(71, 13)
+        Me.Label20.TabIndex = 38
+        Me.Label20.Text = "Alternate Unit"
+        '
+        'TxtProductQuantity
+        '
+        Me.TxtProductQuantity.Location = New System.Drawing.Point(359, 219)
+        Me.TxtProductQuantity.Name = "TxtProductQuantity"
+        Me.TxtProductQuantity.Size = New System.Drawing.Size(170, 20)
+        Me.TxtProductQuantity.TabIndex = 35
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(373, 203)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(86, 13)
+        Me.Label18.TabIndex = 34
+        Me.Label18.Text = "Product Quantity"
+        '
+        'TxtWeight
+        '
+        Me.TxtWeight.Location = New System.Drawing.Point(182, 219)
+        Me.TxtWeight.Name = "TxtWeight"
+        Me.TxtWeight.Size = New System.Drawing.Size(170, 20)
+        Me.TxtWeight.TabIndex = 33
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(207, 203)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(41, 13)
+        Me.Label17.TabIndex = 32
+        Me.Label17.Text = "Weight"
+        '
+        'TxtSupplierCode
+        '
+        Me.TxtSupplierCode.Location = New System.Drawing.Point(4, 219)
+        Me.TxtSupplierCode.Name = "TxtSupplierCode"
+        Me.TxtSupplierCode.Size = New System.Drawing.Size(170, 20)
+        Me.TxtSupplierCode.TabIndex = 31
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(24, 203)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(73, 13)
+        Me.Label16.TabIndex = 30
+        Me.Label16.Text = "Supplier Code"
+        '
+        'TxtQuantityToReorder
+        '
+        Me.TxtQuantityToReorder.Location = New System.Drawing.Point(359, 180)
+        Me.TxtQuantityToReorder.Name = "TxtQuantityToReorder"
+        Me.TxtQuantityToReorder.Size = New System.Drawing.Size(170, 20)
+        Me.TxtQuantityToReorder.TabIndex = 29
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(377, 164)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(87, 13)
+        Me.Label15.TabIndex = 28
+        Me.Label15.Text = "Quantity to Order"
+        '
+        'TxtReorderLevel
+        '
+        Me.TxtReorderLevel.Location = New System.Drawing.Point(184, 180)
+        Me.TxtReorderLevel.Name = "TxtReorderLevel"
+        Me.TxtReorderLevel.Size = New System.Drawing.Size(170, 20)
+        Me.TxtReorderLevel.TabIndex = 27
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(197, 164)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(74, 13)
+        Me.Label14.TabIndex = 26
+        Me.Label14.Text = "Reorder Level"
+        '
+        'TxtMinQuantity
+        '
+        Me.TxtMinQuantity.Location = New System.Drawing.Point(4, 180)
+        Me.TxtMinQuantity.Name = "TxtMinQuantity"
+        Me.TxtMinQuantity.Size = New System.Drawing.Size(170, 20)
+        Me.TxtMinQuantity.TabIndex = 25
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(41, 164)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(66, 13)
+        Me.Label13.TabIndex = 24
+        Me.Label13.Text = "Min Quantity"
+        '
+        'TxtSellingPrice
+        '
+        Me.TxtSellingPrice.Location = New System.Drawing.Point(359, 141)
+        Me.TxtSellingPrice.Name = "TxtSellingPrice"
+        Me.TxtSellingPrice.Size = New System.Drawing.Size(170, 20)
+        Me.TxtSellingPrice.TabIndex = 23
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(388, 125)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(105, 13)
+        Me.Label12.TabIndex = 22
+        Me.Label12.Text = "Product Selling Price"
+        '
+        'TxtProductMargin
+        '
+        Me.TxtProductMargin.Location = New System.Drawing.Point(184, 141)
+        Me.TxtProductMargin.Name = "TxtProductMargin"
+        Me.TxtProductMargin.Size = New System.Drawing.Size(170, 20)
+        Me.TxtProductMargin.TabIndex = 21
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(197, 125)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(79, 13)
+        Me.Label11.TabIndex = 20
+        Me.Label11.Text = "Product Margin"
+        '
+        'TxtProductLastCost
+        '
+        Me.TxtProductLastCost.Location = New System.Drawing.Point(4, 141)
+        Me.TxtProductLastCost.Name = "TxtProductLastCost"
+        Me.TxtProductLastCost.Size = New System.Drawing.Size(170, 20)
+        Me.TxtProductLastCost.TabIndex = 19
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(41, 125)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(118, 13)
+        Me.Label10.TabIndex = 18
+        Me.Label10.Text = "Product Last Cost Price"
+        '
+        'TxtCostPrice
+        '
+        Me.TxtCostPrice.Location = New System.Drawing.Point(359, 102)
+        Me.TxtCostPrice.Name = "TxtCostPrice"
+        Me.TxtCostPrice.Size = New System.Drawing.Size(170, 20)
+        Me.TxtCostPrice.TabIndex = 17
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(398, 86)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(95, 13)
+        Me.Label9.TabIndex = 16
+        Me.Label9.Text = "Product Cost Price"
+        '
+        'TxtVatCode
+        '
+        Me.TxtVatCode.Location = New System.Drawing.Point(182, 102)
+        Me.TxtVatCode.Name = "TxtVatCode"
+        Me.TxtVatCode.Size = New System.Drawing.Size(170, 20)
+        Me.TxtVatCode.TabIndex = 15
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(188, 86)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(96, 13)
+        Me.Label8.TabIndex = 14
+        Me.Label8.Text = "Product VAT Code"
+        '
+        'TxtTagPrice
+        '
+        Me.TxtTagPrice.Location = New System.Drawing.Point(4, 102)
+        Me.TxtTagPrice.Name = "TxtTagPrice"
+        Me.TxtTagPrice.Size = New System.Drawing.Size(170, 20)
+        Me.TxtTagPrice.TabIndex = 13
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(60, 86)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(52, 13)
+        Me.Label7.TabIndex = 12
+        Me.Label7.Text = "Tag price"
+        '
+        'TxtProductUnit
+        '
+        Me.TxtProductUnit.Location = New System.Drawing.Point(359, 63)
+        Me.TxtProductUnit.Name = "TxtProductUnit"
+        Me.TxtProductUnit.Size = New System.Drawing.Size(170, 20)
+        Me.TxtProductUnit.TabIndex = 11
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(398, 47)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(66, 13)
+        Me.Label6.TabIndex = 10
+        Me.Label6.Text = "Product Unit"
+        '
+        'TxtSupplierDetails
+        '
+        Me.TxtSupplierDetails.Location = New System.Drawing.Point(4, 63)
+        Me.TxtSupplierDetails.Name = "TxtSupplierDetails"
+        Me.TxtSupplierDetails.Size = New System.Drawing.Size(170, 20)
+        Me.TxtSupplierDetails.TabIndex = 9
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(41, 47)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(122, 13)
+        Me.Label5.TabIndex = 8
+        Me.Label5.Text = "Supplier Packing Details"
+        '
+        'TxtSupplierPacking
+        '
+        Me.TxtSupplierPacking.Location = New System.Drawing.Point(182, 63)
+        Me.TxtSupplierPacking.Name = "TxtSupplierPacking"
+        Me.TxtSupplierPacking.Size = New System.Drawing.Size(170, 20)
+        Me.TxtSupplierPacking.TabIndex = 7
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(197, 47)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(87, 13)
+        Me.Label4.TabIndex = 6
+        Me.Label4.Text = "Supplier Packing"
+        '
+        'TxtDepartmentCode
+        '
+        Me.TxtDepartmentCode.Location = New System.Drawing.Point(359, 24)
+        Me.TxtDepartmentCode.Name = "TxtDepartmentCode"
+        Me.TxtDepartmentCode.Size = New System.Drawing.Size(170, 20)
+        Me.TxtDepartmentCode.TabIndex = 5
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(421, 8)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(90, 13)
+        Me.Label3.TabIndex = 4
+        Me.Label3.Text = "Department Code"
+        '
+        'TxtProductName
+        '
+        Me.TxtProductName.Location = New System.Drawing.Point(182, 24)
+        Me.TxtProductName.Name = "TxtProductName"
+        Me.TxtProductName.Size = New System.Drawing.Size(170, 20)
+        Me.TxtProductName.TabIndex = 3
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(209, 8)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(75, 13)
+        Me.Label2.TabIndex = 2
+        Me.Label2.Text = "Product Name"
+        '
+        'TxtProductCode
+        '
+        Me.TxtProductCode.Location = New System.Drawing.Point(4, 24)
+        Me.TxtProductCode.Name = "TxtProductCode"
+        Me.TxtProductCode.Size = New System.Drawing.Size(170, 20)
+        Me.TxtProductCode.TabIndex = 1
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(60, 8)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(72, 13)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Product Code"
         '
         'Form1
         '
@@ -922,10 +922,10 @@ Partial Class Form1
         Me.Text = "Products Management"
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
-        Me.TabPage2.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
         CType(Me.DgvLocalProducts, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage2.ResumeLayout(False)
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -937,7 +937,7 @@ Partial Class Form1
         Me.TableLayoutPanel6.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PcbPreview, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -965,60 +965,60 @@ Partial Class Form1
     Friend WithEvents BtnSave As Button
     Friend WithEvents BtnDeleteSingle As Button
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents TextBox24 As TextBox
+    Friend WithEvents TxtHsnDesc As TextBox
     Friend WithEvents Label24 As Label
-    Friend WithEvents TextBox23 As TextBox
+    Friend WithEvents TxtHsnCode As TextBox
     Friend WithEvents Label23 As Label
-    Friend WithEvents TextBox22 As TextBox
+    Friend WithEvents TxtAlternateUnitValue As TextBox
     Friend WithEvents Label22 As Label
-    Friend WithEvents TextBox21 As TextBox
+    Friend WithEvents TxtUnitValue As TextBox
     Friend WithEvents Label21 As Label
-    Friend WithEvents TextBox20 As TextBox
+    Friend WithEvents TxtAlternateUnit As TextBox
     Friend WithEvents Label20 As Label
-    Friend WithEvents TextBox18 As TextBox
+    Friend WithEvents TxtProductQuantity As TextBox
     Friend WithEvents Label18 As Label
-    Friend WithEvents TextBox17 As TextBox
+    Friend WithEvents TxtWeight As TextBox
     Friend WithEvents Label17 As Label
-    Friend WithEvents TextBox16 As TextBox
+    Friend WithEvents TxtSupplierCode As TextBox
     Friend WithEvents Label16 As Label
-    Friend WithEvents TextBox15 As TextBox
+    Friend WithEvents TxtQuantityToReorder As TextBox
     Friend WithEvents Label15 As Label
-    Friend WithEvents TextBox14 As TextBox
+    Friend WithEvents TxtReorderLevel As TextBox
     Friend WithEvents Label14 As Label
-    Friend WithEvents TextBox13 As TextBox
+    Friend WithEvents TxtMinQuantity As TextBox
     Friend WithEvents Label13 As Label
-    Friend WithEvents TextBox12 As TextBox
+    Friend WithEvents TxtSellingPrice As TextBox
     Friend WithEvents Label12 As Label
-    Friend WithEvents TextBox11 As TextBox
+    Friend WithEvents TxtProductMargin As TextBox
     Friend WithEvents Label11 As Label
-    Friend WithEvents TextBox10 As TextBox
+    Friend WithEvents TxtProductLastCost As TextBox
     Friend WithEvents Label10 As Label
-    Friend WithEvents TextBox9 As TextBox
+    Friend WithEvents TxtCostPrice As TextBox
     Friend WithEvents Label9 As Label
-    Friend WithEvents TextBox8 As TextBox
+    Friend WithEvents TxtVatCode As TextBox
     Friend WithEvents Label8 As Label
-    Friend WithEvents TextBox7 As TextBox
+    Friend WithEvents TxtTagPrice As TextBox
     Friend WithEvents Label7 As Label
-    Friend WithEvents TextBox6 As TextBox
+    Friend WithEvents TxtProductUnit As TextBox
     Friend WithEvents Label6 As Label
-    Friend WithEvents TextBox5 As TextBox
+    Friend WithEvents TxtSupplierDetails As TextBox
     Friend WithEvents Label5 As Label
-    Friend WithEvents TextBox4 As TextBox
+    Friend WithEvents TxtSupplierPacking As TextBox
     Friend WithEvents Label4 As Label
-    Friend WithEvents TextBox3 As TextBox
+    Friend WithEvents TxtDepartmentCode As TextBox
     Friend WithEvents Label3 As Label
-    Friend WithEvents TextBox2 As TextBox
+    Friend WithEvents TxtProductName As TextBox
     Friend WithEvents Label2 As Label
-    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents TxtProductCode As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label29 As Label
-    Friend WithEvents TextBox28 As TextBox
+    Friend WithEvents TxtSrNo As TextBox
     Friend WithEvents Label28 As Label
-    Friend WithEvents TextBox27 As TextBox
+    Friend WithEvents TxtRemark As TextBox
     Friend WithEvents Label27 As Label
     Friend WithEvents BtnBrowse As Button
-    Friend WithEvents PictureBox1 As PictureBox
-    Friend WithEvents CheckBox3 As CheckBox
-    Friend WithEvents CheckBox2 As CheckBox
-    Friend WithEvents CheckBox1 As CheckBox
+    Friend WithEvents PcbPreview As PictureBox
+    Friend WithEvents ChkIsStockItem As CheckBox
+    Friend WithEvents ChkIsActive As CheckBox
+    Friend WithEvents ChkIsAlternateUnit As CheckBox
 End Class
