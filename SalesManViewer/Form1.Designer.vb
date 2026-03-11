@@ -36,7 +36,7 @@ Partial Class Form1
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.BtnRefreshOnline = New System.Windows.Forms.Button()
-        Me.BtnDelete = New System.Windows.Forms.Button()
+        Me.BtnDeleteSelected = New System.Windows.Forms.Button()
         Me.BtnLoad = New System.Windows.Forms.Button()
         Me.DgvOnlineProducts = New System.Windows.Forms.DataGridView()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
@@ -91,7 +91,7 @@ Partial Class Form1
         Me.Label7 = New System.Windows.Forms.Label()
         Me.TxtProductUnit = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.TxtSupplierDetails = New System.Windows.Forms.TextBox()
+        Me.TxtSupplierPackingDetails = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.TxtSupplierPacking = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -278,7 +278,7 @@ Partial Class Form1
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
         Me.TableLayoutPanel4.Controls.Add(Me.BtnRefreshOnline, 2, 0)
-        Me.TableLayoutPanel4.Controls.Add(Me.BtnDelete, 1, 0)
+        Me.TableLayoutPanel4.Controls.Add(Me.BtnDeleteSelected, 1, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.BtnLoad, 0, 0)
         Me.TableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel4.Location = New System.Drawing.Point(3, 3)
@@ -298,15 +298,15 @@ Partial Class Form1
         Me.BtnRefreshOnline.Text = "Refresh"
         Me.BtnRefreshOnline.UseVisualStyleBackColor = True
         '
-        'BtnDelete
+        'BtnDeleteSelected
         '
-        Me.BtnDelete.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnDelete.Location = New System.Drawing.Point(271, 3)
-        Me.BtnDelete.Name = "BtnDelete"
-        Me.BtnDelete.Size = New System.Drawing.Size(262, 23)
-        Me.BtnDelete.TabIndex = 1
-        Me.BtnDelete.Text = "Delete"
-        Me.BtnDelete.UseVisualStyleBackColor = True
+        Me.BtnDeleteSelected.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnDeleteSelected.Location = New System.Drawing.Point(271, 3)
+        Me.BtnDeleteSelected.Name = "BtnDeleteSelected"
+        Me.BtnDeleteSelected.Size = New System.Drawing.Size(262, 23)
+        Me.BtnDeleteSelected.TabIndex = 1
+        Me.BtnDeleteSelected.Text = "Delete Selected"
+        Me.BtnDeleteSelected.UseVisualStyleBackColor = True
         '
         'BtnLoad
         '
@@ -440,7 +440,7 @@ Partial Class Form1
         Me.Panel1.Controls.Add(Me.Label7)
         Me.Panel1.Controls.Add(Me.TxtProductUnit)
         Me.Panel1.Controls.Add(Me.Label6)
-        Me.Panel1.Controls.Add(Me.TxtSupplierDetails)
+        Me.Panel1.Controls.Add(Me.TxtSupplierPackingDetails)
         Me.Panel1.Controls.Add(Me.Label5)
         Me.Panel1.Controls.Add(Me.TxtSupplierPacking)
         Me.Panel1.Controls.Add(Me.Label4)
@@ -499,7 +499,8 @@ Partial Class Form1
         '
         Me.PcbPreview.Location = New System.Drawing.Point(184, 389)
         Me.PcbPreview.Name = "PcbPreview"
-        Me.PcbPreview.Size = New System.Drawing.Size(168, 50)
+        Me.PcbPreview.Size = New System.Drawing.Size(150, 150)
+        Me.PcbPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PcbPreview.TabIndex = 57
         Me.PcbPreview.TabStop = False
         '
@@ -832,12 +833,12 @@ Partial Class Form1
         Me.Label6.TabIndex = 10
         Me.Label6.Text = "Product Unit"
         '
-        'TxtSupplierDetails
+        'TxtSupplierPackingDetails
         '
-        Me.TxtSupplierDetails.Location = New System.Drawing.Point(4, 63)
-        Me.TxtSupplierDetails.Name = "TxtSupplierDetails"
-        Me.TxtSupplierDetails.Size = New System.Drawing.Size(170, 20)
-        Me.TxtSupplierDetails.TabIndex = 9
+        Me.TxtSupplierPackingDetails.Location = New System.Drawing.Point(4, 63)
+        Me.TxtSupplierPackingDetails.Name = "TxtSupplierPackingDetails"
+        Me.TxtSupplierPackingDetails.Size = New System.Drawing.Size(170, 20)
+        Me.TxtSupplierPackingDetails.TabIndex = 9
         '
         'Label5
         '
@@ -956,7 +957,7 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
     Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
     Friend WithEvents BtnRefreshOnline As Button
-    Friend WithEvents BtnDelete As Button
+    Friend WithEvents BtnDeleteSelected As Button
     Friend WithEvents BtnLoad As Button
     Friend WithEvents DgvOnlineProducts As DataGridView
     Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
@@ -1001,7 +1002,7 @@ Partial Class Form1
     Friend WithEvents Label7 As Label
     Friend WithEvents TxtProductUnit As TextBox
     Friend WithEvents Label6 As Label
-    Friend WithEvents TxtSupplierDetails As TextBox
+    Friend WithEvents TxtSupplierPackingDetails As TextBox
     Friend WithEvents Label5 As Label
     Friend WithEvents TxtSupplierPacking As TextBox
     Friend WithEvents Label4 As Label
