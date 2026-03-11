@@ -1,9 +1,11 @@
-﻿Namespace helpers
+﻿Imports MySql.Data.MySqlClient
+
+Namespace helpers
     Public Class DatabaseHelper
         Public Shared Function GetConnection() As MySqlConnection
 
             Dim server As String = "localhost"
-            Dim database As String = "your_local_db"
+            Dim database As String = "sales_man"
             Dim user As String = "root"
             Dim password As String = ""
 
