@@ -43,7 +43,6 @@ Partial Class Form1
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.BtnNew = New System.Windows.Forms.Button()
         Me.BtnSave = New System.Windows.Forms.Button()
-        Me.BtnDeleteSingle = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.ChkIsStockItem = New System.Windows.Forms.CheckBox()
         Me.ChkIsActive = New System.Windows.Forms.CheckBox()
@@ -101,6 +100,7 @@ Partial Class Form1
         Me.Label2 = New System.Windows.Forms.Label()
         Me.TxtProductCode = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.BtnDeleteSingle = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
@@ -381,16 +381,6 @@ Partial Class Form1
         Me.BtnSave.TabIndex = 1
         Me.BtnSave.Text = "Save"
         Me.BtnSave.UseVisualStyleBackColor = True
-        '
-        'BtnDeleteSingle
-        '
-        Me.BtnDeleteSingle.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.BtnDeleteSingle.Location = New System.Drawing.Point(359, 16)
-        Me.BtnDeleteSingle.Name = "BtnDeleteSingle"
-        Me.BtnDeleteSingle.Size = New System.Drawing.Size(173, 23)
-        Me.BtnDeleteSingle.TabIndex = 2
-        Me.BtnDeleteSingle.Text = "Delete"
-        Me.BtnDeleteSingle.UseVisualStyleBackColor = True
         '
         'Panel1
         '
@@ -913,6 +903,16 @@ Partial Class Form1
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Product Code"
         '
+        'BtnDeleteSingle
+        '
+        Me.BtnDeleteSingle.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.BtnDeleteSingle.Location = New System.Drawing.Point(359, 16)
+        Me.BtnDeleteSingle.Name = "BtnDeleteSingle"
+        Me.BtnDeleteSingle.Size = New System.Drawing.Size(173, 23)
+        Me.BtnDeleteSingle.TabIndex = 2
+        Me.BtnDeleteSingle.Text = "Delete"
+        Me.BtnDeleteSingle.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -964,7 +964,6 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanel6 As TableLayoutPanel
     Friend WithEvents BtnNew As Button
     Friend WithEvents BtnSave As Button
-    Friend WithEvents BtnDeleteSingle As Button
     Friend WithEvents Panel1 As Panel
     Friend WithEvents TxtHsnDesc As TextBox
     Friend WithEvents Label24 As Label
@@ -1022,4 +1021,5 @@ Partial Class Form1
     Friend WithEvents ChkIsStockItem As CheckBox
     Friend WithEvents ChkIsActive As CheckBox
     Friend WithEvents ChkIsAlternateUnit As CheckBox
+    Friend WithEvents BtnDeleteSingle As Button
 End Class

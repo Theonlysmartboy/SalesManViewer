@@ -233,21 +233,21 @@ Public Class Form1
                 content.Add(New StringContent(TxtTagPrice.Text), "TagPrice")
                 content.Add(New StringContent(TxtVatCode.Text), "Product_VAT_Code")
                 content.Add(New StringContent(TxtCostPrice.Text), "Product_Cost_Price")
-                content.Add(New StringContent(TxtProductLastCost.Text), "LastCostPrice")
-                content.Add(New StringContent(TxtProductMargin.Text), "ProductMargin")
+                content.Add(New StringContent(TxtProductLastCost.Text), "Product_Last_Cost_Price")
+                content.Add(New StringContent(TxtProductMargin.Text), "Product_Margin")
                 content.Add(New StringContent(TxtSellingPrice.Text), "Product_Selling_Price")
-                content.Add(New StringContent(TxtMinQuantity.Text), "MinQuantity")
-                content.Add(New StringContent(TxtReorderLevel.Text), "ReorderLevel")
-                content.Add(New StringContent(TxtQuantityToReorder.Text), "QuantityToReOrder")
+                content.Add(New StringContent(TxtMinQuantity.Text), "Min_Qty")
+                content.Add(New StringContent(TxtReorderLevel.Text), "ReOrd_Level")
+                content.Add(New StringContent(TxtQuantityToReorder.Text), "Qty_to_Order")
                 content.Add(New StringContent(TxtSupplierCode.Text), "SupplierCode")
                 content.Add(New StringContent(TxtWeight.Text), "Weight")
-                content.Add(New StringContent(TxtProductQuantity.Text), "ProductQuantity")
+                content.Add(New StringContent(TxtProductQuantity.Text), "Product_Qty")
                 content.Add(New StringContent(ChkIsAlternateUnit.Checked.ToString()), "isAlternetUnit")
                 content.Add(New StringContent(TxtAlternateUnit.Text), "AlternetUnit")
                 content.Add(New StringContent(TxtUnitValue.Text), "UnitValue")
                 content.Add(New StringContent(TxtAlternateUnitValue.Text), "AlternetUnitValue")
-                content.Add(New StringContent(TxtHsnCode.Text), "HsnCode")
-                content.Add(New StringContent(TxtHsnDesc.Text), "HsnDescription")
+                content.Add(New StringContent(TxtHsnCode.Text), "HSCode")
+                content.Add(New StringContent(TxtHsnDesc.Text), "HSDesc")
                 content.Add(New StringContent(ChkIsActive.Checked.ToString()), "isActive")
                 content.Add(New StringContent(ChkIsStockItem.Checked.ToString()), "isStockItem")
                 content.Add(New StringContent(TxtRemark.Text), "Remark")
@@ -258,7 +258,7 @@ Public Class Form1
                     Dim fileContent As New ByteArrayContent(fileBytes)
                     fileContent.Headers.ContentType =
                     New Headers.MediaTypeHeaderValue("image/jpeg")
-                    content.Add(fileContent, "image", Path.GetFileName(selectedImagePath))
+                    content.Add(fileContent, "img_src", Path.GetFileName(selectedImagePath))
                 End If
                 Dim response = Await client.PostAsync(url, content)
                 Dim result = Await response.Content.ReadAsStringAsync()
@@ -267,6 +267,14 @@ Public Class Form1
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
+    End Sub
+
+    Private Sub BtnDeleteSelected_Click(sender As Object, e As EventArgs) Handles BtnDeleteSelected.Click
+
+    End Sub
+
+    Private Sub BtnDeleteSingle_Click(sender As Object, e As EventArgs) Handles BtnDeleteSingle.Click
+
     End Sub
 
     'helpers
