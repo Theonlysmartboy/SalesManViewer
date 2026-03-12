@@ -8,7 +8,12 @@ Imports SalesManViewer.repositories
 Public Class Form1
     Private repo As New ProductRepository()
     Private selectedImagePath As String = ""
+    Private OriginalTables As New Dictionary(Of DataGridView, DataTable)
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        SetPlaceholder(TxtSearchOnlineProducts, "Start typing to search...")
+        AddHandler TxtSearchOnlineProducts.Enter, AddressOf TextBox_Enter
+        AddHandler TxtSearchOnlineProducts.Leave, AddressOf TextBox_Leave
         LoadLocalProducts()
         AddCheckboxColumntoLocalDataGrid()
     End Sub
@@ -87,7 +92,56 @@ Public Class Form1
         End Try
     End Sub
 
+    Private Sub DgvLocalProducts_CurrentCellDirtyStateChanged(sender As Object, e As EventArgs) Handles DgvLocalProducts.CurrentCellDirtyStateChanged
+        If TypeOf DgvLocalProducts.CurrentCell Is DataGridViewCheckBoxCell Then
+            DgvLocalProducts.CommitEdit(DataGridViewDataErrorContexts.Commit)
+        End If
+    End Sub
+
+    'local tab helpers
+    Private Sub LoadLocalProducts()
+        Dim dt = repo.GetLocalProducts()
+        DgvLocalProducts.DataSource = dt
+    End Sub
+
+    Private Sub AddCheckboxColumntoLocalDataGrid()
+        If Not DgvLocalProducts.Columns.Contains("Select") Then
+            Dim chk As New DataGridViewCheckBoxColumn()
+            chk.HeaderText = "Select"
+            chk.Name = "Select"
+            chk.Width = 60
+            chk.ReadOnly = False
+            chk.TrueValue = True
+            chk.FalseValue = False
+            chk.ThreeState = False
+            DgvLocalProducts.Columns.Insert(0, chk)
+        End If
+        ' Allow editing
+        DgvLocalProducts.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLocalProducts.MultiSelect = False
+        DgvLocalProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+    End Sub
+
+    Private Async Function SendProductsToServer(products As List(Of Object)) As Task
+        Dim url As String = "http://197.248.220.180/salesman-backend/api/products.php?action=bulk-create"
+        Dim payload = New Dictionary(Of String, Object)
+        payload("products") = products
+        Dim json As String = JsonConvert.SerializeObject(payload)
+        Using client As New HttpClient()
+            Dim content As New StringContent(json, Encoding.UTF8, "application/json")
+            Dim response = Await client.PostAsync(url, content)
+            Dim result = Await response.Content.ReadAsStringAsync()
+            MessageBox.Show(result)
+        End Using
+    End Function
+
     'online tab events
+    Private Sub TxtSearchOnlineProducts_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchOnlineProducts.TextChanged
+        If TxtSearchOnlineProducts.ForeColor = Color.Gray Then Exit Sub
+
+        FilterGrid(DgvOnlineProducts, TxtSearchOnlineProducts.Text)
+    End Sub
+
     Private Async Sub BtnRefreshOnline_Click(sender As Object, e As EventArgs) Handles BtnRefreshOnline.Click
         BtnRefreshOnline.Enabled = False
         Try
@@ -96,6 +150,7 @@ Public Class Form1
             Dim products As List(Of RemoteProduct) = Await FetchAllRemoteProducts(lastSync)
             ' Populate DataGridView
             Dim dt As New DataTable()
+            dt.Columns.Add("Select", GetType(Boolean)) 'checkbox column
             dt.Columns.Add("ProductCd")
             dt.Columns.Add("ProductName")
             dt.Columns.Add("DepartmentCd")
@@ -126,13 +181,15 @@ Public Class Form1
             dt.Columns.Add("SrNo")
             dt.Columns.Add("Image")
             For Each p In products
-                dt.Rows.Add(p.ProductCode, p.ProductName, p.DepartmentCode, p.SupplierPacking, p.SupplierPackingDetails,
+                dt.Rows.Add(False, p.ProductCode, p.ProductName, p.DepartmentCode, p.SupplierPacking, p.SupplierPackingDetails,
                             p.ProductUnit, p.TagPrice, p.Product_VAT_Code, p.Product_Cost_Price, p.Product_Last_Cost_Price,
                             p.Product_Margin, p.Product_Selling_Price, p.Min_Qty, p.ReOrd_Level, p.Qty_to_Order, p.SupplierCode,
                             p.Weight, p.Product_Qty, p.isAlternetUnit, p.AlternetUnit, p.UnitValue, p.AlternetUnitValue, p.HSCode,
                             p.HSDesc, p.isActive, p.isStockItem, p.Remark, p.SrNo, p.img_src)
             Next
+            OriginalTables(DgvOnlineProducts) = dt.Copy()
             DgvOnlineProducts.DataSource = dt
+            DgvOnlineProducts.EditMode = DataGridViewEditMode.EditOnEnter
         Catch ex As Exception
             MessageBox.Show("Error fetching remote products: " & ex.Message)
         Finally
@@ -269,56 +326,62 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub BtnDeleteSelected_Click(sender As Object, e As EventArgs) Handles BtnDeleteSelected.Click
-
-    End Sub
-
-    Private Sub BtnDeleteSingle_Click(sender As Object, e As EventArgs) Handles BtnDeleteSingle.Click
-
-    End Sub
-
-    'helpers
-    'local tab helpers
-    Private Sub LoadLocalProducts()
-        Dim dt = repo.GetLocalProducts()
-        DgvLocalProducts.DataSource = dt
-    End Sub
-
-    Private Sub AddCheckboxColumntoLocalDataGrid()
-        If Not DgvLocalProducts.Columns.Contains("Select") Then
-            Dim chk As New DataGridViewCheckBoxColumn()
-            chk.HeaderText = "Select"
-            chk.Name = "Select"
-            chk.Width = 60
-            chk.ReadOnly = False
-            chk.TrueValue = True
-            chk.FalseValue = False
-            chk.ThreeState = False
-            DgvLocalProducts.Columns.Insert(0, chk)
+    Private Sub DgvOnlineProducts_CurrentCellDirtyStateChanged(sender As Object, e As EventArgs) Handles DgvOnlineProducts.CurrentCellDirtyStateChanged
+        If TypeOf DgvOnlineProducts.CurrentCell Is DataGridViewCheckBoxCell Then
+            DgvOnlineProducts.CommitEdit(DataGridViewDataErrorContexts.Commit)
         End If
-        ' Allow editing
-        DgvLocalProducts.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLocalProducts.MultiSelect = False
-        DgvLocalProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
     End Sub
 
-    Private Async Function SendProductsToServer(products As List(Of Object)) As Task
-        Dim url As String = "http://197.248.220.180/salesman-backend/api/products.php?action=bulk-create"
-        Dim payload = New Dictionary(Of String, Object)
-        payload("products") = products
-        Dim json As String = JsonConvert.SerializeObject(payload)
-        Using client As New HttpClient()
-            Dim content As New StringContent(json, Encoding.UTF8, "application/json")
-            Dim response = Await client.PostAsync(url, content)
-            Dim result = Await response.Content.ReadAsStringAsync()
-            MessageBox.Show(result)
-        End Using
-    End Function
+    Private Async Sub BtnDeleteSelected_Click(sender As Object, e As EventArgs) Handles BtnDeleteSelected.Click
+        Try
+            Dim codes As New List(Of String)
+            For Each row As DataGridViewRow In DgvOnlineProducts.Rows
+                If Convert.ToBoolean(row.Cells("Select").Value) = True Then
+                    codes.Add(row.Cells("ProductCd").Value.ToString())
+                End If
+            Next
+            If codes.Count = 0 Then
+                MessageBox.Show("No products selected.")
+                Return
+            End If
+            Dim confirm = MessageBox.Show($"Delete {codes.Count} products?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+            If confirm <> DialogResult.Yes Then Return
+            Dim payload = New Dictionary(Of String, Object)
+            payload("codes") = codes
+            Dim json As String = JsonConvert.SerializeObject(payload)
+            Dim url As String = "http://197.248.220.180:80/salesman-backend/api/products.php?action=delete-multiple"
+            Using client As New HttpClient()
+                Dim content As New StringContent(json, Encoding.UTF8, "application/json")
+                Dim response = Await client.PostAsync(url, content)
+                Dim result = Await response.Content.ReadAsStringAsync()
+                MessageBox.Show(result)
+            End Using
+            BtnRefreshOnline.PerformClick()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
 
-    Private Sub DgvLocalProducts_CurrentCellDirtyStateChanged(sender As Object, e As EventArgs) Handles DgvLocalProducts.CurrentCellDirtyStateChanged
-        If TypeOf DgvLocalProducts.CurrentCell Is DataGridViewCheckBoxCell Then
-            DgvLocalProducts.CommitEdit(DataGridViewDataErrorContexts.Commit)
-        End If
+    Private Async Sub BtnDeleteSingle_Click(sender As Object, e As EventArgs) Handles BtnDeleteSingle.Click
+        Try
+            If TxtProductCode.Text = "" Then
+                MessageBox.Show("Please select a product to delete.")
+                Return
+            End If
+            Dim code As String = TxtProductCode.Text.Trim()
+            Dim confirm = MessageBox.Show($"Delete product {code} ?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+            If confirm <> DialogResult.Yes Then Return
+            Dim url As String = $"http://197.248.220.180:80/salesman-backend/api/products.php?action=delete&code={code}"
+            Using client As New HttpClient()
+                Dim response = Await client.DeleteAsync(url)
+                Dim result = Await response.Content.ReadAsStringAsync()
+                MessageBox.Show(result)
+            End Using
+            BtnNew.PerformClick()
+            BtnRefreshOnline.PerformClick()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
     End Sub
 
     'online tab helpers
@@ -328,11 +391,14 @@ Public Class Form1
         Dim limit As Integer = 20
         Dim fetched As Integer
         Do
-            Dim chunk As List(Of RemoteProduct) = Await GetRemoteProductsAsync(lastSync, limit, offset)
+            Dim chunk As List(Of RemoteProduct) =
+            Await GetRemoteProductsAsync(lastSync, limit, offset)
             fetched = chunk.Count
-            allProducts.AddRange(chunk)
-            offset += fetched
-        Loop While fetched = limit ' continue if full page retrieved
+            If fetched > 0 Then
+                allProducts.AddRange(chunk)
+                offset += fetched
+            End If
+        Loop While fetched > 0
         Return allProducts
     End Function
 
@@ -359,5 +425,45 @@ Public Class Form1
         BtnUploadAll.Enabled = status
         BtnSelectAll.Enabled = status
         button.Text = text
+    End Sub
+
+    Private Sub SetPlaceholder(txt As TextBox, placeholder As String)
+        If txt Is Nothing Then Exit Sub
+        If String.IsNullOrEmpty(txt.Text) Then
+            txt.ForeColor = Color.Gray
+            txt.Text = placeholder
+            txt.Tag = placeholder
+        End If
+    End Sub
+
+    Private Sub TextBox_Enter(sender As Object, e As EventArgs)
+        Dim txt = DirectCast(sender, TextBox)
+        If txt.Text = CStr(txt.Tag) Then
+            txt.Text = ""
+            txt.ForeColor = Color.Black
+        End If
+    End Sub
+
+    Private Sub TextBox_Leave(sender As Object, e As EventArgs)
+        Dim txt = DirectCast(sender, TextBox)
+        If txt.Text = "" Then
+            txt.ForeColor = Color.Gray
+            txt.Text = CStr(txt.Tag)
+        End If
+    End Sub
+
+    Private Sub FilterGrid(grid As DataGridView, search As String)
+        If Not OriginalTables.ContainsKey(grid) Then Exit Sub
+        Dim dt As DataTable = OriginalTables(grid)
+        Dim dv As DataView = dt.DefaultView
+        If String.IsNullOrWhiteSpace(search) Then
+            dv.RowFilter = ""
+        Else
+            Dim safeSearch = search.Replace("'", "''")
+            Dim filter As String = String.Join(" OR ", dt.Columns.Cast(Of DataColumn).Select(
+                        Function(c) $"Convert([{c.ColumnName}], 'System.String') LIKE '%{safeSearch}%'"))
+            dv.RowFilter = filter
+        End If
+        grid.DataSource = dv
     End Sub
 End Class

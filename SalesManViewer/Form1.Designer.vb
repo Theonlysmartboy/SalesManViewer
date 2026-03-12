@@ -37,12 +37,12 @@ Partial Class Form1
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.BtnRefreshOnline = New System.Windows.Forms.Button()
         Me.BtnDeleteSelected = New System.Windows.Forms.Button()
-        Me.BtnLoad = New System.Windows.Forms.Button()
         Me.DgvOnlineProducts = New System.Windows.Forms.DataGridView()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.BtnNew = New System.Windows.Forms.Button()
         Me.BtnSave = New System.Windows.Forms.Button()
+        Me.BtnDeleteSingle = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.ChkIsStockItem = New System.Windows.Forms.CheckBox()
         Me.ChkIsActive = New System.Windows.Forms.CheckBox()
@@ -100,7 +100,7 @@ Partial Class Form1
         Me.Label2 = New System.Windows.Forms.Label()
         Me.TxtProductCode = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.BtnDeleteSingle = New System.Windows.Forms.Button()
+        Me.TxtSearchOnlineProducts = New System.Windows.Forms.TextBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
@@ -224,7 +224,6 @@ Partial Class Form1
         Me.DgvLocalProducts.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DgvLocalProducts.Location = New System.Drawing.Point(3, 50)
         Me.DgvLocalProducts.Name = "DgvLocalProducts"
-        Me.DgvLocalProducts.ReadOnly = True
         Me.DgvLocalProducts.Size = New System.Drawing.Size(1350, 626)
         Me.DgvLocalProducts.TabIndex = 1
         '
@@ -274,12 +273,12 @@ Partial Class Form1
         'TableLayoutPanel4
         '
         Me.TableLayoutPanel4.ColumnCount = 3
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30.0!))
         Me.TableLayoutPanel4.Controls.Add(Me.BtnRefreshOnline, 2, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.BtnDeleteSelected, 1, 0)
-        Me.TableLayoutPanel4.Controls.Add(Me.BtnLoad, 0, 0)
+        Me.TableLayoutPanel4.Controls.Add(Me.TxtSearchOnlineProducts, 0, 0)
         Me.TableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel4.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
@@ -291,9 +290,9 @@ Partial Class Form1
         'BtnRefreshOnline
         '
         Me.BtnRefreshOnline.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnRefreshOnline.Location = New System.Drawing.Point(539, 3)
+        Me.BtnRefreshOnline.Location = New System.Drawing.Point(566, 3)
         Me.BtnRefreshOnline.Name = "BtnRefreshOnline"
-        Me.BtnRefreshOnline.Size = New System.Drawing.Size(263, 23)
+        Me.BtnRefreshOnline.Size = New System.Drawing.Size(236, 23)
         Me.BtnRefreshOnline.TabIndex = 0
         Me.BtnRefreshOnline.Text = "Refresh"
         Me.BtnRefreshOnline.UseVisualStyleBackColor = True
@@ -301,22 +300,12 @@ Partial Class Form1
         'BtnDeleteSelected
         '
         Me.BtnDeleteSelected.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnDeleteSelected.Location = New System.Drawing.Point(271, 3)
+        Me.BtnDeleteSelected.Location = New System.Drawing.Point(325, 3)
         Me.BtnDeleteSelected.Name = "BtnDeleteSelected"
-        Me.BtnDeleteSelected.Size = New System.Drawing.Size(262, 23)
+        Me.BtnDeleteSelected.Size = New System.Drawing.Size(235, 23)
         Me.BtnDeleteSelected.TabIndex = 1
         Me.BtnDeleteSelected.Text = "Delete Selected"
         Me.BtnDeleteSelected.UseVisualStyleBackColor = True
-        '
-        'BtnLoad
-        '
-        Me.BtnLoad.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnLoad.Location = New System.Drawing.Point(3, 3)
-        Me.BtnLoad.Name = "BtnLoad"
-        Me.BtnLoad.Size = New System.Drawing.Size(262, 23)
-        Me.BtnLoad.TabIndex = 2
-        Me.BtnLoad.Text = "Load"
-        Me.BtnLoad.UseVisualStyleBackColor = True
         '
         'DgvOnlineProducts
         '
@@ -326,7 +315,6 @@ Partial Class Form1
         Me.DgvOnlineProducts.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DgvOnlineProducts.Location = New System.Drawing.Point(3, 50)
         Me.DgvOnlineProducts.Name = "DgvOnlineProducts"
-        Me.DgvOnlineProducts.ReadOnly = True
         Me.DgvOnlineProducts.Size = New System.Drawing.Size(805, 626)
         Me.DgvOnlineProducts.TabIndex = 1
         '
@@ -381,6 +369,16 @@ Partial Class Form1
         Me.BtnSave.TabIndex = 1
         Me.BtnSave.Text = "Save"
         Me.BtnSave.UseVisualStyleBackColor = True
+        '
+        'BtnDeleteSingle
+        '
+        Me.BtnDeleteSingle.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.BtnDeleteSingle.Location = New System.Drawing.Point(359, 16)
+        Me.BtnDeleteSingle.Name = "BtnDeleteSingle"
+        Me.BtnDeleteSingle.Size = New System.Drawing.Size(173, 23)
+        Me.BtnDeleteSingle.TabIndex = 2
+        Me.BtnDeleteSingle.Text = "Delete"
+        Me.BtnDeleteSingle.UseVisualStyleBackColor = True
         '
         'Panel1
         '
@@ -903,15 +901,13 @@ Partial Class Form1
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Product Code"
         '
-        'BtnDeleteSingle
+        'TxtSearchOnlineProducts
         '
-        Me.BtnDeleteSingle.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.BtnDeleteSingle.Location = New System.Drawing.Point(359, 16)
-        Me.BtnDeleteSingle.Name = "BtnDeleteSingle"
-        Me.BtnDeleteSingle.Size = New System.Drawing.Size(173, 23)
-        Me.BtnDeleteSingle.TabIndex = 2
-        Me.BtnDeleteSingle.Text = "Delete"
-        Me.BtnDeleteSingle.UseVisualStyleBackColor = True
+        Me.TxtSearchOnlineProducts.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TxtSearchOnlineProducts.Location = New System.Drawing.Point(3, 3)
+        Me.TxtSearchOnlineProducts.Name = "TxtSearchOnlineProducts"
+        Me.TxtSearchOnlineProducts.Size = New System.Drawing.Size(316, 20)
+        Me.TxtSearchOnlineProducts.TabIndex = 2
         '
         'Form1
         '
@@ -933,6 +929,7 @@ Partial Class Form1
         Me.SplitContainer1.ResumeLayout(False)
         Me.TableLayoutPanel3.ResumeLayout(False)
         Me.TableLayoutPanel4.ResumeLayout(False)
+        Me.TableLayoutPanel4.PerformLayout()
         CType(Me.DgvOnlineProducts, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel5.ResumeLayout(False)
         Me.TableLayoutPanel6.ResumeLayout(False)
@@ -958,7 +955,6 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
     Friend WithEvents BtnRefreshOnline As Button
     Friend WithEvents BtnDeleteSelected As Button
-    Friend WithEvents BtnLoad As Button
     Friend WithEvents DgvOnlineProducts As DataGridView
     Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
     Friend WithEvents TableLayoutPanel6 As TableLayoutPanel
@@ -1022,4 +1018,5 @@ Partial Class Form1
     Friend WithEvents ChkIsActive As CheckBox
     Friend WithEvents ChkIsAlternateUnit As CheckBox
     Friend WithEvents BtnDeleteSingle As Button
+    Friend WithEvents TxtSearchOnlineProducts As TextBox
 End Class
