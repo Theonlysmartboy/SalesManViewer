@@ -22,21 +22,23 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
-        Me.btnRefresh = New System.Windows.Forms.Button()
-        Me.BtnUploadSelected = New System.Windows.Forms.Button()
-        Me.BtnUploadAll = New System.Windows.Forms.Button()
-        Me.BtnSelectAll = New System.Windows.Forms.Button()
-        Me.DgvLocalProducts = New System.Windows.Forms.DataGridView()
+        Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TableLayoutPanel9 = New System.Windows.Forms.TableLayoutPanel()
+        Me.BtnDeleteSelectedSm = New System.Windows.Forms.Button()
+        Me.BtnRefreshSm = New System.Windows.Forms.Button()
+        Me.TxtSearchSalesMen = New System.Windows.Forms.TextBox()
+        Me.DgvSalesMen = New System.Windows.Forms.DataGridView()
+        Me.WbMap = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.BtnRefreshOnline = New System.Windows.Forms.Button()
         Me.BtnDeleteSelected = New System.Windows.Forms.Button()
+        Me.TxtSearchOnlineProducts = New System.Windows.Forms.TextBox()
         Me.DgvOnlineProducts = New System.Windows.Forms.DataGridView()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
@@ -100,12 +102,24 @@ Partial Class Form1
         Me.Label2 = New System.Windows.Forms.Label()
         Me.TxtProductCode = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.TxtSearchOnlineProducts = New System.Windows.Forms.TextBox()
-        Me.TabControl1.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
-        Me.TableLayoutPanel1.SuspendLayout()
-        Me.TableLayoutPanel2.SuspendLayout()
-        CType(Me.DgvLocalProducts, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
+        Me.btnRefresh = New System.Windows.Forms.Button()
+        Me.BtnUploadSelected = New System.Windows.Forms.Button()
+        Me.BtnUploadAll = New System.Windows.Forms.Button()
+        Me.BtnSelectAll = New System.Windows.Forms.Button()
+        Me.DgvLocalProducts = New System.Windows.Forms.DataGridView()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.TabPage3.SuspendLayout()
+        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer2.Panel1.SuspendLayout()
+        Me.SplitContainer2.Panel2.SuspendLayout()
+        Me.SplitContainer2.SuspendLayout()
+        Me.TableLayoutPanel8.SuspendLayout()
+        Me.TableLayoutPanel9.SuspendLayout()
+        CType(Me.DgvSalesMen, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.WbMap, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage2.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -118,114 +132,138 @@ Partial Class Form1
         Me.TableLayoutPanel6.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.PcbPreview, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage1.SuspendLayout()
+        Me.TableLayoutPanel1.SuspendLayout()
+        Me.TableLayoutPanel2.SuspendLayout()
+        CType(Me.DgvLocalProducts, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabControl1.SuspendLayout()
         Me.SuspendLayout()
         '
-        'TabControl1
+        'TableLayoutPanel7
         '
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
-        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1370, 711)
-        Me.TabControl1.TabIndex = 0
+        Me.TableLayoutPanel7.ColumnCount = 1
+        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel7.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel7.Name = "TableLayoutPanel7"
+        Me.TableLayoutPanel7.RowCount = 2
+        Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.0!))
+        Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90.0!))
+        Me.TableLayoutPanel7.Size = New System.Drawing.Size(527, 679)
+        Me.TableLayoutPanel7.TabIndex = 0
         '
-        'TabPage1
+        'TabPage3
         '
-        Me.TabPage1.Controls.Add(Me.TableLayoutPanel1)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(1362, 685)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "Local Products"
-        Me.TabPage1.UseVisualStyleBackColor = True
+        Me.TabPage3.Controls.Add(Me.SplitContainer2)
+        Me.TabPage3.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage3.Name = "TabPage3"
+        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage3.Size = New System.Drawing.Size(1362, 685)
+        Me.TabPage3.TabIndex = 2
+        Me.TabPage3.Text = "Salesmen"
+        Me.TabPage3.UseVisualStyleBackColor = True
         '
-        'TableLayoutPanel1
+        'SplitContainer2
         '
-        Me.TableLayoutPanel1.ColumnCount = 1
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.TableLayoutPanel2, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.DgvLocalProducts, 0, 1)
-        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 2
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1356, 679)
-        Me.TableLayoutPanel1.TabIndex = 0
+        Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer2.Location = New System.Drawing.Point(3, 3)
+        Me.SplitContainer2.Name = "SplitContainer2"
         '
-        'TableLayoutPanel2
+        'SplitContainer2.Panel1
         '
-        Me.TableLayoutPanel2.ColumnCount = 4
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.Controls.Add(Me.btnRefresh, 0, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.BtnUploadSelected, 1, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.BtnUploadAll, 2, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.BtnSelectAll, 3, 0)
-        Me.TableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel2.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
-        Me.TableLayoutPanel2.RowCount = 1
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(1350, 41)
-        Me.TableLayoutPanel2.TabIndex = 0
+        Me.SplitContainer2.Panel1.Controls.Add(Me.TableLayoutPanel8)
+        Me.SplitContainer2.Panel1MinSize = 40
         '
-        'btnRefresh
+        'SplitContainer2.Panel2
         '
-        Me.btnRefresh.Dock = System.Windows.Forms.DockStyle.Top
-        Me.btnRefresh.Location = New System.Drawing.Point(3, 3)
-        Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(331, 23)
-        Me.btnRefresh.TabIndex = 0
-        Me.btnRefresh.Text = "Refresh"
-        Me.btnRefresh.UseVisualStyleBackColor = True
+        Me.SplitContainer2.Panel2.Controls.Add(Me.WbMap)
+        Me.SplitContainer2.Size = New System.Drawing.Size(1356, 679)
+        Me.SplitContainer2.SplitterDistance = 607
+        Me.SplitContainer2.TabIndex = 0
         '
-        'BtnUploadSelected
+        'TableLayoutPanel8
         '
-        Me.BtnUploadSelected.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnUploadSelected.Location = New System.Drawing.Point(340, 3)
-        Me.BtnUploadSelected.Name = "BtnUploadSelected"
-        Me.BtnUploadSelected.Size = New System.Drawing.Size(331, 23)
-        Me.BtnUploadSelected.TabIndex = 1
-        Me.BtnUploadSelected.Text = "Upload Selected"
-        Me.BtnUploadSelected.UseVisualStyleBackColor = True
+        Me.TableLayoutPanel8.ColumnCount = 1
+        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel8.Controls.Add(Me.TableLayoutPanel9, 0, 0)
+        Me.TableLayoutPanel8.Controls.Add(Me.DgvSalesMen, 0, 1)
+        Me.TableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel8.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel8.Name = "TableLayoutPanel8"
+        Me.TableLayoutPanel8.RowCount = 2
+        Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.0!))
+        Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 94.0!))
+        Me.TableLayoutPanel8.Size = New System.Drawing.Size(607, 679)
+        Me.TableLayoutPanel8.TabIndex = 0
         '
-        'BtnUploadAll
+        'TableLayoutPanel9
         '
-        Me.BtnUploadAll.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnUploadAll.Location = New System.Drawing.Point(677, 3)
-        Me.BtnUploadAll.Name = "BtnUploadAll"
-        Me.BtnUploadAll.Size = New System.Drawing.Size(331, 23)
-        Me.BtnUploadAll.TabIndex = 2
-        Me.BtnUploadAll.Text = "Upload All"
-        Me.BtnUploadAll.UseVisualStyleBackColor = True
+        Me.TableLayoutPanel9.ColumnCount = 3
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.TableLayoutPanel9.Controls.Add(Me.BtnDeleteSelectedSm, 1, 0)
+        Me.TableLayoutPanel9.Controls.Add(Me.BtnRefreshSm, 2, 0)
+        Me.TableLayoutPanel9.Controls.Add(Me.TxtSearchSalesMen, 0, 0)
+        Me.TableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel9.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanel9.Name = "TableLayoutPanel9"
+        Me.TableLayoutPanel9.RowCount = 1
+        Me.TableLayoutPanel9.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel9.Size = New System.Drawing.Size(601, 34)
+        Me.TableLayoutPanel9.TabIndex = 0
         '
-        'BtnSelectAll
+        'BtnDeleteSelectedSm
         '
-        Me.BtnSelectAll.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnSelectAll.Location = New System.Drawing.Point(1014, 3)
-        Me.BtnSelectAll.Name = "BtnSelectAll"
-        Me.BtnSelectAll.Size = New System.Drawing.Size(333, 23)
-        Me.BtnSelectAll.TabIndex = 3
-        Me.BtnSelectAll.Text = "Select All"
-        Me.BtnSelectAll.UseVisualStyleBackColor = True
+        Me.BtnDeleteSelectedSm.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnDeleteSelectedSm.Location = New System.Drawing.Point(303, 3)
+        Me.BtnDeleteSelectedSm.Name = "BtnDeleteSelectedSm"
+        Me.BtnDeleteSelectedSm.Size = New System.Drawing.Size(144, 23)
+        Me.BtnDeleteSelectedSm.TabIndex = 0
+        Me.BtnDeleteSelectedSm.Text = "Delete Selected"
+        Me.BtnDeleteSelectedSm.UseVisualStyleBackColor = True
         '
-        'DgvLocalProducts
+        'BtnRefreshSm
         '
-        Me.DgvLocalProducts.AllowUserToAddRows = False
-        Me.DgvLocalProducts.AllowUserToDeleteRows = False
-        Me.DgvLocalProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DgvLocalProducts.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DgvLocalProducts.Location = New System.Drawing.Point(3, 50)
-        Me.DgvLocalProducts.Name = "DgvLocalProducts"
-        Me.DgvLocalProducts.Size = New System.Drawing.Size(1350, 626)
-        Me.DgvLocalProducts.TabIndex = 1
+        Me.BtnRefreshSm.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnRefreshSm.Location = New System.Drawing.Point(453, 3)
+        Me.BtnRefreshSm.Name = "BtnRefreshSm"
+        Me.BtnRefreshSm.Size = New System.Drawing.Size(145, 23)
+        Me.BtnRefreshSm.TabIndex = 1
+        Me.BtnRefreshSm.Text = "Refresh"
+        Me.BtnRefreshSm.UseVisualStyleBackColor = True
+        '
+        'TxtSearchSalesMen
+        '
+        Me.TxtSearchSalesMen.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TxtSearchSalesMen.Location = New System.Drawing.Point(3, 3)
+        Me.TxtSearchSalesMen.Name = "TxtSearchSalesMen"
+        Me.TxtSearchSalesMen.Size = New System.Drawing.Size(294, 20)
+        Me.TxtSearchSalesMen.TabIndex = 2
+        '
+        'DgvSalesMen
+        '
+        Me.DgvSalesMen.AllowUserToAddRows = False
+        Me.DgvSalesMen.AllowUserToDeleteRows = False
+        Me.DgvSalesMen.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvSalesMen.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvSalesMen.Location = New System.Drawing.Point(3, 43)
+        Me.DgvSalesMen.Name = "DgvSalesMen"
+        Me.DgvSalesMen.Size = New System.Drawing.Size(601, 633)
+        Me.DgvSalesMen.TabIndex = 1
+        '
+        'WbMap
+        '
+        Me.WbMap.AllowExternalDrop = True
+        Me.WbMap.CreationProperties = Nothing
+        Me.WbMap.DefaultBackgroundColor = System.Drawing.Color.White
+        Me.WbMap.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.WbMap.Location = New System.Drawing.Point(0, 0)
+        Me.WbMap.Name = "WbMap"
+        Me.WbMap.Size = New System.Drawing.Size(745, 679)
+        Me.WbMap.TabIndex = 0
+        Me.WbMap.Visible = False
+        Me.WbMap.ZoomFactor = 1.0R
         '
         'TabPage2
         '
@@ -306,6 +344,14 @@ Partial Class Form1
         Me.BtnDeleteSelected.TabIndex = 1
         Me.BtnDeleteSelected.Text = "Delete Selected"
         Me.BtnDeleteSelected.UseVisualStyleBackColor = True
+        '
+        'TxtSearchOnlineProducts
+        '
+        Me.TxtSearchOnlineProducts.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TxtSearchOnlineProducts.Location = New System.Drawing.Point(3, 3)
+        Me.TxtSearchOnlineProducts.Name = "TxtSearchOnlineProducts"
+        Me.TxtSearchOnlineProducts.Size = New System.Drawing.Size(316, 20)
+        Me.TxtSearchOnlineProducts.TabIndex = 2
         '
         'DgvOnlineProducts
         '
@@ -901,13 +947,113 @@ Partial Class Form1
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Product Code"
         '
-        'TxtSearchOnlineProducts
+        'TabPage1
         '
-        Me.TxtSearchOnlineProducts.Dock = System.Windows.Forms.DockStyle.Top
-        Me.TxtSearchOnlineProducts.Location = New System.Drawing.Point(3, 3)
-        Me.TxtSearchOnlineProducts.Name = "TxtSearchOnlineProducts"
-        Me.TxtSearchOnlineProducts.Size = New System.Drawing.Size(316, 20)
-        Me.TxtSearchOnlineProducts.TabIndex = 2
+        Me.TabPage1.Controls.Add(Me.TableLayoutPanel1)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1.Size = New System.Drawing.Size(1362, 685)
+        Me.TabPage1.TabIndex = 0
+        Me.TabPage1.Text = "Local Products"
+        Me.TabPage1.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.ColumnCount = 1
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.TableLayoutPanel2, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.DgvLocalProducts, 0, 1)
+        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 2
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1356, 679)
+        Me.TableLayoutPanel1.TabIndex = 0
+        '
+        'TableLayoutPanel2
+        '
+        Me.TableLayoutPanel2.ColumnCount = 4
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.TableLayoutPanel2.Controls.Add(Me.btnRefresh, 0, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.BtnUploadSelected, 1, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.BtnUploadAll, 2, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.BtnSelectAll, 3, 0)
+        Me.TableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel2.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
+        Me.TableLayoutPanel2.RowCount = 1
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(1350, 41)
+        Me.TableLayoutPanel2.TabIndex = 0
+        '
+        'btnRefresh
+        '
+        Me.btnRefresh.Dock = System.Windows.Forms.DockStyle.Top
+        Me.btnRefresh.Location = New System.Drawing.Point(3, 3)
+        Me.btnRefresh.Name = "btnRefresh"
+        Me.btnRefresh.Size = New System.Drawing.Size(331, 23)
+        Me.btnRefresh.TabIndex = 0
+        Me.btnRefresh.Text = "Refresh"
+        Me.btnRefresh.UseVisualStyleBackColor = True
+        '
+        'BtnUploadSelected
+        '
+        Me.BtnUploadSelected.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnUploadSelected.Location = New System.Drawing.Point(340, 3)
+        Me.BtnUploadSelected.Name = "BtnUploadSelected"
+        Me.BtnUploadSelected.Size = New System.Drawing.Size(331, 23)
+        Me.BtnUploadSelected.TabIndex = 1
+        Me.BtnUploadSelected.Text = "Upload Selected"
+        Me.BtnUploadSelected.UseVisualStyleBackColor = True
+        '
+        'BtnUploadAll
+        '
+        Me.BtnUploadAll.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnUploadAll.Location = New System.Drawing.Point(677, 3)
+        Me.BtnUploadAll.Name = "BtnUploadAll"
+        Me.BtnUploadAll.Size = New System.Drawing.Size(331, 23)
+        Me.BtnUploadAll.TabIndex = 2
+        Me.BtnUploadAll.Text = "Upload All"
+        Me.BtnUploadAll.UseVisualStyleBackColor = True
+        '
+        'BtnSelectAll
+        '
+        Me.BtnSelectAll.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnSelectAll.Location = New System.Drawing.Point(1014, 3)
+        Me.BtnSelectAll.Name = "BtnSelectAll"
+        Me.BtnSelectAll.Size = New System.Drawing.Size(333, 23)
+        Me.BtnSelectAll.TabIndex = 3
+        Me.BtnSelectAll.Text = "Select All"
+        Me.BtnSelectAll.UseVisualStyleBackColor = True
+        '
+        'DgvLocalProducts
+        '
+        Me.DgvLocalProducts.AllowUserToAddRows = False
+        Me.DgvLocalProducts.AllowUserToDeleteRows = False
+        Me.DgvLocalProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvLocalProducts.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvLocalProducts.Location = New System.Drawing.Point(3, 50)
+        Me.DgvLocalProducts.Name = "DgvLocalProducts"
+        Me.DgvLocalProducts.Size = New System.Drawing.Size(1350, 626)
+        Me.DgvLocalProducts.TabIndex = 1
+        '
+        'TabControl1
+        '
+        Me.TabControl1.Controls.Add(Me.TabPage1)
+        Me.TabControl1.Controls.Add(Me.TabPage2)
+        Me.TabControl1.Controls.Add(Me.TabPage3)
+        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
+        Me.TabControl1.Name = "TabControl1"
+        Me.TabControl1.SelectedIndex = 0
+        Me.TabControl1.Size = New System.Drawing.Size(1370, 711)
+        Me.TabControl1.TabIndex = 0
         '
         'Form1
         '
@@ -917,11 +1063,16 @@ Partial Class Form1
         Me.Controls.Add(Me.TabControl1)
         Me.Name = "Form1"
         Me.Text = "Products Management"
-        Me.TabControl1.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TableLayoutPanel1.ResumeLayout(False)
-        Me.TableLayoutPanel2.ResumeLayout(False)
-        CType(Me.DgvLocalProducts, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage3.ResumeLayout(False)
+        Me.SplitContainer2.Panel1.ResumeLayout(False)
+        Me.SplitContainer2.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer2.ResumeLayout(False)
+        Me.TableLayoutPanel8.ResumeLayout(False)
+        Me.TableLayoutPanel9.ResumeLayout(False)
+        Me.TableLayoutPanel9.PerformLayout()
+        CType(Me.DgvSalesMen, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.WbMap, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage2.ResumeLayout(False)
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
@@ -936,31 +1087,48 @@ Partial Class Form1
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.PcbPreview, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage1.ResumeLayout(False)
+        Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.TableLayoutPanel2.ResumeLayout(False)
+        CType(Me.DgvLocalProducts, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabControl1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents TabControl1 As TabControl
-    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents TableLayoutPanel7 As TableLayoutPanel
+    Friend WithEvents TabPage3 As TabPage
+    Friend WithEvents SplitContainer2 As SplitContainer
+    Friend WithEvents TableLayoutPanel8 As TableLayoutPanel
+    Friend WithEvents TableLayoutPanel9 As TableLayoutPanel
+    Friend WithEvents BtnDeleteSelectedSm As Button
+    Friend WithEvents BtnRefreshSm As Button
+    Friend WithEvents TxtSearchSalesMen As TextBox
+    Friend WithEvents DgvSalesMen As DataGridView
+    Friend WithEvents WbMap As Microsoft.Web.WebView2.WinForms.WebView2
     Friend WithEvents TabPage2 As TabPage
-    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
-    Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
-    Friend WithEvents DgvLocalProducts As DataGridView
-    Friend WithEvents btnRefresh As Button
-    Friend WithEvents BtnUploadSelected As Button
-    Friend WithEvents BtnUploadAll As Button
-    Friend WithEvents BtnSelectAll As Button
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
     Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
     Friend WithEvents BtnRefreshOnline As Button
     Friend WithEvents BtnDeleteSelected As Button
+    Friend WithEvents TxtSearchOnlineProducts As TextBox
     Friend WithEvents DgvOnlineProducts As DataGridView
     Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
     Friend WithEvents TableLayoutPanel6 As TableLayoutPanel
     Friend WithEvents BtnNew As Button
     Friend WithEvents BtnSave As Button
+    Friend WithEvents BtnDeleteSingle As Button
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents ChkIsStockItem As CheckBox
+    Friend WithEvents ChkIsActive As CheckBox
+    Friend WithEvents ChkIsAlternateUnit As CheckBox
+    Friend WithEvents BtnBrowse As Button
+    Friend WithEvents PcbPreview As PictureBox
+    Friend WithEvents Label29 As Label
+    Friend WithEvents TxtSrNo As TextBox
+    Friend WithEvents Label28 As Label
+    Friend WithEvents TxtRemark As TextBox
+    Friend WithEvents Label27 As Label
     Friend WithEvents TxtHsnDesc As TextBox
     Friend WithEvents Label24 As Label
     Friend WithEvents TxtHsnCode As TextBox
@@ -1007,16 +1175,13 @@ Partial Class Form1
     Friend WithEvents Label2 As Label
     Friend WithEvents TxtProductCode As TextBox
     Friend WithEvents Label1 As Label
-    Friend WithEvents Label29 As Label
-    Friend WithEvents TxtSrNo As TextBox
-    Friend WithEvents Label28 As Label
-    Friend WithEvents TxtRemark As TextBox
-    Friend WithEvents Label27 As Label
-    Friend WithEvents BtnBrowse As Button
-    Friend WithEvents PcbPreview As PictureBox
-    Friend WithEvents ChkIsStockItem As CheckBox
-    Friend WithEvents ChkIsActive As CheckBox
-    Friend WithEvents ChkIsAlternateUnit As CheckBox
-    Friend WithEvents BtnDeleteSingle As Button
-    Friend WithEvents TxtSearchOnlineProducts As TextBox
+    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
+    Friend WithEvents btnRefresh As Button
+    Friend WithEvents BtnUploadSelected As Button
+    Friend WithEvents BtnUploadAll As Button
+    Friend WithEvents BtnSelectAll As Button
+    Friend WithEvents DgvLocalProducts As DataGridView
+    Friend WithEvents TabControl1 As TabControl
 End Class

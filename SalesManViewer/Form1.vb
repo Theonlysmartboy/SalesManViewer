@@ -1,21 +1,35 @@
 ﻿Imports System.IO
 Imports System.Net.Http
+Imports System.Security.Permissions
 Imports System.Text
 Imports Newtonsoft.Json
+Imports SalesManViewer.helpers
 Imports SalesManViewer.models
 Imports SalesManViewer.repositories
 
+<PermissionSet(SecurityAction.Demand, Name:="FullTrust")>
+<System.Runtime.InteropServices.ComVisible(True)>
 Public Class Form1
     Private repo As New ProductRepository()
     Private selectedImagePath As String = ""
     Private OriginalTables As New Dictionary(Of DataGridView, DataTable)
+    Dim serverUrl As String = "http://197.248.220.180/salesman-backend"
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         SetPlaceholder(TxtSearchOnlineProducts, "Start typing to search...")
         AddHandler TxtSearchOnlineProducts.Enter, AddressOf TextBox_Enter
         AddHandler TxtSearchOnlineProducts.Leave, AddressOf TextBox_Leave
         LoadLocalProducts()
         AddCheckboxColumntoLocalDataGrid()
+        SetPlaceholder(TxtSearchSalesMen, "Start typing to search...")
+        AddHandler TxtSearchSalesMen.Enter, AddressOf TextBox_Enter
+        AddHandler TxtSearchSalesMen.Leave, AddressOf TextBox_Leave
+        ' --- WEBVIEW2 MAP SETUP ---
+        Await WbMap.EnsureCoreWebView2Async()
+        WbMap.CoreWebView2.AddHostObjectToScript("bridge", Me)
+        ' Load empty map
+        Dim gmh As New GoogleMapsHelper(WbMap, New String(,) {})
+        Await gmh.LoadMapAsync()
     End Sub
 
     'Local tab events
@@ -123,7 +137,7 @@ Public Class Form1
     End Sub
 
     Private Async Function SendProductsToServer(products As List(Of Object)) As Task
-        Dim url As String = "http://197.248.220.180/salesman-backend/api/products.php?action=bulk-create"
+        Dim url As String = $"{serverUrl}/products.php?action=bulk-create"
         Dim payload = New Dictionary(Of String, Object)
         payload("products") = products
         Dim json As String = JsonConvert.SerializeObject(payload)
@@ -237,13 +251,12 @@ Public Class Form1
         TxtRemark.Text = row.Cells("Remark").Value?.ToString()
         TxtSrNo.Text = row.Cells("SrNo").Value?.ToString()
         ' Load image if exists
-        Dim serverUrl As String = "http://197.248.220.180:80"
         ' Get the image file name from the row
         Dim imgFile As String = If(row.Cells("Image").Value IsNot Nothing, row.Cells("Image").Value.ToString(), "")
         ' Load the image if available
         If Not String.IsNullOrEmpty(imgFile) Then
             Try
-                PcbPreview.Load($"{serverUrl}/salesman-backend/assets/uploads/images/{imgFile}")
+                PcbPreview.Load($"{serverUrl}/assets/uploads/images/{imgFile}")
             Catch ex As Exception
                 PcbPreview.Image = Nothing
             End Try
@@ -277,7 +290,7 @@ Public Class Form1
 
     Private Async Sub BtnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
         Try
-            Dim url As String = "http://197.248.220.180:80/salesman-backend/api/products.php?action=create"
+            Dim url As String = $"{serverUrl}/api/products.php?action=create"
             Using client As New HttpClient()
                 Dim content As New MultipartFormDataContent()
                 'Product fields
@@ -349,7 +362,7 @@ Public Class Form1
             Dim payload = New Dictionary(Of String, Object)
             payload("codes") = codes
             Dim json As String = JsonConvert.SerializeObject(payload)
-            Dim url As String = "http://197.248.220.180:80/salesman-backend/api/products.php?action=delete-multiple"
+            Dim url As String = $"{serverUrl}/api/products.php?action=delete-multiple"
             Using client As New HttpClient()
                 Dim content As New StringContent(json, Encoding.UTF8, "application/json")
                 Dim response = Await client.PostAsync(url, content)
@@ -371,7 +384,7 @@ Public Class Form1
             Dim code As String = TxtProductCode.Text.Trim()
             Dim confirm = MessageBox.Show($"Delete product {code} ?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
             If confirm <> DialogResult.Yes Then Return
-            Dim url As String = $"http://197.248.220.180:80/salesman-backend/api/products.php?action=delete&code={code}"
+            Dim url As String = $"{serverUrl}/api/products.php?action=delete&code={code}"
             Using client As New HttpClient()
                 Dim response = Await client.DeleteAsync(url)
                 Dim result = Await response.Content.ReadAsStringAsync()
@@ -405,7 +418,7 @@ Public Class Form1
     Private Async Function GetRemoteProductsAsync(lastSync As String, limit As Integer, offset As Integer) As Task(Of List(Of RemoteProduct))
         Dim products As New List(Of RemoteProduct)
         Using client As New HttpClient()
-            Dim url As String = $"http://197.248.220.180/salesman-backend/api/products.php?action=sync&lastSync={lastSync}&limit={limit}&offset={offset}"
+            Dim url As String = $"{serverUrl}/api/products.php?action=sync&lastSync={lastSync}&limit={limit}&offset={offset}"
             Dim response As HttpResponseMessage = Await client.GetAsync(url)
             If response.IsSuccessStatusCode Then
                 Dim jsonString As String = Await response.Content.ReadAsStringAsync()
@@ -416,6 +429,155 @@ Public Class Form1
             End If
         End Using
         Return products
+    End Function
+
+    'Salesmen events
+    Private Sub TxtSearchSalesMen_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchSalesMen.TextChanged
+        If TxtSearchSalesMen.ForeColor = Color.Gray Then Exit Sub
+        FilterGrid(DgvOnlineProducts, TxtSearchSalesMen.Text)
+    End Sub
+
+    'salesman helpers
+    Private Async Sub BtnRefreshSm_Click(sender As Object, e As EventArgs) Handles BtnRefreshSm.Click
+        Try
+            BtnRefreshSm.Enabled = False
+            BtnRefreshSm.Text = "Loading..."
+            Dim url As String = $"{serverUrl}/api/auth.php?action=get-all-users"
+            Using client As New HttpClient()
+                Dim response = Await client.GetAsync(url)
+                Dim json = Await response.Content.ReadAsStringAsync()
+                Dim apiResponse = JsonConvert.DeserializeObject(Of SalesmanApiResponse)(json)
+                If apiResponse IsNot Nothing AndAlso apiResponse.success Then
+                    Dim dt As New DataTable()
+                    dt.Columns.Add("Select", GetType(Boolean))
+                    dt.Columns.Add("id")
+                    dt.Columns.Add("username")
+                    dt.Columns.Add("full_name")
+                    dt.Columns.Add("email")
+                    dt.Columns.Add("phone")
+                    For Each u In apiResponse.data
+                        dt.Rows.Add(False, u.id, u.username, u.full_name, u.email, u.phone)
+                    Next
+                    OriginalTables(DgvSalesMen) = dt.Copy()
+                    DgvSalesMen.DataSource = dt
+                    DgvSalesMen.EditMode = DataGridViewEditMode.EditOnEnter
+                Else
+                    MessageBox.Show("Failed to load salesmen.")
+                End If
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        Finally
+            BtnRefreshSm.Enabled = True
+            BtnRefreshSm.Text = "Refresh"
+        End Try
+    End Sub
+
+    Private Async Sub BtnDeleteSelectedSm_Click(sender As Object, e As EventArgs) Handles BtnDeleteSelectedSm.Click
+        Try
+            Dim ids As New List(Of Integer)
+            For Each row As DataGridViewRow In DgvSalesMen.Rows
+                If Convert.ToBoolean(row.Cells("Select").Value) = True Then
+                    ids.Add(Convert.ToInt32(row.Cells("id").Value))
+                End If
+            Next
+            If ids.Count = 0 Then
+                MessageBox.Show("No salesmen selected.")
+                Return
+            End If
+            Dim confirm = MessageBox.Show($"Delete {ids.Count} salesman(s)?", "Confirm", MessageBoxButtons.YesNo)
+            If confirm <> DialogResult.Yes Then Return
+            Using client As New HttpClient()
+                Dim url As String = ""
+                Dim payload As String = ""
+                If ids.Count = 1 Then
+                    url = $"{serverUrl}/api/auth.php?action=delete-user"
+                    payload = JsonConvert.SerializeObject(New With {.userId = ids(0)})
+                Else
+                    url = $"{serverUrl}/api/auth.php?action=bulk-delete"
+                    payload = JsonConvert.SerializeObject(New With {.userIds = ids})
+                End If
+                Dim content As New StringContent(payload, Encoding.UTF8, "application/json")
+                Dim response = Await client.PostAsync(url, content)
+                Dim result = Await response.Content.ReadAsStringAsync()
+                MessageBox.Show(result)
+            End Using
+            BtnRefreshSm.PerformClick()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+    Private Async Sub DgvSalesMen_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvSalesMen.CellClick
+        If e.RowIndex < 0 Then Return
+        Dim row = DgvSalesMen.Rows(e.RowIndex)
+        Dim userId = row.Cells("id").Value.ToString()
+        Await LoadTracking(userId)
+    End Sub
+
+    Private Async Function LoadTracking(Optional userId As String = "") As Task
+        Try
+            Using client As New HttpClient()
+                Dim url As String
+                If String.IsNullOrEmpty(userId) Then
+                    url = $"{serverUrl}/api/tracking.php?action=all-last"
+                    Dim response = Await client.GetAsync(url)
+                    Dim json = Await response.Content.ReadAsStringAsync()
+                    Dim data = JsonConvert.DeserializeObject(Of TrackingResponseList)(json)
+                    If data.success Then
+                        Dim markers As New List(Of String())
+                        Dim iconBase64 = GetImageBase64()
+                        For Each t In data.data
+                            markers.Add(New String() {
+                            t.latitude,
+                            t.longitude,
+                            t.username,
+                            iconBase64
+                        })
+                        Next
+                        UpdateMap(markers)
+                    End If
+                Else
+                    url = $"{serverUrl}/api/tracking.php?action=last&user_id={userId}"
+                    Dim response = Await client.GetAsync(url)
+                    Dim json = Await response.Content.ReadAsStringAsync()
+                    Dim data = JsonConvert.DeserializeObject(Of TrackingResponseSingle)(json)
+                    If data.success AndAlso data.data IsNot Nothing Then
+                        Dim markers As New List(Of String()) From {
+                        New String() {
+                            data.data.latitude,
+                            data.data.longitude,
+                            data.data.username,
+                            "truck_red.png"
+                        }
+                    }
+                        UpdateMap(markers)
+                    End If
+                End If
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Tracking error: " & ex.Message)
+        End Try
+    End Function
+
+    'salemen helpers
+    Private Sub UpdateMap(markers As List(Of String()))
+        Dim jsArray As New StringBuilder("[")
+        For i = 0 To markers.Count - 1
+            Dim m = markers(i)
+            jsArray.Append($"['{m(0)}','{m(1)}','{m(2)}','{m(3)}']")
+            If i < markers.Count - 1 Then jsArray.Append(",")
+        Next
+        jsArray.Append("]")
+        WbMap.CoreWebView2.ExecuteScriptAsync($"updateMarkers({jsArray.ToString()});")
+    End Sub
+
+    Private Function GetImageBase64() As String
+        Using ms As New MemoryStream()
+            My.Resources.marker.Save(ms, Imaging.ImageFormat.Png)
+            Dim bytes = ms.ToArray()
+            Return "data:image/png;base64," & Convert.ToBase64String(bytes)
+        End Using
     End Function
 
     'global helpers
