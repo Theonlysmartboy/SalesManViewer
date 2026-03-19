@@ -5,6 +5,7 @@
         Public Property full_name As String
         Public Property email As String
         Public Property phone As String
+        Public Property is_Active As Boolean
     End Class
 
     Public Class SalesmanApiResponse

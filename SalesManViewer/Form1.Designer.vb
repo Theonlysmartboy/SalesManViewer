@@ -111,6 +111,7 @@ Partial Class Form1
         Me.BtnSelectAll = New System.Windows.Forms.Button()
         Me.DgvLocalProducts = New System.Windows.Forms.DataGridView()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.BtnNewUpdateSm = New System.Windows.Forms.Button()
         Me.TabPage3.SuspendLayout()
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer2.Panel1.SuspendLayout()
@@ -178,7 +179,7 @@ Partial Class Form1
         '
         Me.SplitContainer2.Panel2.Controls.Add(Me.WbMap)
         Me.SplitContainer2.Size = New System.Drawing.Size(1356, 679)
-        Me.SplitContainer2.SplitterDistance = 607
+        Me.SplitContainer2.SplitterDistance = 680
         Me.SplitContainer2.TabIndex = 0
         '
         'TableLayoutPanel8
@@ -193,32 +194,34 @@ Partial Class Form1
         Me.TableLayoutPanel8.RowCount = 2
         Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.0!))
         Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 94.0!))
-        Me.TableLayoutPanel8.Size = New System.Drawing.Size(607, 679)
+        Me.TableLayoutPanel8.Size = New System.Drawing.Size(680, 679)
         Me.TableLayoutPanel8.TabIndex = 0
         '
         'TableLayoutPanel9
         '
-        Me.TableLayoutPanel9.ColumnCount = 3
-        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.TableLayoutPanel9.ColumnCount = 4
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.0!))
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
         Me.TableLayoutPanel9.Controls.Add(Me.BtnDeleteSelectedSm, 1, 0)
         Me.TableLayoutPanel9.Controls.Add(Me.BtnRefreshSm, 2, 0)
         Me.TableLayoutPanel9.Controls.Add(Me.TxtSearchSalesMen, 0, 0)
+        Me.TableLayoutPanel9.Controls.Add(Me.BtnNewUpdateSm, 3, 0)
         Me.TableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel9.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel9.Name = "TableLayoutPanel9"
         Me.TableLayoutPanel9.RowCount = 1
-        Me.TableLayoutPanel9.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel9.Size = New System.Drawing.Size(601, 34)
+        Me.TableLayoutPanel9.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel9.Size = New System.Drawing.Size(674, 34)
         Me.TableLayoutPanel9.TabIndex = 0
         '
         'BtnDeleteSelectedSm
         '
         Me.BtnDeleteSelectedSm.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnDeleteSelectedSm.Location = New System.Drawing.Point(303, 3)
+        Me.BtnDeleteSelectedSm.Location = New System.Drawing.Point(272, 3)
         Me.BtnDeleteSelectedSm.Name = "BtnDeleteSelectedSm"
-        Me.BtnDeleteSelectedSm.Size = New System.Drawing.Size(144, 23)
+        Me.BtnDeleteSelectedSm.Size = New System.Drawing.Size(128, 23)
         Me.BtnDeleteSelectedSm.TabIndex = 0
         Me.BtnDeleteSelectedSm.Text = "Delete Selected"
         Me.BtnDeleteSelectedSm.UseVisualStyleBackColor = True
@@ -226,9 +229,9 @@ Partial Class Form1
         'BtnRefreshSm
         '
         Me.BtnRefreshSm.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnRefreshSm.Location = New System.Drawing.Point(453, 3)
+        Me.BtnRefreshSm.Location = New System.Drawing.Point(406, 3)
         Me.BtnRefreshSm.Name = "BtnRefreshSm"
-        Me.BtnRefreshSm.Size = New System.Drawing.Size(145, 23)
+        Me.BtnRefreshSm.Size = New System.Drawing.Size(128, 23)
         Me.BtnRefreshSm.TabIndex = 1
         Me.BtnRefreshSm.Text = "Refresh"
         Me.BtnRefreshSm.UseVisualStyleBackColor = True
@@ -238,7 +241,7 @@ Partial Class Form1
         Me.TxtSearchSalesMen.Dock = System.Windows.Forms.DockStyle.Top
         Me.TxtSearchSalesMen.Location = New System.Drawing.Point(3, 3)
         Me.TxtSearchSalesMen.Name = "TxtSearchSalesMen"
-        Me.TxtSearchSalesMen.Size = New System.Drawing.Size(294, 20)
+        Me.TxtSearchSalesMen.Size = New System.Drawing.Size(263, 20)
         Me.TxtSearchSalesMen.TabIndex = 2
         '
         'DgvSalesMen
@@ -249,7 +252,7 @@ Partial Class Form1
         Me.DgvSalesMen.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DgvSalesMen.Location = New System.Drawing.Point(3, 43)
         Me.DgvSalesMen.Name = "DgvSalesMen"
-        Me.DgvSalesMen.Size = New System.Drawing.Size(601, 633)
+        Me.DgvSalesMen.Size = New System.Drawing.Size(674, 633)
         Me.DgvSalesMen.TabIndex = 1
         '
         'WbMap
@@ -260,7 +263,7 @@ Partial Class Form1
         Me.WbMap.Dock = System.Windows.Forms.DockStyle.Fill
         Me.WbMap.Location = New System.Drawing.Point(0, 0)
         Me.WbMap.Name = "WbMap"
-        Me.WbMap.Size = New System.Drawing.Size(745, 679)
+        Me.WbMap.Size = New System.Drawing.Size(672, 679)
         Me.WbMap.TabIndex = 0
         Me.WbMap.Visible = False
         Me.WbMap.ZoomFactor = 1.0R
@@ -1055,6 +1058,16 @@ Partial Class Form1
         Me.TabControl1.Size = New System.Drawing.Size(1370, 711)
         Me.TabControl1.TabIndex = 0
         '
+        'BtnNewUpdateSm
+        '
+        Me.BtnNewUpdateSm.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnNewUpdateSm.Location = New System.Drawing.Point(540, 3)
+        Me.BtnNewUpdateSm.Name = "BtnNewUpdateSm"
+        Me.BtnNewUpdateSm.Size = New System.Drawing.Size(131, 23)
+        Me.BtnNewUpdateSm.TabIndex = 3
+        Me.BtnNewUpdateSm.Text = "New/Update Selected"
+        Me.BtnNewUpdateSm.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1184,4 +1197,5 @@ Partial Class Form1
     Friend WithEvents BtnSelectAll As Button
     Friend WithEvents DgvLocalProducts As DataGridView
     Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents BtnNewUpdateSm As Button
 End Class

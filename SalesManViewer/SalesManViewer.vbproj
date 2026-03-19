@@ -118,6 +118,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="repositories\ProductRepository.vb" />
+    <Compile Include="SalesMan.Designer.vb">
+      <DependentUpon>SalesMan.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SalesMan.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
@@ -128,6 +134,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SalesMan.resx">
+      <DependentUpon>SalesMan.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

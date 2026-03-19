@@ -204,6 +204,7 @@ Public Class Form1
             OriginalTables(DgvOnlineProducts) = dt.Copy()
             DgvOnlineProducts.DataSource = dt
             DgvOnlineProducts.EditMode = DataGridViewEditMode.EditOnEnter
+            DgvOnlineProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         Catch ex As Exception
             MessageBox.Show("Error fetching remote products: " & ex.Message)
         Finally
@@ -437,7 +438,6 @@ Public Class Form1
         FilterGrid(DgvOnlineProducts, TxtSearchSalesMen.Text)
     End Sub
 
-    'salesman helpers
     Private Async Sub BtnRefreshSm_Click(sender As Object, e As EventArgs) Handles BtnRefreshSm.Click
         Try
             BtnRefreshSm.Enabled = False
@@ -450,17 +450,19 @@ Public Class Form1
                 If apiResponse IsNot Nothing AndAlso apiResponse.success Then
                     Dim dt As New DataTable()
                     dt.Columns.Add("Select", GetType(Boolean))
-                    dt.Columns.Add("id")
-                    dt.Columns.Add("username")
-                    dt.Columns.Add("full_name")
-                    dt.Columns.Add("email")
-                    dt.Columns.Add("phone")
+                    dt.Columns.Add("Id")
+                    dt.Columns.Add("User Name")
+                    dt.Columns.Add("Full Name")
+                    dt.Columns.Add("Email")
+                    dt.Columns.Add("Phone")
+                    dt.Columns.Add("Is Active")
                     For Each u In apiResponse.data
-                        dt.Rows.Add(False, u.id, u.username, u.full_name, u.email, u.phone)
+                        dt.Rows.Add(False, u.id, u.username, u.full_name, u.email, u.phone, u.is_Active)
                     Next
                     OriginalTables(DgvSalesMen) = dt.Copy()
                     DgvSalesMen.DataSource = dt
                     DgvSalesMen.EditMode = DataGridViewEditMode.EditOnEnter
+                    DgvSalesMen.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
                 Else
                     MessageBox.Show("Failed to load salesmen.")
                 End If
@@ -515,6 +517,53 @@ Public Class Form1
         Await LoadTracking(userId)
     End Sub
 
+    Private Sub BtnNewUpdateSm_Click(sender As Object, e As EventArgs) Handles BtnNewUpdateSm.Click
+        Try
+            Dim selectedRows As New List(Of DataGridViewRow)
+            ' Get checked rows
+            For Each row As DataGridViewRow In DgvSalesMen.Rows
+                If Convert.ToBoolean(row.Cells("Select").Value) = True Then
+                    selectedRows.Add(row)
+                End If
+            Next
+            ' More than one selected → ERROR
+            If selectedRows.Count > 1 Then
+                MessageBox.Show("Please select only one salesman to edit.", "Warning")
+                Return
+            End If
+            ' Open form
+            Dim frm As New SalesMan()
+            ' ONE selected → EDIT MODE
+            If selectedRows.Count = 1 Then
+                Dim row = selectedRows(0)
+                frm.IsEditMode = True
+                frm.UserId = Convert.ToInt32(row.Cells("id").Value)
+                ' Prefill fields
+                frm.TxtUserName.Text = row.Cells("User Name").Value?.ToString()
+                frm.TxtFullName.Text = row.Cells("Full Name").Value?.ToString()
+                frm.TxtEmail.Text = row.Cells("Email").Value?.ToString()
+                frm.TxtPhoneNo.Text = row.Cells("Phone").Value?.ToString()
+                frm.ChkIsActive.Checked = row.Cells("Is Active").Value?.ToString()
+                frm.BtnSubmit.Text = "Update"
+            Else
+                ' NONE selected → CREATE MODE
+                frm.IsEditMode = False
+                frm.UserId = 0
+                frm.TxtUserName.Text = ""
+                frm.TxtFullName.Text = ""
+                frm.TxtEmail.Text = ""
+                frm.TxtPhoneNo.Text = ""
+                frm.BtnSubmit.Text = "Save"
+            End If
+            If frm.ShowDialog() = DialogResult.OK Then
+                BtnRefreshSm.PerformClick()
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message)
+        End Try
+    End Sub
+
+    'salesman helpers
     Private Async Function LoadTracking(Optional userId As String = "") As Task
         Try
             Using client As New HttpClient()
@@ -560,7 +609,6 @@ Public Class Form1
         End Try
     End Function
 
-    'salemen helpers
     Private Sub UpdateMap(markers As List(Of String()))
         Dim jsArray As New StringBuilder("[")
         For i = 0 To markers.Count - 1
