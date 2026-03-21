@@ -10,7 +10,6 @@ Public Class SalesMan
     Private Async Sub BtnSubmit_Click(sender As Object, e As EventArgs) Handles BtnSubmit.Click
         Try
             Using client As New HttpClient()
-
                 Dim url As String
                 Dim payload As String
                 Dim status As Boolean
@@ -19,7 +18,6 @@ Public Class SalesMan
                 Else
                     status = False
                 End If
-
                 If IsEditMode Then
                     ' UPDATE
                     url = $"{serverUrl}/api/auth.php?action=update-user"
@@ -56,4 +54,12 @@ Public Class SalesMan
         End Try
     End Sub
 
+    Private Sub BtnClear_Click(sender As Object, e As EventArgs) Handles BtnClear.Click
+        TxtUserName.Text = ""
+        TxtPassword.Text = ""
+        TxtFullName.Text = ""
+        TxtEmail.Text = ""
+        TxtPhoneNo.Text = ""
+        ChkIsActive.Checked = False
+    End Sub
 End Class

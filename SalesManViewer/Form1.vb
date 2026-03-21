@@ -16,11 +16,17 @@ Public Class Form1
     Dim serverUrl As String = "http://197.248.220.180/salesman-backend"
 
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        'Local
+        SetPlaceholder(TxtSearchLocalProducts, "Start typing to search...")
+        AddHandler TxtSearchLocalProducts.Enter, AddressOf TextBox_Enter
+        AddHandler TxtSearchLocalProducts.Leave, AddressOf TextBox_Leave
+        LoadLocalProducts()
+        AddCheckboxColumntoLocalDataGrid()
+        'Online
         SetPlaceholder(TxtSearchOnlineProducts, "Start typing to search...")
         AddHandler TxtSearchOnlineProducts.Enter, AddressOf TextBox_Enter
         AddHandler TxtSearchOnlineProducts.Leave, AddressOf TextBox_Leave
-        LoadLocalProducts()
-        AddCheckboxColumntoLocalDataGrid()
+        'Salesmen
         SetPlaceholder(TxtSearchSalesMen, "Start typing to search...")
         AddHandler TxtSearchSalesMen.Enter, AddressOf TextBox_Enter
         AddHandler TxtSearchSalesMen.Leave, AddressOf TextBox_Leave
@@ -33,6 +39,11 @@ Public Class Form1
     End Sub
 
     'Local tab events
+    Private Sub TxtSearchLocalProducts_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchLocalProducts.TextChanged
+        If TxtSearchLocalProducts.ForeColor = Color.Gray Then Exit Sub
+        FilterGrid(DgvLocalProducts, TxtSearchLocalProducts.Text)
+    End Sub
+
     Private Async Sub BtnUploadSelected_Click(sender As Object, e As EventArgs) Handles BtnUploadSelected.Click
         Try
             toggleControls(False, BtnUploadSelected, "Uploading...")
@@ -115,6 +126,7 @@ Public Class Form1
     'local tab helpers
     Private Sub LoadLocalProducts()
         Dim dt = repo.GetLocalProducts()
+        OriginalTables(DgvLocalProducts) = dt.Copy()
         DgvLocalProducts.DataSource = dt
     End Sub
 
@@ -152,7 +164,6 @@ Public Class Form1
     'online tab events
     Private Sub TxtSearchOnlineProducts_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchOnlineProducts.TextChanged
         If TxtSearchOnlineProducts.ForeColor = Color.Gray Then Exit Sub
-
         FilterGrid(DgvOnlineProducts, TxtSearchOnlineProducts.Text)
     End Sub
 
@@ -435,7 +446,7 @@ Public Class Form1
     'Salesmen events
     Private Sub TxtSearchSalesMen_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchSalesMen.TextChanged
         If TxtSearchSalesMen.ForeColor = Color.Gray Then Exit Sub
-        FilterGrid(DgvOnlineProducts, TxtSearchSalesMen.Text)
+        FilterGrid(DgvSalesMen, TxtSearchSalesMen.Text)
     End Sub
 
     Private Async Sub BtnRefreshSm_Click(sender As Object, e As EventArgs) Handles BtnRefreshSm.Click

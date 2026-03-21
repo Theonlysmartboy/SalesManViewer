@@ -30,6 +30,7 @@ Partial Class Form1
         Me.BtnDeleteSelectedSm = New System.Windows.Forms.Button()
         Me.BtnRefreshSm = New System.Windows.Forms.Button()
         Me.TxtSearchSalesMen = New System.Windows.Forms.TextBox()
+        Me.BtnNewUpdateSm = New System.Windows.Forms.Button()
         Me.DgvSalesMen = New System.Windows.Forms.DataGridView()
         Me.WbMap = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
@@ -111,7 +112,7 @@ Partial Class Form1
         Me.BtnSelectAll = New System.Windows.Forms.Button()
         Me.DgvLocalProducts = New System.Windows.Forms.DataGridView()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.BtnNewUpdateSm = New System.Windows.Forms.Button()
+        Me.TxtSearchLocalProducts = New System.Windows.Forms.TextBox()
         Me.TabPage3.SuspendLayout()
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer2.Panel1.SuspendLayout()
@@ -243,6 +244,16 @@ Partial Class Form1
         Me.TxtSearchSalesMen.Name = "TxtSearchSalesMen"
         Me.TxtSearchSalesMen.Size = New System.Drawing.Size(263, 20)
         Me.TxtSearchSalesMen.TabIndex = 2
+        '
+        'BtnNewUpdateSm
+        '
+        Me.BtnNewUpdateSm.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnNewUpdateSm.Location = New System.Drawing.Point(540, 3)
+        Me.BtnNewUpdateSm.Name = "BtnNewUpdateSm"
+        Me.BtnNewUpdateSm.Size = New System.Drawing.Size(131, 23)
+        Me.BtnNewUpdateSm.TabIndex = 3
+        Me.BtnNewUpdateSm.Text = "New/Update Selected"
+        Me.BtnNewUpdateSm.UseVisualStyleBackColor = True
         '
         'DgvSalesMen
         '
@@ -978,15 +989,17 @@ Partial Class Form1
         '
         'TableLayoutPanel2
         '
-        Me.TableLayoutPanel2.ColumnCount = 4
+        Me.TableLayoutPanel2.ColumnCount = 5
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.Controls.Add(Me.btnRefresh, 0, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.BtnUploadSelected, 1, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.BtnUploadAll, 2, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.BtnSelectAll, 3, 0)
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel2.Controls.Add(Me.btnRefresh, 1, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.BtnUploadSelected, 2, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.BtnUploadAll, 3, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.BtnSelectAll, 4, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.TxtSearchLocalProducts, 0, 0)
         Me.TableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
@@ -998,9 +1011,9 @@ Partial Class Form1
         'btnRefresh
         '
         Me.btnRefresh.Dock = System.Windows.Forms.DockStyle.Top
-        Me.btnRefresh.Location = New System.Drawing.Point(3, 3)
+        Me.btnRefresh.Location = New System.Drawing.Point(340, 3)
         Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(331, 23)
+        Me.btnRefresh.Size = New System.Drawing.Size(196, 23)
         Me.btnRefresh.TabIndex = 0
         Me.btnRefresh.Text = "Refresh"
         Me.btnRefresh.UseVisualStyleBackColor = True
@@ -1008,9 +1021,9 @@ Partial Class Form1
         'BtnUploadSelected
         '
         Me.BtnUploadSelected.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnUploadSelected.Location = New System.Drawing.Point(340, 3)
+        Me.BtnUploadSelected.Location = New System.Drawing.Point(542, 3)
         Me.BtnUploadSelected.Name = "BtnUploadSelected"
-        Me.BtnUploadSelected.Size = New System.Drawing.Size(331, 23)
+        Me.BtnUploadSelected.Size = New System.Drawing.Size(264, 23)
         Me.BtnUploadSelected.TabIndex = 1
         Me.BtnUploadSelected.Text = "Upload Selected"
         Me.BtnUploadSelected.UseVisualStyleBackColor = True
@@ -1018,9 +1031,9 @@ Partial Class Form1
         'BtnUploadAll
         '
         Me.BtnUploadAll.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnUploadAll.Location = New System.Drawing.Point(677, 3)
+        Me.BtnUploadAll.Location = New System.Drawing.Point(812, 3)
         Me.BtnUploadAll.Name = "BtnUploadAll"
-        Me.BtnUploadAll.Size = New System.Drawing.Size(331, 23)
+        Me.BtnUploadAll.Size = New System.Drawing.Size(264, 23)
         Me.BtnUploadAll.TabIndex = 2
         Me.BtnUploadAll.Text = "Upload All"
         Me.BtnUploadAll.UseVisualStyleBackColor = True
@@ -1028,9 +1041,9 @@ Partial Class Form1
         'BtnSelectAll
         '
         Me.BtnSelectAll.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnSelectAll.Location = New System.Drawing.Point(1014, 3)
+        Me.BtnSelectAll.Location = New System.Drawing.Point(1082, 3)
         Me.BtnSelectAll.Name = "BtnSelectAll"
-        Me.BtnSelectAll.Size = New System.Drawing.Size(333, 23)
+        Me.BtnSelectAll.Size = New System.Drawing.Size(265, 23)
         Me.BtnSelectAll.TabIndex = 3
         Me.BtnSelectAll.Text = "Select All"
         Me.BtnSelectAll.UseVisualStyleBackColor = True
@@ -1058,15 +1071,13 @@ Partial Class Form1
         Me.TabControl1.Size = New System.Drawing.Size(1370, 711)
         Me.TabControl1.TabIndex = 0
         '
-        'BtnNewUpdateSm
+        'TxtSearchLocalProducts
         '
-        Me.BtnNewUpdateSm.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnNewUpdateSm.Location = New System.Drawing.Point(540, 3)
-        Me.BtnNewUpdateSm.Name = "BtnNewUpdateSm"
-        Me.BtnNewUpdateSm.Size = New System.Drawing.Size(131, 23)
-        Me.BtnNewUpdateSm.TabIndex = 3
-        Me.BtnNewUpdateSm.Text = "New/Update Selected"
-        Me.BtnNewUpdateSm.UseVisualStyleBackColor = True
+        Me.TxtSearchLocalProducts.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TxtSearchLocalProducts.Location = New System.Drawing.Point(3, 3)
+        Me.TxtSearchLocalProducts.Name = "TxtSearchLocalProducts"
+        Me.TxtSearchLocalProducts.Size = New System.Drawing.Size(331, 20)
+        Me.TxtSearchLocalProducts.TabIndex = 4
         '
         'Form1
         '
@@ -1103,6 +1114,7 @@ Partial Class Form1
         Me.TabPage1.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
+        Me.TableLayoutPanel2.PerformLayout()
         CType(Me.DgvLocalProducts, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl1.ResumeLayout(False)
         Me.ResumeLayout(False)
@@ -1198,4 +1210,5 @@ Partial Class Form1
     Friend WithEvents DgvLocalProducts As DataGridView
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents BtnNewUpdateSm As Button
+    Friend WithEvents TxtSearchLocalProducts As TextBox
 End Class
