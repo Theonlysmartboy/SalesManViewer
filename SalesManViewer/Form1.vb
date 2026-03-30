@@ -12,6 +12,7 @@ Imports SalesManViewer.repositories
 Public Class Form1
     Private repo As New ProductRepository()
     Private orderRepo As New OrderRepository()
+    Private lookupRepo As New LookupRepository()
     Private selectedImagePath As String = ""
     Private OriginalTables As New Dictionary(Of DataGridView, DataTable)
     Dim serverUrl As String = "http://197.248.220.180/salesman-backend"
@@ -42,6 +43,8 @@ Public Class Form1
         AddHandler TxtSearchOrders.Enter, AddressOf TextBox_Enter
         AddHandler TxtSearchOrders.Leave, AddressOf TextBox_Leave
         LoadOrders()
+        Await LoadCustomers()
+        Await LoadSalesmen()
     End Sub
 
     'Local tab events
@@ -727,6 +730,32 @@ Public Class Form1
             End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message)
+        End Try
+    End Function
+
+    Private Async Function LoadCustomers() As Task
+        Try
+            Dim dt = Await lookupRepo.GetCustomers()
+            CmbCustomer.DataSource = dt
+            CmbCustomer.DisplayMember = "CustomerName"   ' adjust to your API field
+            CmbCustomer.ValueMember = "CustomerCode"
+            CmbCustomer.SelectedIndex = -1
+            CmbCustomer.Text = "Select Customer"
+        Catch ex As Exception
+            MessageBox.Show("Failed to load customers: " & ex.Message)
+        End Try
+    End Function
+
+    Private Async Function LoadSalesmen() As Task
+        Try
+            Dim dt = Await lookupRepo.GetSalesmen()
+            CmbSalesman.DataSource = dt
+            CmbSalesman.DisplayMember = "SalesmanName"   ' adjust if needed
+            CmbSalesman.ValueMember = "SalesmanCode"
+            CmbSalesman.SelectedIndex = -1
+            CmbSalesman.Text = "Select Salesman"
+        Catch ex As Exception
+            MessageBox.Show("Failed to load salesmen: " & ex.Message)
         End Try
     End Function
 
