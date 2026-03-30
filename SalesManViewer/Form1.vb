@@ -730,7 +730,7 @@ Public Class Form1
         End Try
     End Function
 
-    'global helpers
+    'Global helpers
     Private Sub toggleControls(status As Boolean, button As Button, text As String)
         btnRefresh.Enabled = status
         BtnUploadSelected.Enabled = status
