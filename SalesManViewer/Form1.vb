@@ -11,6 +11,7 @@ Imports SalesManViewer.repositories
 <System.Runtime.InteropServices.ComVisible(True)>
 Public Class Form1
     Private repo As New ProductRepository()
+    Private orderRepo As New OrderRepository()
     Private selectedImagePath As String = ""
     Private OriginalTables As New Dictionary(Of DataGridView, DataTable)
     Dim serverUrl As String = "http://197.248.220.180/salesman-backend"
@@ -36,6 +37,11 @@ Public Class Form1
         ' Load empty map
         Dim gmh As New GoogleMapsHelper(WbMap, New String(,) {})
         Await gmh.LoadMapAsync()
+        'Orders
+        SetPlaceholder(TxtSearchOrders, "Start typing to search...")
+        AddHandler TxtSearchOrders.Enter, AddressOf TextBox_Enter
+        AddHandler TxtSearchOrders.Leave, AddressOf TextBox_Leave
+        LoadOrders()
     End Sub
 
     'Local tab events
@@ -300,7 +306,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Async Sub BtnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
+    Private Async Function BtnSave_Click(sender As Object, e As EventArgs) As Task Handles BtnSave.Click
         Try
             Dim url As String = $"{serverUrl}/api/products.php?action=create"
             Using client As New HttpClient()
@@ -349,7 +355,7 @@ Public Class Form1
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
-    End Sub
+    End Function
 
     Private Sub DgvOnlineProducts_CurrentCellDirtyStateChanged(sender As Object, e As EventArgs) Handles DgvOnlineProducts.CurrentCellDirtyStateChanged
         If TypeOf DgvOnlineProducts.CurrentCell Is DataGridViewCheckBoxCell Then
@@ -637,6 +643,91 @@ Public Class Form1
             Dim bytes = ms.ToArray()
             Return "data:image/png;base64," & Convert.ToBase64String(bytes)
         End Using
+    End Function
+
+    'Order events
+    Private Sub BtnFilter_Click(sender As Object, e As EventArgs) Handles BtnFilter.Click
+        Dim filters As New Dictionary(Of String, String)
+        If CmbCustomer.SelectedItem IsNot Nothing Then
+            filters("CustomerCode") = CmbCustomer.SelectedValue.ToString()
+        End If
+        If CmbSalesman.SelectedItem IsNot Nothing Then
+            filters("SalesmanCode") = CmbSalesman.SelectedValue.ToString()
+        End If
+        filters("DateFrom") = DtpFrom.Value.ToString("yyyy-MM-dd")
+        filters("DateTo") = DtpTo.Value.ToString("yyyy-MM-dd")
+        LoadOrders(filters)
+    End Sub
+
+    Private Sub TxtSearchOrders_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchOrders.TextChanged
+        If TxtSearchOrders.ForeColor = Color.Gray Then Exit Sub
+        FilterGrid(DgvOrders, TxtSearchOrders.Text)
+    End Sub
+
+    Private Async Sub BtnDeleteSelectedOrders_Click(sender As Object, e As EventArgs) Handles BtnDeleteSelectedOrders.Click
+        Try
+            Dim ids As New List(Of String)
+            For Each row As DataGridViewRow In DgvOrders.Rows
+                If Convert.ToBoolean(row.Cells("Select").Value) = True Then
+                    ids.Add(row.Cells("OrderID").Value.ToString())
+                End If
+            Next
+            If ids.Count = 0 Then
+                MessageBox.Show("No orders selected")
+                Return
+            End If
+            Await orderRepo.DeleteOrders(ids)
+            MessageBox.Show("Deleted successfully")
+            LoadOrders()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+    Private Async Sub DgvOrders_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvOrders.CellClick
+        If e.RowIndex < 0 Then Return
+        Dim orderId = DgvOrders.Rows(e.RowIndex).Cells("OrderID").Value.ToString()
+        Await LoadOrderLines(orderId)
+    End Sub
+
+    'Order helpers
+    Private Async Sub LoadOrders(Optional filters As Dictionary(Of String, String) = Nothing)
+        Try
+            Dim dt = Await orderRepo.GetOrders(If(filters, New Dictionary(Of String, String)))
+            DgvOrders.DataSource = dt
+            OriginalTables(DgvOrders) = dt
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+    Private Async Function LoadOrderLines(orderId As String) As Task
+        Try
+            Using client As New HttpClient()
+                Dim url = $"{serverUrl}/api/orders.php?action=lines&orderId={orderId}"
+                Dim response = Await client.GetStringAsync(url)
+                Dim json = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(response)
+                Dim dt As New DataTable()
+                If json.ContainsKey("data") Then
+                    Dim list = JsonConvert.DeserializeObject(Of List(Of Dictionary(Of String, Object)))(json("data").ToString())
+                    If list.Count > 0 Then
+                        For Each key In list(0).Keys
+                            dt.Columns.Add(key)
+                        Next
+                        For Each item In list
+                            Dim row = dt.NewRow()
+                            For Each key In item.Keys
+                                row(key) = item(key)
+                            Next
+                            dt.Rows.Add(row)
+                        Next
+                    End If
+                End If
+                DgvOrderLines.DataSource = dt
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
     End Function
 
     'global helpers

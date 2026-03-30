@@ -117,6 +117,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="repositories\OrderRepository.vb" />
     <Compile Include="repositories\ProductRepository.vb" />
     <Compile Include="SalesMan.Designer.vb">
       <DependentUpon>SalesMan.vb</DependentUpon>
