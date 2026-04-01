@@ -649,6 +649,17 @@ Public Class Form1
     End Function
 
     'Order events
+    Private Async Sub DgvOrders_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvOrders.CellClick
+        If e.RowIndex < 0 Then Return
+        Dim orderId = DgvOrders.Rows(e.RowIndex).Cells("id").Value.ToString()
+        Await LoadOrderLines(orderId)
+    End Sub
+
+    Private Sub TxtSearchOrders_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchOrders.TextChanged
+        If TxtSearchOrders.ForeColor = Color.Gray Then Exit Sub
+        FilterGrid(DgvOrders, TxtSearchOrders.Text)
+    End Sub
+
     Private Sub BtnFilter_Click(sender As Object, e As EventArgs) Handles BtnFilter.Click
         Dim filters As New Dictionary(Of String, String)
         If CmbCustomer.SelectedItem IsNot Nothing Then
@@ -662,35 +673,42 @@ Public Class Form1
         LoadOrders(filters)
     End Sub
 
-    Private Sub TxtSearchOrders_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchOrders.TextChanged
-        If TxtSearchOrders.ForeColor = Color.Gray Then Exit Sub
-        FilterGrid(DgvOrders, TxtSearchOrders.Text)
+    Private Async Sub BtnConfirm_Click(sender As Object, e As EventArgs) Handles BtnConfirm.Click
+        Await UpdateSelectedOrdersStatus("Confirmed")
+    End Sub
+
+    Private Async Sub BtnReject_Click(sender As Object, e As EventArgs) Handles BtnReject.Click
+        Await UpdateSelectedOrdersStatus("Cancelled")
+    End Sub
+
+    Private Async Sub BtnComplete_Click(sender As Object, e As EventArgs) Handles BtnComplete.Click
+        Await UpdateSelectedOrdersStatus("Completed")
     End Sub
 
     Private Async Sub BtnDeleteSelectedOrders_Click(sender As Object, e As EventArgs) Handles BtnDeleteSelectedOrders.Click
         Try
             Dim ids As New List(Of String)
             For Each row As DataGridViewRow In DgvOrders.Rows
-                If Convert.ToBoolean(row.Cells("Select").Value) = True Then
-                    ids.Add(row.Cells("OrderID").Value.ToString())
+                If row.Cells("Select").Value IsNot Nothing AndAlso CBool(row.Cells("Select").Value) Then
+                    ids.Add(row.Cells("OrderNo").Value.ToString())
                 End If
             Next
             If ids.Count = 0 Then
                 MessageBox.Show("No orders selected")
                 Return
             End If
-            Await orderRepo.DeleteOrders(ids)
-            MessageBox.Show("Deleted successfully")
-            LoadOrders()
+            ' Optional confirmation
+            If MessageBox.Show($"Delete {ids.Count} order(s)?", "Confirm", MessageBoxButtons.YesNo) = DialogResult.No Then
+                Return
+            End If
+            Dim success = Await orderRepo.DeleteOrders(ids)
+            If success Then
+                MessageBox.Show($"{ids.Count} order(s) deleted successfully")
+                LoadOrders()
+            End If
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
-    End Sub
-
-    Private Async Sub DgvOrders_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvOrders.CellClick
-        If e.RowIndex < 0 Then Return
-        Dim orderId = DgvOrders.Rows(e.RowIndex).Cells("id").Value.ToString()
-        Await LoadOrderLines(orderId)
     End Sub
 
     'Order helpers
@@ -698,6 +716,15 @@ Public Class Form1
         Try
             Dim dt = Await orderRepo.GetOrders(If(filters, New Dictionary(Of String, String)))
             DgvOrders.DataSource = dt
+            ' Add checkbox column if not exists
+            If Not DgvOrders.Columns.Contains("Select") Then
+                Dim chk As New DataGridViewCheckBoxColumn()
+                chk.Name = "Select"
+                chk.HeaderText = ""
+                chk.Width = 40
+                chk.ReadOnly = False
+                DgvOrders.Columns.Insert(0, chk)
+            End If
             OriginalTables(DgvOrders) = dt.Copy()
         Catch ex As Exception
             MessageBox.Show(ex.Message)
@@ -750,12 +777,39 @@ Public Class Form1
         Try
             Dim dt = Await lookupRepo.GetSalesmen()
             CmbSalesman.DataSource = dt
-            CmbSalesman.DisplayMember = "SalesmanName"   ' adjust if needed
-            CmbSalesman.ValueMember = "SalesmanCode"
+            CmbSalesman.DisplayMember = "full_name"   ' adjust if needed
+            CmbSalesman.ValueMember = "id"
             CmbSalesman.SelectedIndex = -1
             CmbSalesman.Text = "Select Salesman"
         Catch ex As Exception
             MessageBox.Show("Failed to load salesmen: " & ex.Message)
+        End Try
+    End Function
+
+    Private Function GetSelectedOrderNos() As List(Of String)
+        Dim ids As New List(Of String)
+        For Each row As DataGridViewRow In DgvOrders.Rows
+            If row.Cells("Select").Value IsNot Nothing AndAlso CBool(row.Cells("Select").Value) Then
+                ids.Add(row.Cells("OrderNo").Value.ToString())
+            End If
+        Next
+        Return ids
+    End Function
+
+    Private Async Function UpdateSelectedOrdersStatus(status As String) As Task
+        Try
+            Dim orderNos = GetSelectedOrderNos()
+            If orderNos.Count = 0 Then
+                MessageBox.Show("No orders selected")
+                Return
+            End If
+            For Each orderNo In orderNos
+                Await orderRepo.UpdateOrderStatus(orderNo, status)
+            Next
+            MessageBox.Show($"Orders marked as {status}")
+            LoadOrders()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
         End Try
     End Function
 

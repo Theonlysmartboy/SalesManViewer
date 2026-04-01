@@ -10,16 +10,16 @@ Namespace repositories
         End Sub
 
         Public Async Function GetCustomers() As Task(Of DataTable)
-            Return Await FetchLookup("customers")
+            Return Await FetchLookup("customers.php?action=sync&limit=20&offset=0")
         End Function
 
         Public Async Function GetSalesmen() As Task(Of DataTable)
-            Return Await FetchLookup("salesmen")
+            Return Await FetchLookup("auth.php?action=get-all-users")
         End Function
 
         Private Async Function FetchLookup(type As String) As Task(Of DataTable)
             Using client As New HttpClient()
-                Dim url = $"{serverUrl}/api/lookups.php?action={type}"
+                Dim url = $"{serverUrl}/api/{type}"
                 Dim response = Await client.GetStringAsync(url)
 
                 Dim json = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(response)
