@@ -10,12 +10,12 @@ Imports SalesManViewer.repositories
 <PermissionSet(SecurityAction.Demand, Name:="FullTrust")>
 <System.Runtime.InteropServices.ComVisible(True)>
 Public Class Form1
+    Dim serverUrl As String = "http://197.248.220.180/salesman-backend"
     Private repo As New ProductRepository()
-    Private orderRepo As New OrderRepository()
-    Private lookupRepo As New LookupRepository()
+    Private orderRepo As New OrderRepository(serverUrl)
+    Private lookupRepo As New LookupRepository(serverUrl)
     Private selectedImagePath As String = ""
     Private OriginalTables As New Dictionary(Of DataGridView, DataTable)
-    Dim serverUrl As String = "http://197.248.220.180/salesman-backend"
 
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         'Local
@@ -698,7 +698,7 @@ Public Class Form1
         Try
             Dim dt = Await orderRepo.GetOrders(If(filters, New Dictionary(Of String, String)))
             DgvOrders.DataSource = dt
-            OriginalTables(DgvOrders) = dt
+            OriginalTables(DgvOrders) = dt.Copy()
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
@@ -742,7 +742,7 @@ Public Class Form1
             CmbCustomer.SelectedIndex = -1
             CmbCustomer.Text = "Select Customer"
         Catch ex As Exception
-            MessageBox.Show("Failed to load customers: " & ex.Message)
+            MessageBox.Show("Failed To load customers: " & ex.Message)
         End Try
     End Function
 

@@ -4,7 +4,11 @@ Imports System.Text
 
 Namespace repositories
     Public Class OrderRepository
-        Private serverUrl As String = "http://197.248.220.180/salesman-backend"
+        Private serverUrl As String
+
+        Public Sub New(serverUrl As String)
+            Me.serverUrl = serverUrl
+        End Sub
 
         Public Async Function GetOrders(filters As Dictionary(Of String, String)) As Task(Of DataTable)
             Using client As New HttpClient()

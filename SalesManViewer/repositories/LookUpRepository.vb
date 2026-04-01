@@ -3,7 +3,11 @@ Imports Newtonsoft.Json
 
 Namespace repositories
     Public Class LookupRepository
-        Private serverUrl As String = "http://197.248.220.180/salesman-backend"
+        Private serverUrl As String
+
+        Public Sub New(serverUrl As String)
+            Me.serverUrl = serverUrl
+        End Sub
 
         Public Async Function GetCustomers() As Task(Of DataTable)
             Return Await FetchLookup("customers")
