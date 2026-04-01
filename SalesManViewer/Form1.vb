@@ -689,7 +689,7 @@ Public Class Form1
 
     Private Async Sub DgvOrders_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvOrders.CellClick
         If e.RowIndex < 0 Then Return
-        Dim orderId = DgvOrders.Rows(e.RowIndex).Cells("OrderID").Value.ToString()
+        Dim orderId = DgvOrders.Rows(e.RowIndex).Cells("id").Value.ToString()
         Await LoadOrderLines(orderId)
     End Sub
 

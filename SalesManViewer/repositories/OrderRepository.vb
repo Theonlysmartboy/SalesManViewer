@@ -12,10 +12,14 @@ Namespace repositories
 
         Public Async Function GetOrders(filters As Dictionary(Of String, String)) As Task(Of DataTable)
             Using client As New HttpClient()
-                Dim query As String = String.Join("&", filters.Select(Function(k) $"{k.Key}={k.Value}"))
+                If Not filters.ContainsKey("limit") Then filters("limit") = "20"
+                If Not filters.ContainsKey("offset") Then filters("offset") = "0"
+                Dim query As String = String.Join("&", filters.Select(Function(k) $"{k.Key}={Uri.EscapeDataString(k.Value)}"))
                 Dim url = $"{serverUrl}/api/orders.php?action=fetch&{query}"
-                Dim response = Await client.GetStringAsync(url)
-                Dim json = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(response)
+                Dim response = Await client.GetAsync(url)
+                response.EnsureSuccessStatusCode()
+                Dim jsonString = Await response.Content.ReadAsStringAsync()
+                Dim json = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonString)
                 Dim dt As New DataTable()
                 If json.ContainsKey("data") Then
                     Dim list = JsonConvert.DeserializeObject(Of List(Of Dictionary(Of String, Object)))(json("data").ToString())
@@ -26,7 +30,7 @@ Namespace repositories
                         For Each item In list
                             Dim row = dt.NewRow()
                             For Each key In item.Keys
-                                row(key) = item(key)
+                                row(key) = If(item(key), DBNull.Value)
                             Next
                             dt.Rows.Add(row)
                         Next
