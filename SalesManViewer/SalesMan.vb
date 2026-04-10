@@ -5,7 +5,7 @@ Imports Newtonsoft.Json
 Public Class SalesMan
     Public IsEditMode As Boolean = False
     Public UserId As Integer = 0
-    Dim serverUrl As String = "http://197.248.220.180/salesman-backend"
+    Dim serverUrl As String = "http://197.248.109.130/salesman-backend"
 
     Private Async Sub BtnSubmit_Click(sender As Object, e As EventArgs) Handles BtnSubmit.Click
         Try

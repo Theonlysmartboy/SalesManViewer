@@ -1,7 +1,9 @@
-﻿Imports System.IO
+﻿Imports System.Data.SqlClient
+Imports System.IO
 Imports System.Net.Http
 Imports System.Security.Permissions
 Imports System.Text
+Imports MySql.Data.MySqlClient
 Imports Newtonsoft.Json
 Imports SalesManViewer.helpers
 Imports SalesManViewer.models
@@ -10,7 +12,7 @@ Imports SalesManViewer.repositories
 <PermissionSet(SecurityAction.Demand, Name:="FullTrust")>
 <System.Runtime.InteropServices.ComVisible(True)>
 Public Class Form1
-    Dim serverUrl As String = "http://197.248.220.180/salesman-backend"
+    Dim serverUrl As String = "http://197.248.109.130/salesman-backend"
     Private repo As New ProductRepository()
     Private orderRepo As New OrderRepository(serverUrl)
     Private lookupRepo As New LookupRepository(serverUrl)
@@ -158,7 +160,7 @@ Public Class Form1
     End Sub
 
     Private Async Function SendProductsToServer(products As List(Of Object)) As Task
-        Dim url As String = $"{serverUrl}/products.php?action=bulk-create"
+        Dim url As String = $"{serverUrl}/api/products.php?action=bulk-create"
         Dim payload = New Dictionary(Of String, Object)
         payload("products") = products
         Dim json As String = JsonConvert.SerializeObject(payload)
@@ -648,6 +650,78 @@ Public Class Form1
         End Using
     End Function
 
+    'Customer events
+    Private Async Sub btnSyncCustomers_Click(sender As Object, e As EventArgs) Handles BtnSyncCustomers.Click
+        BtnSyncCustomers.Enabled = False
+        Try
+            Await SyncCustomersAsync()
+        Catch ex As Exception
+            MessageBox.Show("Sync failed: " & ex.Message)
+        Finally
+            BtnSyncCustomers.Enabled = True
+        End Try
+    End Sub
+
+    'Customer helpers
+    Public Async Function SyncCustomersAsync() As Task
+        Dim apiUrl As String = $"{serverUrl}/api/customers.php?action=bulk-create"
+        Dim batchSize As Integer = 200
+        Using conn = DatabaseHelper.GetConnection()
+            'Await conn.OpenAsync()
+            Dim cmd As New MySqlCommand("SELECT * FROM customermaster", conn)
+            Dim reader As MySqlDataReader = Await cmd.ExecuteReaderAsync()
+            Dim batch As New List(Of Dictionary(Of String, Object))
+            Using httpClient As New HttpClient()
+                While Await reader.ReadAsync()
+                    Dim customer As New Dictionary(Of String, Object)
+                    ' Required fields
+                    customer("CustomerCode") = reader("CustomerCode").ToString()
+                    customer("CustomerName") = reader("CustomerName").ToString()
+                    ' Optional
+                    customer("Address1") = If(IsDBNull(reader("Address1")), Nothing, reader("Address1"))
+                    customer("City") = If(IsDBNull(reader("City")), Nothing, reader("City"))
+                    customer("Country") = If(IsDBNull(reader("Country")), Nothing, reader("Country"))
+                    customer("Phone") = If(IsDBNull(reader("Phone")), Nothing, reader("Phone"))
+                    customer("Email") = If(IsDBNull(reader("Email")), Nothing, reader("Email"))
+                    customer("CreditDays") = If(IsDBNull(reader("CreditDays")), 0, reader("CreditDays"))
+                    customer("CreditAmount") = If(IsDBNull(reader("CreditAmount")), 0, reader("CreditAmount"))
+                    customer("OpeningBalance") = If(IsDBNull(reader("OpeningBalance")), 0, reader("OpeningBalance"))
+                    customer("SubRouteCode") = If(IsDBNull(reader("SubRouteCode")), Nothing, reader("SubRouteCode"))
+                    customer("WHTaxApplicable") = If(IsDBNull(reader("WHTaxApplicable")), 0, reader("WHTaxApplicable"))
+                    customer("ModifiedBy") = "sync-client"
+                    batch.Add(customer)
+                    'Call send When batch is full
+                    If batch.Count >= batchSize Then
+                        Await SendBatchAsync(httpClient, apiUrl, batch)
+                        batch.Clear()
+                    End If
+                End While
+                'Send remaining
+                If batch.Count > 0 Then
+                    Await SendBatchAsync(httpClient, apiUrl, batch)
+                End If
+            End Using
+        End Using
+        MessageBox.Show("Customer sync completed.")
+    End Function
+
+    Private Async Function SendBatchAsync(httpClient As HttpClient, apiUrl As String, batch As List(Of Dictionary(Of String, Object))) As Task
+        Try
+            Dim payload = New With {
+                .customers = batch
+            }
+            Dim json As String = JsonConvert.SerializeObject(payload)
+            Dim content As New StringContent(json, Encoding.UTF8, "application/json")
+            Dim response = Await httpClient.PostAsync(apiUrl, content)
+            Dim responseBody = Await response.Content.ReadAsStringAsync()
+            If Not response.IsSuccessStatusCode Then
+                Throw New Exception($"API Error: {response.StatusCode} - {responseBody}")
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Batch failed: " & ex.Message)
+        End Try
+    End Function
+
     'Order events
     Private Async Sub DgvOrders_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvOrders.CellClick
         If e.RowIndex < 0 Then Return
@@ -725,6 +799,7 @@ Public Class Form1
                 chk.ReadOnly = False
                 DgvOrders.Columns.Insert(0, chk)
             End If
+            DgvOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             OriginalTables(DgvOrders) = dt.Copy()
         Catch ex As Exception
             MessageBox.Show(ex.Message)
@@ -754,6 +829,7 @@ Public Class Form1
                     End If
                 End If
                 DgvOrderLines.DataSource = dt
+                DgvOrderLines.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message)
