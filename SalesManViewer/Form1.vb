@@ -2,7 +2,6 @@
 Imports System.Net.Http
 Imports System.Security.Permissions
 Imports System.Text
-Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Tab
 Imports MySql.Data.MySqlClient
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
@@ -113,13 +112,18 @@ Public Class Form1
         End If
     End Sub
 
-    Private Async Sub btnUploadAll_Click(sender As Object, e As EventArgs) Handles BtnUploadAll.Click
+    Private Async Sub BtnUploadAll_Click(sender As Object, e As EventArgs) Handles BtnUploadAll.Click
         Try
             BtnUploadAll.Enabled = False
-            ' 1. Load from LOCAL DB
+            BtnUploadAll.Text = "Uploading..."
+            ' 1. Load from LOCAL DB directly (entire tables)
             Dim products As List(Of Product) = repo.LoadProducts()
             Dim alternates As List(Of AlternateUnit) = repo.LoadAlternates()
-            ' 2. Chunk products
+            If products Is Nothing OrElse products.Count = 0 Then
+                showAlert("No products found in local database.", "Warning", True)
+                Return
+            End If
+            ' 2. Chunk products for upload (reuse existing utility)
             Dim chunks = ChunkingUtility.Chunk(products, 200)
             Dim total = chunks.Count
             Dim success = 0
@@ -127,24 +131,62 @@ Public Class Form1
                 Dim chunk = chunks(i)
                 Dim ok = Await UploadChunk(chunk, alternates)
                 If Not ok Then
-                    MessageBox.Show($"Failed at chunk {i + 1}")
+                    showAlert($"Failed at chunk {i + 1}", "Error", True)
                     Exit For
                 End If
                 success += 1
                 ' UI progress
-                LblStatus.Text = $"Uploading {i + 1}/{total}"
-                ProgressBar1.Value = CInt(((i + 1) / total) * 100)
+                If LblStatus IsNot Nothing Then LblStatus.Text = $"Uploading {i + 1}/{total}"
+                If ProgressBar1 IsNot Nothing Then ProgressBar1.Value = CInt(((i + 1) / total) * 100)
                 Application.DoEvents()
             Next
-            MessageBox.Show(Me, $"Sync complete: {success}/{total} chunks uploaded")
+            showAlert($"Sync complete: {success}/{total} chunks uploaded", "Info", False)
         Catch ex As Exception
-            MessageBox.Show("Sync error: " & ex.Message)
+            Debug.WriteLine("Sync error: " & ex.Message)
+            showAlert("Sync error: " & ex.Message, "Error", True)
         Finally
             BtnUploadAll.Enabled = True
+            BtnUploadAll.Text = "Upload All"
         End Try
     End Sub
 
     'local tab helpers
+    ' Helper: safely read cell as string from multiple possible column names
+    Private Function GetCellString(row As DataGridViewRow, colName As String) As String
+        If DgvLocalProducts.Columns.Contains(colName) Then
+            Dim v = row.Cells(colName).Value
+            If v IsNot Nothing Then Return v.ToString()
+        End If
+        Return String.Empty
+    End Function
+
+    Private Function TryGetDecimal(row As DataGridViewRow, colName As String) As Decimal
+        Dim s = GetCellString(row, colName)
+        Dim d As Decimal
+        If Decimal.TryParse(s, Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture, d) Then
+            Return d
+        End If
+        Return 0D
+    End Function
+
+    Private Function TryGetInteger(row As DataGridViewRow, colName As String) As Integer
+        Dim s = GetCellString(row, colName)
+        Dim i As Integer
+        If Integer.TryParse(s, i) Then Return i
+        Return 0
+    End Function
+
+    Private Function TryGetBoolean(row As DataGridViewRow, colName As String) As Boolean
+        Dim s = GetCellString(row, colName)
+        If String.IsNullOrWhiteSpace(s) Then Return False
+        If s = "1" OrElse s.ToLower() = "true" Then Return True
+        Return False
+    End Function
+
+    Private Sub showAlert(message As String, Optional title As String = "Info", Optional isError As Boolean = False)
+        ' Keep simple wrapper to show results consistently
+        MessageBox.Show(message, title, MessageBoxButtons.OK, If(isError, MessageBoxIcon.Error, MessageBoxIcon.Information))
+    End Sub
     Private Sub LoadLocalProducts()
         Dim dt = repo.GetLocalProducts()
         OriginalTables(DgvLocalProducts) = dt.Copy()
