@@ -135,7 +135,12 @@ Partial Class Form1
         Me.BtnConfirm = New System.Windows.Forms.Button()
         Me.BtnReject = New System.Windows.Forms.Button()
         Me.BtnComplete = New System.Windows.Forms.Button()
+        Me.TableLayoutPanel12 = New System.Windows.Forms.TableLayoutPanel()
+        Me.BtnRefreshOrders = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
+        Me.TableLayoutPanel14 = New System.Windows.Forms.TableLayoutPanel()
+        Me.LblStatus = New System.Windows.Forms.Label()
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.TabPage3.SuspendLayout()
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer2.Panel1.SuspendLayout()
@@ -175,6 +180,8 @@ Partial Class Form1
         Me.TableLayoutPanel11.SuspendLayout()
         Me.TableLayoutPanel13.SuspendLayout()
         Me.TableLayoutPanel15.SuspendLayout()
+        Me.TableLayoutPanel12.SuspendLayout()
+        Me.TableLayoutPanel14.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel7
@@ -1014,12 +1021,14 @@ Partial Class Form1
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.TableLayoutPanel2, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.DgvLocalProducts, 0, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.TableLayoutPanel14, 0, 2)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 2
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.0!))
+        Me.TableLayoutPanel1.RowCount = 3
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(1356, 679)
         Me.TableLayoutPanel1.TabIndex = 0
         '
@@ -1041,7 +1050,7 @@ Partial Class Form1
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 1
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(1350, 41)
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(1350, 27)
         Me.TableLayoutPanel2.TabIndex = 0
         '
         'btnRefresh
@@ -1049,7 +1058,7 @@ Partial Class Form1
         Me.btnRefresh.Dock = System.Windows.Forms.DockStyle.Top
         Me.btnRefresh.Location = New System.Drawing.Point(340, 3)
         Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(196, 23)
+        Me.btnRefresh.Size = New System.Drawing.Size(196, 21)
         Me.btnRefresh.TabIndex = 0
         Me.btnRefresh.Text = "Refresh"
         Me.btnRefresh.UseVisualStyleBackColor = True
@@ -1059,7 +1068,7 @@ Partial Class Form1
         Me.BtnUploadSelected.Dock = System.Windows.Forms.DockStyle.Top
         Me.BtnUploadSelected.Location = New System.Drawing.Point(542, 3)
         Me.BtnUploadSelected.Name = "BtnUploadSelected"
-        Me.BtnUploadSelected.Size = New System.Drawing.Size(264, 23)
+        Me.BtnUploadSelected.Size = New System.Drawing.Size(264, 21)
         Me.BtnUploadSelected.TabIndex = 1
         Me.BtnUploadSelected.Text = "Upload Selected"
         Me.BtnUploadSelected.UseVisualStyleBackColor = True
@@ -1069,7 +1078,7 @@ Partial Class Form1
         Me.BtnUploadAll.Dock = System.Windows.Forms.DockStyle.Top
         Me.BtnUploadAll.Location = New System.Drawing.Point(812, 3)
         Me.BtnUploadAll.Name = "BtnUploadAll"
-        Me.BtnUploadAll.Size = New System.Drawing.Size(264, 23)
+        Me.BtnUploadAll.Size = New System.Drawing.Size(264, 21)
         Me.BtnUploadAll.TabIndex = 2
         Me.BtnUploadAll.Text = "Upload All"
         Me.BtnUploadAll.UseVisualStyleBackColor = True
@@ -1079,7 +1088,7 @@ Partial Class Form1
         Me.BtnSelectAll.Dock = System.Windows.Forms.DockStyle.Top
         Me.BtnSelectAll.Location = New System.Drawing.Point(1082, 3)
         Me.BtnSelectAll.Name = "BtnSelectAll"
-        Me.BtnSelectAll.Size = New System.Drawing.Size(265, 23)
+        Me.BtnSelectAll.Size = New System.Drawing.Size(265, 21)
         Me.BtnSelectAll.TabIndex = 3
         Me.BtnSelectAll.Text = "Select All"
         Me.BtnSelectAll.UseVisualStyleBackColor = True
@@ -1098,9 +1107,9 @@ Partial Class Form1
         Me.DgvLocalProducts.AllowUserToDeleteRows = False
         Me.DgvLocalProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvLocalProducts.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DgvLocalProducts.Location = New System.Drawing.Point(3, 50)
+        Me.DgvLocalProducts.Location = New System.Drawing.Point(3, 36)
         Me.DgvLocalProducts.Name = "DgvLocalProducts"
-        Me.DgvLocalProducts.Size = New System.Drawing.Size(1350, 626)
+        Me.DgvLocalProducts.Size = New System.Drawing.Size(1350, 598)
         Me.DgvLocalProducts.TabIndex = 1
         '
         'TabControl1
@@ -1233,18 +1242,19 @@ Partial Class Form1
         '
         'TableLayoutPanel11
         '
-        Me.TableLayoutPanel11.ColumnCount = 1
+        Me.TableLayoutPanel11.ColumnCount = 2
         Me.TableLayoutPanel11.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel11.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel11.Controls.Add(Me.TableLayoutPanel13, 0, 0)
         Me.TableLayoutPanel11.Controls.Add(Me.TableLayoutPanel15, 0, 2)
-        Me.TableLayoutPanel11.Controls.Add(Me.Label19, 0, 1)
+        Me.TableLayoutPanel11.Controls.Add(Me.TableLayoutPanel12, 0, 1)
         Me.TableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel11.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel11.Name = "TableLayoutPanel11"
         Me.TableLayoutPanel11.RowCount = 3
-        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.0!))
-        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.0!))
-        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.0!))
+        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
         Me.TableLayoutPanel11.Size = New System.Drawing.Size(1350, 95)
         Me.TableLayoutPanel11.TabIndex = 1
         '
@@ -1268,7 +1278,7 @@ Partial Class Form1
         Me.TableLayoutPanel13.Name = "TableLayoutPanel13"
         Me.TableLayoutPanel13.RowCount = 1
         Me.TableLayoutPanel13.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel13.Size = New System.Drawing.Size(1344, 27)
+        Me.TableLayoutPanel13.Size = New System.Drawing.Size(1324, 25)
         Me.TableLayoutPanel13.TabIndex = 1
         '
         'TxtSearchOrders
@@ -1276,15 +1286,15 @@ Partial Class Form1
         Me.TxtSearchOrders.Dock = System.Windows.Forms.DockStyle.Top
         Me.TxtSearchOrders.Location = New System.Drawing.Point(3, 3)
         Me.TxtSearchOrders.Name = "TxtSearchOrders"
-        Me.TxtSearchOrders.Size = New System.Drawing.Size(330, 20)
+        Me.TxtSearchOrders.Size = New System.Drawing.Size(325, 20)
         Me.TxtSearchOrders.TabIndex = 0
         '
         'BtnFilter
         '
         Me.BtnFilter.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnFilter.Location = New System.Drawing.Point(1143, 3)
+        Me.BtnFilter.Location = New System.Drawing.Point(1126, 3)
         Me.BtnFilter.Name = "BtnFilter"
-        Me.BtnFilter.Size = New System.Drawing.Size(198, 21)
+        Me.BtnFilter.Size = New System.Drawing.Size(195, 19)
         Me.BtnFilter.TabIndex = 3
         Me.BtnFilter.Text = "Filter"
         Me.BtnFilter.UseVisualStyleBackColor = True
@@ -1292,35 +1302,35 @@ Partial Class Form1
         'DtpTo
         '
         Me.DtpTo.Dock = System.Windows.Forms.DockStyle.Top
-        Me.DtpTo.Location = New System.Drawing.Point(942, 3)
+        Me.DtpTo.Location = New System.Drawing.Point(928, 3)
         Me.DtpTo.Name = "DtpTo"
-        Me.DtpTo.Size = New System.Drawing.Size(195, 20)
+        Me.DtpTo.Size = New System.Drawing.Size(192, 20)
         Me.DtpTo.TabIndex = 2
         '
         'DtpFrom
         '
         Me.DtpFrom.Dock = System.Windows.Forms.DockStyle.Top
-        Me.DtpFrom.Location = New System.Drawing.Point(741, 3)
+        Me.DtpFrom.Location = New System.Drawing.Point(730, 3)
         Me.DtpFrom.Name = "DtpFrom"
-        Me.DtpFrom.Size = New System.Drawing.Size(195, 20)
+        Me.DtpFrom.Size = New System.Drawing.Size(192, 20)
         Me.DtpFrom.TabIndex = 1
         '
         'CmbCustomer
         '
         Me.CmbCustomer.Dock = System.Windows.Forms.DockStyle.Top
         Me.CmbCustomer.FormattingEnabled = True
-        Me.CmbCustomer.Location = New System.Drawing.Point(339, 3)
+        Me.CmbCustomer.Location = New System.Drawing.Point(334, 3)
         Me.CmbCustomer.Name = "CmbCustomer"
-        Me.CmbCustomer.Size = New System.Drawing.Size(195, 21)
+        Me.CmbCustomer.Size = New System.Drawing.Size(192, 21)
         Me.CmbCustomer.TabIndex = 5
         '
         'CmbSalesman
         '
         Me.CmbSalesman.Dock = System.Windows.Forms.DockStyle.Top
         Me.CmbSalesman.FormattingEnabled = True
-        Me.CmbSalesman.Location = New System.Drawing.Point(540, 3)
+        Me.CmbSalesman.Location = New System.Drawing.Point(532, 3)
         Me.CmbSalesman.Name = "CmbSalesman"
-        Me.CmbSalesman.Size = New System.Drawing.Size(195, 21)
+        Me.CmbSalesman.Size = New System.Drawing.Size(192, 21)
         Me.CmbSalesman.TabIndex = 6
         '
         'TableLayoutPanel15
@@ -1335,19 +1345,19 @@ Partial Class Form1
         Me.TableLayoutPanel15.Controls.Add(Me.BtnReject, 1, 0)
         Me.TableLayoutPanel15.Controls.Add(Me.BtnComplete, 2, 0)
         Me.TableLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel15.Location = New System.Drawing.Point(3, 57)
+        Me.TableLayoutPanel15.Location = New System.Drawing.Point(3, 65)
         Me.TableLayoutPanel15.Name = "TableLayoutPanel15"
         Me.TableLayoutPanel15.RowCount = 1
         Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel15.Size = New System.Drawing.Size(1344, 35)
+        Me.TableLayoutPanel15.Size = New System.Drawing.Size(1324, 27)
         Me.TableLayoutPanel15.TabIndex = 0
         '
         'BtnDeleteSelectedOrders
         '
         Me.BtnDeleteSelectedOrders.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnDeleteSelectedOrders.Location = New System.Drawing.Point(1011, 3)
+        Me.BtnDeleteSelectedOrders.Location = New System.Drawing.Point(996, 3)
         Me.BtnDeleteSelectedOrders.Name = "BtnDeleteSelectedOrders"
-        Me.BtnDeleteSelectedOrders.Size = New System.Drawing.Size(330, 21)
+        Me.BtnDeleteSelectedOrders.Size = New System.Drawing.Size(325, 21)
         Me.BtnDeleteSelectedOrders.TabIndex = 5
         Me.BtnDeleteSelectedOrders.Text = "Delete"
         Me.BtnDeleteSelectedOrders.UseVisualStyleBackColor = True
@@ -1357,7 +1367,7 @@ Partial Class Form1
         Me.BtnConfirm.Dock = System.Windows.Forms.DockStyle.Top
         Me.BtnConfirm.Location = New System.Drawing.Point(3, 3)
         Me.BtnConfirm.Name = "BtnConfirm"
-        Me.BtnConfirm.Size = New System.Drawing.Size(330, 22)
+        Me.BtnConfirm.Size = New System.Drawing.Size(325, 21)
         Me.BtnConfirm.TabIndex = 0
         Me.BtnConfirm.Text = "Confirm"
         Me.BtnConfirm.UseVisualStyleBackColor = True
@@ -1365,9 +1375,9 @@ Partial Class Form1
         'BtnReject
         '
         Me.BtnReject.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnReject.Location = New System.Drawing.Point(339, 3)
+        Me.BtnReject.Location = New System.Drawing.Point(334, 3)
         Me.BtnReject.Name = "BtnReject"
-        Me.BtnReject.Size = New System.Drawing.Size(330, 22)
+        Me.BtnReject.Size = New System.Drawing.Size(325, 21)
         Me.BtnReject.TabIndex = 1
         Me.BtnReject.Text = "Reject"
         Me.BtnReject.UseVisualStyleBackColor = True
@@ -1375,24 +1385,80 @@ Partial Class Form1
         'BtnComplete
         '
         Me.BtnComplete.Dock = System.Windows.Forms.DockStyle.Top
-        Me.BtnComplete.Location = New System.Drawing.Point(675, 3)
+        Me.BtnComplete.Location = New System.Drawing.Point(665, 3)
         Me.BtnComplete.Name = "BtnComplete"
-        Me.BtnComplete.Size = New System.Drawing.Size(330, 22)
+        Me.BtnComplete.Size = New System.Drawing.Size(325, 21)
         Me.BtnComplete.TabIndex = 2
         Me.BtnComplete.Text = "Complete"
         Me.BtnComplete.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanel12
+        '
+        Me.TableLayoutPanel12.ColumnCount = 2
+        Me.TableLayoutPanel12.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.0!))
+        Me.TableLayoutPanel12.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.TableLayoutPanel12.Controls.Add(Me.BtnRefreshOrders, 1, 0)
+        Me.TableLayoutPanel12.Controls.Add(Me.Label19, 0, 0)
+        Me.TableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanel12.Location = New System.Drawing.Point(3, 34)
+        Me.TableLayoutPanel12.Name = "TableLayoutPanel12"
+        Me.TableLayoutPanel12.RowCount = 1
+        Me.TableLayoutPanel12.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel12.Size = New System.Drawing.Size(1324, 25)
+        Me.TableLayoutPanel12.TabIndex = 2
+        '
+        'BtnRefreshOrders
+        '
+        Me.BtnRefreshOrders.Dock = System.Windows.Forms.DockStyle.Top
+        Me.BtnRefreshOrders.Location = New System.Drawing.Point(996, 3)
+        Me.BtnRefreshOrders.Name = "BtnRefreshOrders"
+        Me.BtnRefreshOrders.Size = New System.Drawing.Size(325, 19)
+        Me.BtnRefreshOrders.TabIndex = 0
+        Me.BtnRefreshOrders.Text = "Refresh"
+        Me.BtnRefreshOrders.UseVisualStyleBackColor = True
         '
         'Label19
         '
         Me.Label19.AutoSize = True
         Me.Label19.Dock = System.Windows.Forms.DockStyle.Top
         Me.Label19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(3, 39)
+        Me.Label19.Location = New System.Drawing.Point(3, 0)
         Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(1344, 13)
-        Me.Label19.TabIndex = 3
+        Me.Label19.Size = New System.Drawing.Size(987, 13)
+        Me.Label19.TabIndex = 1
         Me.Label19.Text = "Orders"
         Me.Label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TableLayoutPanel14
+        '
+        Me.TableLayoutPanel14.ColumnCount = 1
+        Me.TableLayoutPanel14.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel14.Controls.Add(Me.LblStatus, 0, 0)
+        Me.TableLayoutPanel14.Controls.Add(Me.ProgressBar1, 0, 1)
+        Me.TableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel14.Location = New System.Drawing.Point(3, 640)
+        Me.TableLayoutPanel14.Name = "TableLayoutPanel14"
+        Me.TableLayoutPanel14.RowCount = 2
+        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel14.Size = New System.Drawing.Size(1350, 36)
+        Me.TableLayoutPanel14.TabIndex = 2
+        '
+        'LblStatus
+        '
+        Me.LblStatus.AutoSize = True
+        Me.LblStatus.Location = New System.Drawing.Point(3, 0)
+        Me.LblStatus.Name = "LblStatus"
+        Me.LblStatus.Size = New System.Drawing.Size(45, 13)
+        Me.LblStatus.TabIndex = 0
+        Me.LblStatus.Text = "Label26"
+        '
+        'ProgressBar1
+        '
+        Me.ProgressBar1.Location = New System.Drawing.Point(3, 21)
+        Me.ProgressBar1.Name = "ProgressBar1"
+        Me.ProgressBar1.Size = New System.Drawing.Size(100, 12)
+        Me.ProgressBar1.TabIndex = 1
         '
         'Form1
         '
@@ -1444,10 +1510,13 @@ Partial Class Form1
         Me.TableLayoutPanel16.PerformLayout()
         CType(Me.DgvOrderLines, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel11.ResumeLayout(False)
-        Me.TableLayoutPanel11.PerformLayout()
         Me.TableLayoutPanel13.ResumeLayout(False)
         Me.TableLayoutPanel13.PerformLayout()
         Me.TableLayoutPanel15.ResumeLayout(False)
+        Me.TableLayoutPanel12.ResumeLayout(False)
+        Me.TableLayoutPanel12.PerformLayout()
+        Me.TableLayoutPanel14.ResumeLayout(False)
+        Me.TableLayoutPanel14.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1562,7 +1631,12 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanel16 As TableLayoutPanel
     Friend WithEvents Label25 As Label
     Friend WithEvents DgvOrderLines As DataGridView
-    Friend WithEvents Label19 As Label
     Friend WithEvents Customers As TabPage
     Friend WithEvents BtnSyncCustomers As Button
+    Friend WithEvents TableLayoutPanel12 As TableLayoutPanel
+    Friend WithEvents BtnRefreshOrders As Button
+    Friend WithEvents Label19 As Label
+    Friend WithEvents TableLayoutPanel14 As TableLayoutPanel
+    Friend WithEvents LblStatus As Label
+    Friend WithEvents ProgressBar1 As ProgressBar
 End Class

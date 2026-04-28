@@ -98,6 +98,7 @@
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="helpers\ChunkingUtility.vb" />
     <Compile Include="helpers\GoogleMapsHelper.vb" />
     <Compile Include="helpers\DatabaseHelper.vb" />
     <Compile Include="models\ProductModel.vb" />

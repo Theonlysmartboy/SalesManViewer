@@ -1,10 +1,11 @@
-﻿Imports System.Data.SqlClient
-Imports System.IO
+﻿Imports System.IO
 Imports System.Net.Http
 Imports System.Security.Permissions
 Imports System.Text
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Tab
 Imports MySql.Data.MySqlClient
 Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
 Imports SalesManViewer.helpers
 Imports SalesManViewer.models
 Imports SalesManViewer.repositories
@@ -95,28 +96,6 @@ Public Class Form1
         End If
     End Sub
 
-    Private Async Sub BtnUploadAll_Click(sender As Object, e As EventArgs) Handles BtnUploadAll.Click
-        Try
-            toggleControls(False, BtnUploadAll, "Uploading...")
-            Dim products As New List(Of Object)
-            For Each row As DataGridViewRow In DgvLocalProducts.Rows
-                Dim product As New Dictionary(Of String, Object)
-                For Each col As DataGridViewColumn In DgvLocalProducts.Columns
-                    If col.Name <> "Select" Then
-                        product(col.Name) = row.Cells(col.Name).Value
-                    End If
-                Next
-                products.Add(product)
-            Next
-            Await SendProductsToServer(products)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        Finally
-            toggleControls(True, BtnUploadAll, "Upload All")
-        End Try
-
-    End Sub
-
     Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
         Try
             toggleControls(False, btnRefresh, "Loading")
@@ -132,6 +111,37 @@ Public Class Form1
         If TypeOf DgvLocalProducts.CurrentCell Is DataGridViewCheckBoxCell Then
             DgvLocalProducts.CommitEdit(DataGridViewDataErrorContexts.Commit)
         End If
+    End Sub
+
+    Private Async Sub btnUploadAll_Click(sender As Object, e As EventArgs) Handles BtnUploadAll.Click
+        Try
+            BtnUploadAll.Enabled = False
+            ' 1. Load from LOCAL DB
+            Dim products As List(Of Product) = repo.LoadProducts()
+            Dim alternates As List(Of AlternateUnit) = repo.LoadAlternates()
+            ' 2. Chunk products
+            Dim chunks = ChunkingUtility.Chunk(products, 200)
+            Dim total = chunks.Count
+            Dim success = 0
+            For i = 0 To total - 1
+                Dim chunk = chunks(i)
+                Dim ok = Await UploadChunk(chunk, alternates)
+                If Not ok Then
+                    MessageBox.Show($"Failed at chunk {i + 1}")
+                    Exit For
+                End If
+                success += 1
+                ' UI progress
+                LblStatus.Text = $"Uploading {i + 1}/{total}"
+                ProgressBar1.Value = CInt(((i + 1) / total) * 100)
+                Application.DoEvents()
+            Next
+            MessageBox.Show(Me, $"Sync complete: {success}/{total} chunks uploaded")
+        Catch ex As Exception
+            MessageBox.Show("Sync error: " & ex.Message)
+        Finally
+            BtnUploadAll.Enabled = True
+        End Try
     End Sub
 
     'local tab helpers
@@ -158,6 +168,46 @@ Public Class Form1
         DgvLocalProducts.MultiSelect = False
         DgvLocalProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
     End Sub
+
+    Private Async Function UploadChunk(productsChunk As List(Of Product),
+                                   allAlternates As List(Of AlternateUnit)) As Task(Of Boolean)
+        ' Match alternates ONLY for this product chunk
+        Dim productCodes = New HashSet(Of String)(productsChunk.Select(Function(p) p.ProductCode))
+        Dim altChunk = allAlternates.
+        Where(Function(a) productCodes.Contains(a.ProductCode)).ToList()
+        Dim payload As New SyncPayload With {
+            .products = productsChunk,
+            .alternate_units = altChunk
+        }
+        Dim json = JsonConvert.SerializeObject(payload)
+        Dim content = New StringContent(json, Encoding.UTF8, "application/json")
+        Dim maxRetries = 3
+        For i = 1 To maxRetries
+            Try
+                Dim client As New HttpClient()
+                Dim response = Await client.PostAsync($"{serverUrl}/api/products.php?action=full-sync", content)
+                Dim body = Await response.Content.ReadAsStringAsync()
+                Dim debugResponse = $"STATUS: {response.StatusCode} ({CInt(response.StatusCode)}){Environment.NewLine}" &
+                                    $"REASON: {response.ReasonPhrase}{Environment.NewLine}" &
+                                    $"HEADERS: {response.Headers.ToString()}{Environment.NewLine}" &
+                                    $"BODY:{Environment.NewLine}{body}"
+                Debug.WriteLine(debugResponse)
+                If response.IsSuccessStatusCode Then
+                    Dim jsonResponse = JObject.Parse(body)
+                    If jsonResponse("success")?.ToObject(Of Boolean)() = True Then
+                        Return True
+                    Else
+                        MessageBox.Show(jsonResponse("message")?.ToString())
+                        Return False
+                    End If
+                End If
+            Catch ex As Exception
+                If i = maxRetries Then Throw
+            End Try
+            Await Task.Delay(1500 * i)
+        Next
+        Return False
+    End Function
 
     Private Async Function SendProductsToServer(products As List(Of Object)) As Task
         Dim url As String = $"{serverUrl}/api/products.php?action=bulk-create"
@@ -692,13 +742,13 @@ Public Class Form1
                     batch.Add(customer)
                     'Call send When batch is full
                     If batch.Count >= batchSize Then
-                        Await SendBatchAsync(httpClient, apiUrl, batch)
+                        Await SendBatchAsync(HttpClient, apiUrl, batch)
                         batch.Clear()
                     End If
                 End While
                 'Send remaining
                 If batch.Count > 0 Then
-                    Await SendBatchAsync(httpClient, apiUrl, batch)
+                    Await SendBatchAsync(HttpClient, apiUrl, batch)
                 End If
             End Using
         End Using
@@ -723,6 +773,9 @@ Public Class Form1
     End Function
 
     'Order events
+    Private Sub BtnRefreshOrders_Click(sender As Object, e As EventArgs) Handles BtnRefreshOrders.Click
+        LoadOrders()
+    End Sub
     Private Async Sub DgvOrders_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvOrders.CellClick
         If e.RowIndex < 0 Then Return
         Dim orderId = DgvOrders.Rows(e.RowIndex).Cells("id").Value.ToString()
@@ -748,15 +801,15 @@ Public Class Form1
     End Sub
 
     Private Async Sub BtnConfirm_Click(sender As Object, e As EventArgs) Handles BtnConfirm.Click
-        Await UpdateSelectedOrdersStatus("Confirmed")
+        Await ProcessOrdersAsync("Confirmed", syncFromServer:=True)
     End Sub
 
     Private Async Sub BtnReject_Click(sender As Object, e As EventArgs) Handles BtnReject.Click
-        Await UpdateSelectedOrdersStatus("Cancelled")
+        Await ProcessOrdersAsync("Cancelled", syncFromServer:=False)
     End Sub
 
     Private Async Sub BtnComplete_Click(sender As Object, e As EventArgs) Handles BtnComplete.Click
-        Await UpdateSelectedOrdersStatus("Completed")
+        Await ProcessOrdersAsync("Completed", syncFromServer:=False)
     End Sub
 
     Private Async Sub BtnDeleteSelectedOrders_Click(sender As Object, e As EventArgs) Handles BtnDeleteSelectedOrders.Click
@@ -872,7 +925,7 @@ Public Class Form1
         Return ids
     End Function
 
-    Private Async Function UpdateSelectedOrdersStatus(status As String) As Task
+    Private Async Function ProcessOrdersAsync(status As String, syncFromServer As Boolean) As Task
         Try
             Dim orderNos = GetSelectedOrderNos()
             If orderNos.Count = 0 Then
@@ -880,13 +933,81 @@ Public Class Form1
                 Return
             End If
             For Each orderNo In orderNos
+                If syncFromServer Then
+                    Await PullOrderToLocalAsync(orderNo)
+                End If
                 Await orderRepo.UpdateOrderStatus(orderNo, status)
             Next
             MessageBox.Show($"Orders marked as {status}")
             LoadOrders()
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            MessageBox.Show("Error: " & ex.Message)
         End Try
+    End Function
+
+    Private Async Function PullOrderToLocalAsync(orderNo As String) As Task
+        Dim url As String =
+        $"{serverUrl}/api/orders.php?action=get&OrderNumber={orderNo}"
+        Using client As New HttpClient()
+            Dim response = Await client.GetStringAsync(url)
+            Dim json = Newtonsoft.Json.Linq.JObject.Parse(response)
+            If Not CBool(json("success")) Then
+                Throw New Exception($"Failed to fetch order {orderNo}")
+            End If
+            Dim data = json("data")
+            'Dim connString = clsConnections.setConnectionString()
+            'Using conn As New MySqlConnection(connString)
+            Using conn = DatabaseHelper.GetConnection()
+                'Await conn.OpenAsync()
+                Dim tx As MySqlTransaction = conn.BeginTransaction()
+                Try
+                    ' 1. INSERT MASTER
+                    Dim insertMasterSql As String =
+                    "INSERT INTO salesordermaster (SalesOrderNo, SalesOrderDate, CustomerCode, SalesmanCode, Remark, SubTotal,
+                    VATAmount, Discount, TotalAmount, isTrack, LPONo, TotalWeight, PreparedBy)
+                    VALUES (@SalesOrderNo, @SalesOrderDate, @CustomerCode, @SalesmanCode, @Remark, @SubTotal, @VATAmount, @Discount,
+                    @TotalAmount, 0, '', 0, '')"
+                    Using cmd As New MySqlCommand(insertMasterSql, conn, tx)
+                        cmd.Parameters.AddWithValue("@SalesOrderNo", data("id"))
+                        cmd.Parameters.AddWithValue("@SalesOrderDate", data("OrderDate").ToString().Split(" "c)(0))
+                        cmd.Parameters.AddWithValue("@CustomerCode", data("CustomerCode"))
+                        cmd.Parameters.AddWithValue("@SalesmanCode", data("sales_man_id"))
+                        cmd.Parameters.AddWithValue("@Remark", "")
+                        cmd.Parameters.AddWithValue("@SubTotal", data("TotalAmount"))
+                        cmd.Parameters.AddWithValue("@VATAmount", 0)
+                        cmd.Parameters.AddWithValue("@Discount", 0)
+                        cmd.Parameters.AddWithValue("@TotalAmount", data("TotalAmount"))
+                        Await cmd.ExecuteNonQueryAsync()
+                    End Using
+                    ' 2. INSERT DETAILS
+                    Dim lines = data("lines")
+                    For Each line In lines
+                        Dim insertLineSql As String =
+                        "INSERT INTO salesorderdetails (SalesOrderNo, SalesOrderDate, ProductCode, Pack, Qty, Price, Amount, VAT,
+                        Weight, VATAmount, NetAmount, SrNo)
+                        VALUES (@SalesOrderNo, @SalesOrderDate, @ProductCode, 0, @Qty, @Price, @Amount, 'N', 0, @VATAmount, @NetAmount, @SrNo)"
+                        Using cmd As New MySqlCommand(insertLineSql, conn, tx)
+                            cmd.Parameters.AddWithValue("@SalesOrderNo", data("id"))
+                            cmd.Parameters.AddWithValue("@SalesOrderDate", data("OrderDate").ToString().Split(" "c)(0))
+                            cmd.Parameters.AddWithValue("@ProductCode", line("ProductCode"))
+                            cmd.Parameters.AddWithValue("@Qty", line("Quantity"))
+                            cmd.Parameters.AddWithValue("@Price", line("UnitPrice"))
+                            cmd.Parameters.AddWithValue("@Amount", line("LineTotal"))
+                            cmd.Parameters.AddWithValue("@VATAmount", line("VatAmount"))
+                            cmd.Parameters.AddWithValue("@NetAmount", line("LineTotal"))
+                            cmd.Parameters.AddWithValue("@SrNo", line("id"))
+                            Await cmd.ExecuteNonQueryAsync()
+                        End Using
+                    Next
+                    tx.Commit()
+                Catch ex As Exception
+                    If tx IsNot Nothing Then
+                        tx.Rollback()
+                    End If
+                    Throw
+                End Try
+            End Using
+        End Using
     End Function
 
     'Global helpers
