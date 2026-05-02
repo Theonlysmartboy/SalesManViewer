@@ -51,6 +51,10 @@
         Public Property Product_Margin As Decimal
         Public Property Product_Selling_Price As Decimal
 
+        Public Property SalesmanPrice1 As Decimal?
+        Public Property SalesmanPrice2 As Decimal?
+        Public Property SalesmanPrice3 As Decimal?
+
         Public Property DistanceStepKM As Decimal?
         Public Property SalesmanExtra As Decimal?
         Public Property MaxDeliveryCharge As Decimal?

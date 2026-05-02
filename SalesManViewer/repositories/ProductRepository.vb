@@ -9,10 +9,11 @@ Namespace repositories
             Using conn = DatabaseHelper.GetConnection()
                 Dim sql As String = "SELECT ProductCode, ProductName, DepartmentCode, SupplierPackingDetails," &
                     "ProductUnit, TagPrice, Product_VAT_Code, Product_Cost_Price, Product_Last_Cost_Price, " &
-                    "Product_Margin, Product_Selling_Price, DistanceStepKM, SalesmanExtra, MaxDeliveryCharge, " &
-                    "Min_Qty, ReOrd_Level, Qty_to_Order, SupplierCode, Weight, Product_Qty, isAlternetUnit, " &
-                    "AlternetUnit, UnitValue, AlternetUnitValue, HSCode, HSDesc, isActive, isStockItem, Remark, " &
-                    "Created, CreatedBy, Modified, ModifiedBy, SrNo FROM productmaster ORDER BY ProductName"
+                    "Product_Margin, Product_Selling_Price, SalesmanPrice1, SalesmanPrice2, SalesmanPrice3, " &
+                    "DistanceStepKM, SalesmanExtra, MaxDeliveryCharge, Min_Qty, ReOrd_Level, Qty_to_Order, " &
+                    "SupplierCode, Weight, Product_Qty, isAlternetUnit, AlternetUnit, UnitValue, AlternetUnitValue, " &
+                    "HSCode, HSDesc, isActive, isStockItem, Remark, Created, CreatedBy, Modified, ModifiedBy, " &
+                    "SrNo FROM productmaster ORDER BY ProductName"
                 Using cmd As New MySqlCommand(sql, conn)
                     Using adapter As New MySqlDataAdapter(cmd)
                         adapter.Fill(dt)
@@ -46,6 +47,9 @@ Namespace repositories
                                 .Product_Last_Cost_Price = Convert.ToDecimal(r("Product_Last_Cost_Price")),
                                 .Product_Margin = Convert.ToDecimal(r("Product_Margin")),
                                 .Product_Selling_Price = Convert.ToDecimal(r("Product_Selling_Price")),
+                                .SalesmanPrice1 = If(IsDBNull(r("SalesmanPrice1")), Nothing, Convert.ToDecimal(r("SalesmanPrice1"))),
+                                .SalesmanPrice2 = If(IsDBNull(r("SalesmanPrice2")), Nothing, Convert.ToDecimal(r("SalesmanPrice2"))),
+                                .SalesmanPrice3 = If(IsDBNull(r("SalesmanPrice3")), Nothing, Convert.ToDecimal(r("SalesmanPrice3"))),
                                 .DistanceStepKM = If(IsDBNull(r("DistanceStepKM")), Nothing, Convert.ToDecimal(r("DistanceStepKM"))),
                                 .SalesmanExtra = If(IsDBNull(r("SalesmanExtra")), Nothing, Convert.ToDecimal(r("SalesmanExtra"))),
                                 .MaxDeliveryCharge = If(IsDBNull(r("MaxDeliveryCharge")), Nothing, Convert.ToDecimal(r("MaxDeliveryCharge"))),
