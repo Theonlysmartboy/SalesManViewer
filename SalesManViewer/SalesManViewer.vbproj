@@ -115,6 +115,9 @@
     <Compile Include="helpers\DatabaseHelper.vb" />
     <Compile Include="models\ProductModel.vb" />
     <Compile Include="models\SalesmanModel.vb" />
+    <Compile Include="models\TrackingPoint.vb" />
+    <Compile Include="models\TrackingResponseList.vb" />
+    <Compile Include="models\TrackingResponseSingle.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

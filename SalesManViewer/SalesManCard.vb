@@ -23,7 +23,7 @@ Public Class SalesmanCard
     Public Sub New(id As Integer, name As String)
         _SalesmanId = id
         _SalesmanName = If(name, "").Trim()
-        Me.Height = 52
+        Me.Height = 40
         Me.Margin = New Padding(0, 0, 0, 6)
         Me.Padding = New Padding(12, 6, 8, 6)
         Me.BackColor = Color.White

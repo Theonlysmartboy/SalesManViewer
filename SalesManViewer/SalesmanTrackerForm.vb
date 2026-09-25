@@ -1,125 +1,214 @@
-﻿Imports System.IO
+﻿Imports System.Globalization
+Imports System.IO
 Imports System.Net.Http
 Imports System.Security.Permissions
-Imports System.Text
 Imports Newtonsoft.Json
 Imports SalesManViewer.helpers
 Imports SalesManViewer.models
+Imports SalesManViewer.models.tracking
 
 <PermissionSet(SecurityAction.Demand, Name:="FullTrust")>
 <System.Runtime.InteropServices.ComVisible(True)>
 Public Class SalesmanTrackerForm
-    Dim serverUrl As String = "http://197.248.109.130/salesman-backend"
-    Private OriginalTables As New Dictionary(Of DataGridView, DataTable)
+    Private Const SERVER_URL As String = "http://197.248.109.130/salesman-backend"
+    ' --- Endpoint action names --
+    Private Const ACTION_ALL_LAST As String = "all-last"
+    Private Const ACTION_USER_LAST As String = "last"
+    Private Const ACTION_USER_BY_DATE As String = "date"
+    Private ReadOnly _http As New HttpClient()
+    Private _markerBase64 As String
+    Private _cardsById As New Dictionary(Of Integer, SalesmanCard)
 
+    ' FORM LIFECYCLE
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         SetPlaceholder(TxtSearchSalesMen, "Start typing to search...")
         AddHandler TxtSearchSalesMen.Enter, AddressOf TextBox_Enter
         AddHandler TxtSearchSalesMen.Leave, AddressOf TextBox_Leave
         Await WbMap.EnsureCoreWebView2Async()
         WbMap.CoreWebView2.AddHostObjectToScript("bridge", Me)
-        ' Load the empty map shell
         Dim gmh As New GoogleMapsHelper(WbMap, New String(,) {})
         Await gmh.LoadMapAsync()
-        ' Give the page a moment to finish running its scripts, then push the markers.
         Await WaitForMapReadyAsync()
-        BtnRefreshSm.PerformClick()
-        Await LoadTracking()
+        Await RefreshSalesmenAsync()
+        Await LoadAllLastAsync()
     End Sub
 
-    Private Sub TxtSearchSalesMen_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchSalesMen.TextChanged
-        If TxtSearchSalesMen.ForeColor = Color.Gray Then Exit Sub
-        FilterGrid(DgvSalesMen, TxtSearchSalesMen.Text)
+    Private Sub FlpSalesmen_Resize(sender As Object, e As EventArgs) Handles flpSalesmen.Resize
+        ResizeCards()
     End Sub
 
-    Private Async Sub BtnRefreshSm_Click(sender As Object, e As EventArgs) Handles BtnRefreshSm.Click
+    Private Sub ResizeCards()
+        Dim w = flpSalesmen.ClientSize.Width - flpSalesmen.Padding.Horizontal - 20
+        If w < 200 Then w = 200
+        For Each c In flpSalesmen.Controls.OfType(Of SalesmanCard)()
+            c.Width = w
+        Next
+    End Sub
+
+    ' SALESMEN LIST
+    Private Async Function RefreshSalesmenAsync() As Task
         Try
             BtnRefreshSm.Enabled = False
             BtnRefreshSm.Text = "Loading..."
-            Dim url As String = $"{serverUrl}/api/auth.php?action=get-all-users"
-            Using client As New HttpClient()
-                Dim response = Await client.GetAsync(url)
-                Dim json = Await response.Content.ReadAsStringAsync()
-                Dim apiResponse = JsonConvert.DeserializeObject(Of SalesmanApiResponse)(json)
-                If apiResponse IsNot Nothing AndAlso apiResponse.success Then
-                    Dim dt As New DataTable()
-                    dt.Columns.Add("Id")
-                    dt.Columns.Add("Full Name")
-                    For Each u In apiResponse.data
-                        dt.Rows.Add(u.id, u.full_name)
-                    Next
-                    OriginalTables(DgvSalesMen) = dt.Copy()
-                    DgvSalesMen.DataSource = dt
-                    DgvSalesMen.EditMode = DataGridViewEditMode.EditOnEnter
-                    DgvSalesMen.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-                    Await LoadTracking()
-                Else
-                    MessageBox.Show("Failed to load salesmen.")
-                End If
-            End Using
+            Dim json = Await _http.GetStringAsync($"{SERVER_URL}/api/auth.php?action=get-all-users")
+            Dim apiResponse = JsonConvert.DeserializeObject(Of SalesmanApiResponse)(json)
+            If apiResponse Is Nothing OrElse Not apiResponse.success Then
+                MessageBox.Show("Failed to load salesmen.")
+                Return
+            End If
+            BuildSalesmenCards(apiResponse.data)
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            MessageBox.Show("Load salesmen failed: " & ex.Message)
         Finally
             BtnRefreshSm.Enabled = True
             BtnRefreshSm.Text = "Refresh"
         End Try
+    End Function
+
+    Private Sub BuildSalesmenCards(users As IEnumerable(Of Object))
+        flpSalesmen.SuspendLayout()
+        ' dispose old cards
+        For i = flpSalesmen.Controls.Count - 1 To 0 Step -1
+            flpSalesmen.Controls(i).Dispose()
+        Next
+        _cardsById.Clear()
+        For Each u In users
+            Dim id = CInt(u.GetType().GetProperty("id").GetValue(u))
+            Dim name = CStr(u.GetType().GetProperty("full_name").GetValue(u))
+            Dim card As New SalesmanCard(id, name)
+            AddHandler card.TodayMovementClicked, AddressOf OnTodayMovement
+            AddHandler card.LocationByDateClicked, AddressOf OnLocationByDate
+            AddHandler card.MovementHistoryClicked, AddressOf OnMovementHistory
+            flpSalesmen.Controls.Add(card)
+            _cardsById(id) = card
+        Next
+        flpSalesmen.ResumeLayout()
+        ResizeCards()
+        ApplySearchFilter()
     End Sub
 
-    Private Async Sub DgvSalesMen_CellClick(sender As Object, e As DataGridViewCellEventArgs)
-        If e.RowIndex < 0 Then Return
-        Dim row = DgvSalesMen.Rows(e.RowIndex)
-        Dim userId = row.Cells("Id").Value.ToString()
-        Await LoadTracking(userId)
+    Private Sub TxtSearchSalesMen_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchSalesMen.TextChanged
+        If TxtSearchSalesMen.ForeColor = Color.Gray Then Exit Sub
+        ApplySearchFilter()
     End Sub
 
-    'helpers
-    Private Async Function LoadTracking(Optional userId As String = "") As Task
+    Private Sub ApplySearchFilter()
+        Dim s = GetSearchText().ToLowerInvariant()
+        For Each c In flpSalesmen.Controls.OfType(Of SalesmanCard)()
+            c.Visible = String.IsNullOrEmpty(s) OrElse c.SalesmanName.ToLowerInvariant().Contains(s)
+        Next
+    End Sub
+
+    Private Function GetSearchText() As String
+        If TxtSearchSalesMen Is Nothing Then Return ""
+        If TxtSearchSalesMen.ForeColor = Color.Gray Then Return ""
+        Return TxtSearchSalesMen.Text.Trim()
+    End Function
+
+    ' CARD BUTTON HANDLERS
+    Private Async Sub OnTodayMovement(sender As Object, e As EventArgs)
+        Dim card = TryCast(sender, SalesmanCard)
+        If card Is Nothing Then Return
+        Await LoadUserByDateAsync(card.SalesmanId, card.SalesmanName, DateTime.Now)
+    End Sub
+
+    Private Async Sub OnLocationByDate(sender As Object, e As EventArgs)
+        Dim card = TryCast(sender, SalesmanCard)
+        If card Is Nothing Then Return
+        Using dlg As New DateTimePickerDialog(
+                $"Location for {card.SalesmanName}",
+                includeTime:=True,
+                initial:=DateTime.Now)
+            If dlg.ShowDialog(Me) <> DialogResult.OK Then Return
+            Await LoadUserAtDateTimeAsync(card.SalesmanId, card.SalesmanName, dlg.SelectedDateTime)
+        End Using
+    End Sub
+
+    Private Async Sub OnMovementHistory(sender As Object, e As EventArgs)
+        Dim card = TryCast(sender, SalesmanCard)
+        If card Is Nothing Then Return
+        Using dlg As New DateTimePickerDialog(
+                $"Movement history for {card.SalesmanName}",
+                includeTime:=False,
+                initial:=DateTime.Today)
+            If dlg.ShowDialog(Me) <> DialogResult.OK Then Return
+            Await LoadUserByDateAsync(card.SalesmanId, card.SalesmanName, dlg.SelectedDateTime.Date)
+        End Using
+    End Sub
+
+    ' TRACKING LOADERS
+    Private Async Function LoadAllLastAsync() As Task
+        Dim points = Await FetchTrackingAsync(
+            $"{SERVER_URL}/api/tracking.php?action={ACTION_ALL_LAST}")
+        PushMarkers(points)
+    End Function
+
+    Private Async Function LoadUserLastAsync(userId As Integer) As Task
+        Dim points = Await FetchTrackingAsync(
+            $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_LAST}&user_id={userId}")
+        PushMarkers(points)
+    End Function
+
+    Private Async Function LoadUserByDateAsync(userId As Integer, name As String, d As DateTime) As Task
+        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_BY_DATE}" &
+                $"&user_id={userId}&date={d:yyyy-MM-dd}"
+        Dim points = Await FetchTrackingAsync(q)
+        PushMarkers(points)
+    End Function
+
+    Private Async Function LoadUserAtDateTimeAsync(userId As Integer, name As String, dt As DateTime) As Task
+        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_BY_DATE}" &
+                $"&user_id={userId}&datetime={Uri.EscapeDataString(dt.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture))}"
+        Dim points = Await FetchTrackingAsync(q)
+        If points Is Nothing OrElse points.Count = 0 Then
+            points = Await FetchTrackingAsync(
+                $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_LAST}&user_id={userId}")
+        End If
+        PushMarkers(points)
+    End Function
+
+    ' TRACKING HELPERS
+    Private Async Function FetchTrackingAsync(url As String) As Task(Of List(Of TrackingPoint))
         Try
-            Using client As New HttpClient()
-                Dim url As String
-                If String.IsNullOrEmpty(userId) Then
-                    url = $"{serverUrl}/api/tracking.php?action=all-last"
-                    Dim response = Await client.GetAsync(url)
-                    Dim json = Await response.Content.ReadAsStringAsync()
-                    Dim data = JsonConvert.DeserializeObject(Of TrackingResponseList)(json)
-                    If data.success Then
-                        Dim markers As New List(Of String())
-                        Dim iconBase64 = GetImageBase64()
-                        For Each t In data.data
-                            markers.Add(New String() {
-                            t.latitude,
-                            t.longitude,
-                            t.username,
-                            iconBase64
-                        })
-                        Next
-                        UpdateMap(markers)
-                    End If
-                Else
-                    url = $"{serverUrl}/api/tracking.php?action=user&user_id={userId}"
-                    Dim response = Await client.GetAsync(url)
-                    Dim json = Await response.Content.ReadAsStringAsync()
-                    Dim data = JsonConvert.DeserializeObject(Of TrackingResponseSingle)(json)
-                    If data.success AndAlso data.data IsNot Nothing Then
-                        Dim markers As New List(Of String()) From {
-                        New String() {
-                            data.data.latitude,
-                            data.data.longitude,
-                            data.data.username,
-                            GetImageBase64()
-                        }
-                    }
-                        UpdateMap(markers)
-                    End If
-                End If
-            End Using
+            Dim json = Await _http.GetStringAsync(url)
+            ' Try the list shape first.
+            Dim listResp = JsonConvert.DeserializeObject(Of TrackingResponseList)(json)
+            If listResp IsNot Nothing AndAlso listResp.success AndAlso listResp.data IsNot Nothing Then
+                Return listResp.data
+            End If
+            ' Fallback: single shape.
+            Dim singleResp = JsonConvert.DeserializeObject(Of TrackingResponseSingle)(json)
+            If singleResp IsNot Nothing AndAlso singleResp.success AndAlso singleResp.data IsNot Nothing Then
+                Return New List(Of TrackingPoint) From {singleResp.data}
+            End If
         Catch ex As Exception
             MessageBox.Show("Tracking error: " & ex.Message)
         End Try
+        Return New List(Of TrackingPoint)()
     End Function
 
+    Private Sub PushMarkers(points As List(Of TrackingPoint))
+        If points Is Nothing Then points = New List(Of TrackingPoint)()
+        Dim icon = GetMarkerBase64()
+        Dim payload As New List(Of Object())
+        For Each p In points
+            Dim lat As Double, lng As Double
+            If Not Double.TryParse(p.latitude, NumberStyles.Float, CultureInfo.InvariantCulture, lat) Then Continue For
+            If Not Double.TryParse(p.longitude, NumberStyles.Float, CultureInfo.InvariantCulture, lng) Then Continue For
+            If lat = 0 AndAlso lng = 0 Then Continue For
+            Dim tracked_at = If(p.tracked_at, "").ToString()
+            payload.Add(New Object() {lat, lng, p.username, icon, tracked_at})
+        Next
+        UpdateMap(payload)
+    End Sub
+
+    Private Sub UpdateMap(payload As List(Of Object()))
+        Dim jsArray = JsonConvert.SerializeObject(payload)
+        WbMap.CoreWebView2.ExecuteScriptAsync($"updateMarkers({jsArray});")
+    End Sub
+
     Private Async Function WaitForMapReadyAsync(Optional timeoutMs As Integer = 5000) As Task
-        Dim sw = Stopwatch.StartNew()
+        Dim sw = Diagnostics.Stopwatch.StartNew()
         While sw.ElapsedMilliseconds < timeoutMs
             Try
                 Dim result = Await WbMap.CoreWebView2.ExecuteScriptAsync("typeof updateMarkers === 'function'")
@@ -130,20 +219,14 @@ Public Class SalesmanTrackerForm
         End While
     End Function
 
-    Private Sub UpdateMap(markers As List(Of String()))
-        ' Build a List(Of Object()) of [lat, lng, label, icon] and let Json.NET do the escaping.
-        Dim payload As New List(Of Object())
-        For Each m In markers
-            Dim lat As Double, lng As Double
-            Double.TryParse(m(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, lat)
-            Double.TryParse(m(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, lng)
-            payload.Add(New Object() {lat, lng, m(2), m(3)})
-        Next
-        Dim jsArray = JsonConvert.SerializeObject(payload)
-        WbMap.CoreWebView2.ExecuteScriptAsync($"updateMarkers({jsArray});")
-    End Sub
+    Private Function GetMarkerBase64() As String
+        If _markerBase64 Is Nothing Then
+            _markerBase64 = RenderIconBase64(32, 32)
+        End If
+        Return _markerBase64
+    End Function
 
-    Private Function GetImageBase64(Optional width As Integer = 32, Optional height As Integer = 32) As String
+    Private Function RenderIconBase64(width As Integer, height As Integer) As String
         Using original As Image = My.Resources.marker
             Using resized As New Bitmap(width, height)
                 Using g As Graphics = Graphics.FromImage(resized)
@@ -160,9 +243,10 @@ Public Class SalesmanTrackerForm
         End Using
     End Function
 
-    Private Sub toggleControls(status As Boolean, button As Button, text As String)
-        BtnRefreshSm.Enabled = status
-        button.Text = text
+    ' REFRESH + SEARCH HELPERS
+    Private Async Sub BtnRefreshSm_Click(sender As Object, e As EventArgs) Handles BtnRefreshSm.Click
+        Await RefreshSalesmenAsync()
+        Await LoadAllLastAsync()
     End Sub
 
     Private Sub SetPlaceholder(txt As TextBox, placeholder As String)
@@ -188,20 +272,5 @@ Public Class SalesmanTrackerForm
             txt.ForeColor = Color.Gray
             txt.Text = CStr(txt.Tag)
         End If
-    End Sub
-
-    Private Sub FilterGrid(grid As DataGridView, search As String)
-        If Not OriginalTables.ContainsKey(grid) Then Exit Sub
-        Dim dt As DataTable = OriginalTables(grid)
-        Dim dv As DataView = dt.DefaultView
-        If String.IsNullOrWhiteSpace(search) Then
-            dv.RowFilter = ""
-        Else
-            Dim safeSearch = search.Replace("'", "''")
-            Dim filter As String = String.Join(" OR ", dt.Columns.Cast(Of DataColumn).Select(
-                        Function(c) $"Convert([{c.ColumnName}], 'System.String') LIKE '%{safeSearch}%'"))
-            dv.RowFilter = filter
-        End If
-        grid.DataSource = dv
     End Sub
 End Class
