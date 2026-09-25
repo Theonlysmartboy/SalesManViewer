@@ -27,12 +27,11 @@ Partial Class SalesmanTrackerForm
         Me.TableLayoutPanel9 = New System.Windows.Forms.TableLayoutPanel()
         Me.BtnRefreshSm = New System.Windows.Forms.Button()
         Me.TxtSearchSalesMen = New System.Windows.Forms.TextBox()
-        Me.DgvSalesMen = New System.Windows.Forms.DataGridView()
         Me.WbMap = New Microsoft.Web.WebView2.WinForms.WebView2()
+        Me.flpSalesmen = New System.Windows.Forms.FlowLayoutPanel()
         Me.tblMain.SuspendLayout()
         Me.TableLayoutPanel8.SuspendLayout()
         Me.TableLayoutPanel9.SuspendLayout()
-        CType(Me.DgvSalesMen, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.WbMap, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -57,7 +56,7 @@ Partial Class SalesmanTrackerForm
         Me.TableLayoutPanel8.ColumnCount = 1
         Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel8.Controls.Add(Me.TableLayoutPanel9, 0, 0)
-        Me.TableLayoutPanel8.Controls.Add(Me.DgvSalesMen, 0, 1)
+        Me.TableLayoutPanel8.Controls.Add(Me.flpSalesmen, 0, 1)
         Me.TableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel8.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel8.Name = "TableLayoutPanel8"
@@ -102,17 +101,6 @@ Partial Class SalesmanTrackerForm
         Me.TxtSearchSalesMen.Size = New System.Drawing.Size(178, 20)
         Me.TxtSearchSalesMen.TabIndex = 2
         '
-        'DgvSalesMen
-        '
-        Me.DgvSalesMen.AllowUserToAddRows = False
-        Me.DgvSalesMen.AllowUserToDeleteRows = False
-        Me.DgvSalesMen.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DgvSalesMen.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DgvSalesMen.Location = New System.Drawing.Point(3, 41)
-        Me.DgvSalesMen.Name = "DgvSalesMen"
-        Me.DgvSalesMen.Size = New System.Drawing.Size(307, 461)
-        Me.DgvSalesMen.TabIndex = 1
-        '
         'WbMap
         '
         Me.WbMap.AllowExternalDrop = True
@@ -124,6 +112,15 @@ Partial Class SalesmanTrackerForm
         Me.WbMap.Size = New System.Drawing.Size(791, 505)
         Me.WbMap.TabIndex = 1
         Me.WbMap.ZoomFactor = 1.0R
+        '
+        'flpSalesmen
+        '
+        Me.flpSalesmen.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.flpSalesmen.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
+        Me.flpSalesmen.Location = New System.Drawing.Point(3, 41)
+        Me.flpSalesmen.Name = "flpSalesmen"
+        Me.flpSalesmen.Size = New System.Drawing.Size(307, 461)
+        Me.flpSalesmen.TabIndex = 1
         '
         'SalesmanTrackerForm
         '
@@ -138,7 +135,6 @@ Partial Class SalesmanTrackerForm
         Me.TableLayoutPanel8.ResumeLayout(False)
         Me.TableLayoutPanel9.ResumeLayout(False)
         Me.TableLayoutPanel9.PerformLayout()
-        CType(Me.DgvSalesMen, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.WbMap, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -150,5 +146,5 @@ Partial Class SalesmanTrackerForm
     Friend WithEvents TableLayoutPanel9 As TableLayoutPanel
     Friend WithEvents BtnRefreshSm As Button
     Friend WithEvents TxtSearchSalesMen As TextBox
-    Friend WithEvents DgvSalesMen As DataGridView
+    Friend WithEvents flpSalesmen As FlowLayoutPanel
 End Class

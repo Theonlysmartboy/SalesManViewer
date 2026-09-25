@@ -100,6 +100,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateTimePickerDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +138,9 @@
     </Compile>
     <Compile Include="SalesMan.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SalesManCard.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SalesmanTrackerForm.Designer.vb">
       <DependentUpon>SalesmanTrackerForm.vb</DependentUpon>

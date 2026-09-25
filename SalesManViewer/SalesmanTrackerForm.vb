@@ -13,16 +13,18 @@ Public Class SalesmanTrackerForm
     Private OriginalTables As New Dictionary(Of DataGridView, DataTable)
 
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        'Salesmen
         SetPlaceholder(TxtSearchSalesMen, "Start typing to search...")
         AddHandler TxtSearchSalesMen.Enter, AddressOf TextBox_Enter
         AddHandler TxtSearchSalesMen.Leave, AddressOf TextBox_Leave
-        ' --- WEBVIEW2 MAP SETUP ---
         Await WbMap.EnsureCoreWebView2Async()
         WbMap.CoreWebView2.AddHostObjectToScript("bridge", Me)
-        ' Load empty map
+        ' Load the empty map shell
         Dim gmh As New GoogleMapsHelper(WbMap, New String(,) {})
         Await gmh.LoadMapAsync()
+        ' Give the page a moment to finish running its scripts, then push the markers.
+        Await WaitForMapReadyAsync()
+        BtnRefreshSm.PerformClick()
+        Await LoadTracking()
     End Sub
 
     Private Sub TxtSearchSalesMen_TextChanged(sender As Object, e As EventArgs) Handles TxtSearchSalesMen.TextChanged
@@ -41,20 +43,16 @@ Public Class SalesmanTrackerForm
                 Dim apiResponse = JsonConvert.DeserializeObject(Of SalesmanApiResponse)(json)
                 If apiResponse IsNot Nothing AndAlso apiResponse.success Then
                     Dim dt As New DataTable()
-                    dt.Columns.Add("Select", GetType(Boolean))
                     dt.Columns.Add("Id")
-                    dt.Columns.Add("User Name")
                     dt.Columns.Add("Full Name")
-                    dt.Columns.Add("Email")
-                    dt.Columns.Add("Phone")
-                    dt.Columns.Add("Is Active")
                     For Each u In apiResponse.data
-                        dt.Rows.Add(False, u.id, u.username, u.full_name, u.email, u.phone, u.is_Active)
+                        dt.Rows.Add(u.id, u.full_name)
                     Next
                     OriginalTables(DgvSalesMen) = dt.Copy()
                     DgvSalesMen.DataSource = dt
                     DgvSalesMen.EditMode = DataGridViewEditMode.EditOnEnter
                     DgvSalesMen.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                    Await LoadTracking()
                 Else
                     MessageBox.Show("Failed to load salesmen.")
                 End If
@@ -67,7 +65,7 @@ Public Class SalesmanTrackerForm
         End Try
     End Sub
 
-    Private Async Sub DgvSalesMen_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvSalesMen.CellClick
+    Private Async Sub DgvSalesMen_CellClick(sender As Object, e As DataGridViewCellEventArgs)
         If e.RowIndex < 0 Then Return
         Dim row = DgvSalesMen.Rows(e.RowIndex)
         Dim userId = row.Cells("Id").Value.ToString()
@@ -98,7 +96,7 @@ Public Class SalesmanTrackerForm
                         UpdateMap(markers)
                     End If
                 Else
-                    url = $"{serverUrl}/api/tracking.php?action=last&user_id={userId}"
+                    url = $"{serverUrl}/api/tracking.php?action=user&user_id={userId}"
                     Dim response = Await client.GetAsync(url)
                     Dim json = Await response.Content.ReadAsStringAsync()
                     Dim data = JsonConvert.DeserializeObject(Of TrackingResponseSingle)(json)
@@ -108,7 +106,7 @@ Public Class SalesmanTrackerForm
                             data.data.latitude,
                             data.data.longitude,
                             data.data.username,
-                            "truck_red.png"
+                            GetImageBase64()
                         }
                     }
                         UpdateMap(markers)
@@ -120,22 +118,45 @@ Public Class SalesmanTrackerForm
         End Try
     End Function
 
+    Private Async Function WaitForMapReadyAsync(Optional timeoutMs As Integer = 5000) As Task
+        Dim sw = Stopwatch.StartNew()
+        While sw.ElapsedMilliseconds < timeoutMs
+            Try
+                Dim result = Await WbMap.CoreWebView2.ExecuteScriptAsync("typeof updateMarkers === 'function'")
+                If result IsNot Nothing AndAlso result.Trim().ToLower() = "true" Then Return
+            Catch
+            End Try
+            Await Task.Delay(100)
+        End While
+    End Function
+
     Private Sub UpdateMap(markers As List(Of String()))
-        Dim jsArray As New StringBuilder("[")
-        For i = 0 To markers.Count - 1
-            Dim m = markers(i)
-            jsArray.Append($"['{m(0)}','{m(1)}','{m(2)}','{m(3)}']")
-            If i < markers.Count - 1 Then jsArray.Append(",")
+        ' Build a List(Of Object()) of [lat, lng, label, icon] and let Json.NET do the escaping.
+        Dim payload As New List(Of Object())
+        For Each m In markers
+            Dim lat As Double, lng As Double
+            Double.TryParse(m(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, lat)
+            Double.TryParse(m(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, lng)
+            payload.Add(New Object() {lat, lng, m(2), m(3)})
         Next
-        jsArray.Append("]")
-        WbMap.CoreWebView2.ExecuteScriptAsync($"updateMarkers({jsArray.ToString()});")
+        Dim jsArray = JsonConvert.SerializeObject(payload)
+        WbMap.CoreWebView2.ExecuteScriptAsync($"updateMarkers({jsArray});")
     End Sub
 
-    Private Function GetImageBase64() As String
-        Using ms As New MemoryStream()
-            My.Resources.marker.Save(ms, Imaging.ImageFormat.Png)
-            Dim bytes = ms.ToArray()
-            Return "data:image/png;base64," & Convert.ToBase64String(bytes)
+    Private Function GetImageBase64(Optional width As Integer = 32, Optional height As Integer = 32) As String
+        Using original As Image = My.Resources.marker
+            Using resized As New Bitmap(width, height)
+                Using g As Graphics = Graphics.FromImage(resized)
+                    g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+                    g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
+                    g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+                    g.DrawImage(original, 0, 0, width, height)
+                End Using
+                Using ms As New MemoryStream()
+                    resized.Save(ms, Imaging.ImageFormat.Png)
+                    Return "data:image/png;base64," & Convert.ToBase64String(ms.ToArray())
+                End Using
+            End Using
         End Using
     End Function
 
