@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Net.Http
 Imports System.Security.Permissions
 Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
 Imports SalesManViewer.helpers
 Imports SalesManViewer.models
 Imports SalesManViewer.models.tracking
@@ -15,6 +16,7 @@ Public Class SalesmanTrackerForm
     Private Const ACTION_ALL_LAST As String = "all-last"
     Private Const ACTION_USER_LAST As String = "last"
     Private Const ACTION_USER_BY_DATE As String = "date"
+    Private Const ACTION_USER_BY_DATE_TIME As String = "datetime"
     Private ReadOnly _http As New HttpClient()
     Private _markerBase64 As String
     Private _cardsById As New Dictionary(Of Integer, SalesmanCard)
@@ -150,15 +152,14 @@ Public Class SalesmanTrackerForm
     End Function
 
     Private Async Function LoadUserByDateAsync(userId As Integer, name As String, d As DateTime) As Task
-        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_BY_DATE}" &
-                $"&user_id={userId}&date={d:yyyy-MM-dd}"
+        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_BY_DATE}&user_id={userId}&date={d:yyyy-MM-dd}"
         Dim points = Await FetchTrackingAsync(q)
         PushMarkers(points)
     End Function
 
     Private Async Function LoadUserAtDateTimeAsync(userId As Integer, name As String, dt As DateTime) As Task
-        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_BY_DATE}" &
-                $"&user_id={userId}&datetime={Uri.EscapeDataString(dt.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture))}"
+        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_BY_DATE_TIME}&user_id={userId}&datetime={Uri.EscapeDataString(dt.ToString("yyyy-MM-dd HH:mm:ss",
+                                                                                                                CultureInfo.InvariantCulture))}"
         Dim points = Await FetchTrackingAsync(q)
         If points Is Nothing OrElse points.Count = 0 Then
             points = Await FetchTrackingAsync(
@@ -169,22 +170,31 @@ Public Class SalesmanTrackerForm
 
     ' TRACKING HELPERS
     Private Async Function FetchTrackingAsync(url As String) As Task(Of List(Of TrackingPoint))
+        Dim result As New List(Of TrackingPoint)()
         Try
             Dim json = Await _http.GetStringAsync(url)
-            ' Try the list shape first.
-            Dim listResp = JsonConvert.DeserializeObject(Of TrackingResponseList)(json)
-            If listResp IsNot Nothing AndAlso listResp.success AndAlso listResp.data IsNot Nothing Then
-                Return listResp.data
+            Dim trimmed = json.TrimStart()
+            If trimmed.StartsWith("<") Then
+                Debug.WriteLine("Non-JSON response from: " & url)
+                Return result
             End If
-            ' Fallback: single shape.
-            Dim singleResp = JsonConvert.DeserializeObject(Of TrackingResponseSingle)(json)
-            If singleResp IsNot Nothing AndAlso singleResp.success AndAlso singleResp.data IsNot Nothing Then
-                Return New List(Of TrackingPoint) From {singleResp.data}
+            Dim root = JObject.Parse(json)
+            Dim success = root.Value(Of Boolean?)("success")
+            If success <> True Then Return result
+            Dim dataToken = root("data")
+            If dataToken Is Nothing OrElse dataToken.Type = JTokenType.Null Then Return result
+            If dataToken.Type = JTokenType.Array Then
+                Dim list = dataToken.ToObject(Of List(Of TrackingPoint))()
+                If list IsNot Nothing Then result.AddRange(list)
+            ElseIf dataToken.Type = JTokenType.Object Then
+                Dim singlePoint = dataToken.ToObject(Of TrackingPoint)()
+                If singlePoint IsNot Nothing Then result.Add(singlePoint)
             End If
         Catch ex As Exception
+            Debug.WriteLine("Tracking error on " & url & ": " & ex.Message)
             MessageBox.Show("Tracking error: " & ex.Message)
         End Try
-        Return New List(Of TrackingPoint)()
+        Return result
     End Function
 
     Private Sub PushMarkers(points As List(Of TrackingPoint))
