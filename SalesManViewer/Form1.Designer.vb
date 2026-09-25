@@ -32,7 +32,6 @@ Partial Class Form1
         Me.TxtSearchSalesMen = New System.Windows.Forms.TextBox()
         Me.BtnNewUpdateSm = New System.Windows.Forms.Button()
         Me.DgvSalesMen = New System.Windows.Forms.DataGridView()
-        Me.WbMap = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
@@ -112,6 +111,9 @@ Partial Class Form1
         Me.BtnSelectAll = New System.Windows.Forms.Button()
         Me.TxtSearchLocalProducts = New System.Windows.Forms.TextBox()
         Me.DgvLocalProducts = New System.Windows.Forms.DataGridView()
+        Me.TableLayoutPanel14 = New System.Windows.Forms.TableLayoutPanel()
+        Me.LblStatus = New System.Windows.Forms.Label()
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.Customers = New System.Windows.Forms.TabPage()
         Me.BtnSyncCustomers = New System.Windows.Forms.Button()
@@ -138,9 +140,7 @@ Partial Class Form1
         Me.TableLayoutPanel12 = New System.Windows.Forms.TableLayoutPanel()
         Me.BtnRefreshOrders = New System.Windows.Forms.Button()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.TableLayoutPanel14 = New System.Windows.Forms.TableLayoutPanel()
-        Me.LblStatus = New System.Windows.Forms.Label()
-        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
+        Me.btnTracker = New System.Windows.Forms.Button()
         Me.TabPage3.SuspendLayout()
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer2.Panel1.SuspendLayout()
@@ -149,7 +149,6 @@ Partial Class Form1
         Me.TableLayoutPanel8.SuspendLayout()
         Me.TableLayoutPanel9.SuspendLayout()
         CType(Me.DgvSalesMen, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.WbMap, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage2.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -166,6 +165,7 @@ Partial Class Form1
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         CType(Me.DgvLocalProducts, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TableLayoutPanel14.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.Customers.SuspendLayout()
         Me.TabPage4.SuspendLayout()
@@ -181,7 +181,6 @@ Partial Class Form1
         Me.TableLayoutPanel13.SuspendLayout()
         Me.TableLayoutPanel15.SuspendLayout()
         Me.TableLayoutPanel12.SuspendLayout()
-        Me.TableLayoutPanel14.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel7
@@ -221,7 +220,7 @@ Partial Class Form1
         '
         'SplitContainer2.Panel2
         '
-        Me.SplitContainer2.Panel2.Controls.Add(Me.WbMap)
+        Me.SplitContainer2.Panel2.Controls.Add(Me.btnTracker)
         Me.SplitContainer2.Size = New System.Drawing.Size(1356, 679)
         Me.SplitContainer2.SplitterDistance = 680
         Me.SplitContainer2.TabIndex = 0
@@ -308,19 +307,6 @@ Partial Class Form1
         Me.DgvSalesMen.Name = "DgvSalesMen"
         Me.DgvSalesMen.Size = New System.Drawing.Size(674, 633)
         Me.DgvSalesMen.TabIndex = 1
-        '
-        'WbMap
-        '
-        Me.WbMap.AllowExternalDrop = True
-        Me.WbMap.CreationProperties = Nothing
-        Me.WbMap.DefaultBackgroundColor = System.Drawing.Color.White
-        Me.WbMap.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.WbMap.Location = New System.Drawing.Point(0, 0)
-        Me.WbMap.Name = "WbMap"
-        Me.WbMap.Size = New System.Drawing.Size(672, 679)
-        Me.WbMap.TabIndex = 0
-        Me.WbMap.Visible = False
-        Me.WbMap.ZoomFactor = 1.0R
         '
         'TabPage2
         '
@@ -1112,6 +1098,37 @@ Partial Class Form1
         Me.DgvLocalProducts.Size = New System.Drawing.Size(1350, 598)
         Me.DgvLocalProducts.TabIndex = 1
         '
+        'TableLayoutPanel14
+        '
+        Me.TableLayoutPanel14.ColumnCount = 1
+        Me.TableLayoutPanel14.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel14.Controls.Add(Me.LblStatus, 0, 0)
+        Me.TableLayoutPanel14.Controls.Add(Me.ProgressBar1, 0, 1)
+        Me.TableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel14.Location = New System.Drawing.Point(3, 640)
+        Me.TableLayoutPanel14.Name = "TableLayoutPanel14"
+        Me.TableLayoutPanel14.RowCount = 2
+        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel14.Size = New System.Drawing.Size(1350, 36)
+        Me.TableLayoutPanel14.TabIndex = 2
+        '
+        'LblStatus
+        '
+        Me.LblStatus.AutoSize = True
+        Me.LblStatus.Location = New System.Drawing.Point(3, 0)
+        Me.LblStatus.Name = "LblStatus"
+        Me.LblStatus.Size = New System.Drawing.Size(45, 13)
+        Me.LblStatus.TabIndex = 0
+        Me.LblStatus.Text = "Label26"
+        '
+        'ProgressBar1
+        '
+        Me.ProgressBar1.Location = New System.Drawing.Point(3, 21)
+        Me.ProgressBar1.Name = "ProgressBar1"
+        Me.ProgressBar1.Size = New System.Drawing.Size(100, 12)
+        Me.ProgressBar1.TabIndex = 1
+        '
         'TabControl1
         '
         Me.TabControl1.Controls.Add(Me.TabPage1)
@@ -1429,36 +1446,14 @@ Partial Class Form1
         Me.Label19.Text = "Orders"
         Me.Label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TableLayoutPanel14
+        'btnTracker
         '
-        Me.TableLayoutPanel14.ColumnCount = 1
-        Me.TableLayoutPanel14.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel14.Controls.Add(Me.LblStatus, 0, 0)
-        Me.TableLayoutPanel14.Controls.Add(Me.ProgressBar1, 0, 1)
-        Me.TableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel14.Location = New System.Drawing.Point(3, 640)
-        Me.TableLayoutPanel14.Name = "TableLayoutPanel14"
-        Me.TableLayoutPanel14.RowCount = 2
-        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel14.Size = New System.Drawing.Size(1350, 36)
-        Me.TableLayoutPanel14.TabIndex = 2
-        '
-        'LblStatus
-        '
-        Me.LblStatus.AutoSize = True
-        Me.LblStatus.Location = New System.Drawing.Point(3, 0)
-        Me.LblStatus.Name = "LblStatus"
-        Me.LblStatus.Size = New System.Drawing.Size(45, 13)
-        Me.LblStatus.TabIndex = 0
-        Me.LblStatus.Text = "Label26"
-        '
-        'ProgressBar1
-        '
-        Me.ProgressBar1.Location = New System.Drawing.Point(3, 21)
-        Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(100, 12)
-        Me.ProgressBar1.TabIndex = 1
+        Me.btnTracker.Location = New System.Drawing.Point(293, 222)
+        Me.btnTracker.Name = "btnTracker"
+        Me.btnTracker.Size = New System.Drawing.Size(112, 53)
+        Me.btnTracker.TabIndex = 0
+        Me.btnTracker.Text = "Salesman Tracker"
+        Me.btnTracker.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1477,7 +1472,6 @@ Partial Class Form1
         Me.TableLayoutPanel9.ResumeLayout(False)
         Me.TableLayoutPanel9.PerformLayout()
         CType(Me.DgvSalesMen, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.WbMap, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage2.ResumeLayout(False)
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
@@ -1497,6 +1491,8 @@ Partial Class Form1
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.TableLayoutPanel2.PerformLayout()
         CType(Me.DgvLocalProducts, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TableLayoutPanel14.ResumeLayout(False)
+        Me.TableLayoutPanel14.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.Customers.ResumeLayout(False)
         Me.TabPage4.ResumeLayout(False)
@@ -1515,8 +1511,6 @@ Partial Class Form1
         Me.TableLayoutPanel15.ResumeLayout(False)
         Me.TableLayoutPanel12.ResumeLayout(False)
         Me.TableLayoutPanel12.PerformLayout()
-        Me.TableLayoutPanel14.ResumeLayout(False)
-        Me.TableLayoutPanel14.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1529,7 +1523,6 @@ Partial Class Form1
     Friend WithEvents BtnRefreshSm As Button
     Friend WithEvents TxtSearchSalesMen As TextBox
     Friend WithEvents DgvSalesMen As DataGridView
-    Friend WithEvents WbMap As Microsoft.Web.WebView2.WinForms.WebView2
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
@@ -1639,4 +1632,5 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanel14 As TableLayoutPanel
     Friend WithEvents LblStatus As Label
     Friend WithEvents ProgressBar1 As ProgressBar
+    Friend WithEvents btnTracker As Button
 End Class

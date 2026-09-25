@@ -23,9 +23,7 @@ Namespace repositories
             Return dt
         End Function
 
-        ' =========================
         ' LOAD PRODUCTS
-        ' =========================
         Public Function LoadProducts() As List(Of Product)
             Dim list As New List(Of Product)
             Using conn = DatabaseHelper.GetConnection()
@@ -78,9 +76,7 @@ Namespace repositories
             Return list
         End Function
 
-        ' =========================
         ' LOAD ALTERNATE UNITS
-        ' =========================
         Public Function LoadAlternates() As List(Of AlternateUnit)
             Dim list As New List(Of AlternateUnit)
             Using conn = DatabaseHelper.GetConnection()
