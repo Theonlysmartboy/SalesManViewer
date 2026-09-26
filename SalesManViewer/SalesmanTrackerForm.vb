@@ -80,6 +80,7 @@ Public Class SalesmanTrackerForm
             Dim id = CInt(u.GetType().GetProperty("id").GetValue(u))
             Dim name = CStr(u.GetType().GetProperty("full_name").GetValue(u))
             Dim card As New SalesmanCard(id, name)
+            AddHandler card.CurrentLocationClicked, AddressOf OnCurrentLocation
             AddHandler card.TodayMovementClicked, AddressOf OnTodayMovement
             AddHandler card.LocationByDateClicked, AddressOf OnLocationByDate
             AddHandler card.MovementHistoryClicked, AddressOf OnMovementHistory
@@ -110,6 +111,11 @@ Public Class SalesmanTrackerForm
     End Function
 
     ' CARD BUTTON HANDLERS
+    Private Async Sub OnCurrentLocation(sender As Object, e As EventArgs)
+        Dim card = TryCast(sender, SalesmanCard)
+        If card Is Nothing Then Return
+        Await LoadUserLastAsync(card.SalesmanId)
+    End Sub
     Private Async Sub OnTodayMovement(sender As Object, e As EventArgs)
         Dim card = TryCast(sender, SalesmanCard)
         If card Is Nothing Then Return
@@ -148,26 +154,47 @@ Public Class SalesmanTrackerForm
     End Function
 
     Private Async Function LoadUserLastAsync(userId As Integer) As Task
-        Dim points = Await FetchTrackingAsync(
-            $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_LAST}&user_id={userId}")
-        PushMarkers(points)
+        Try
+            Dim url As String = $"{SERVER_URL}/api/tracking.php" &
+            $"?action={ACTION_USER_LAST}&user_id={userId}"
+            Dim points As List(Of TrackingPoint) = Await FetchTrackingAsync(url)
+            PushMarkers(points)
+        Catch ex As Exception
+            MessageBox.Show("Failed to load the salesman's latest location: " &
+            ex.Message, "Tracking", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Function
 
     Private Async Function LoadUserByDateAsync(userId As Integer, name As String, d As DateTime) As Task
-        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_ON_DATE}&user_id={userId}&date={d:yyyy-MM-dd}"
-        Dim points = Await FetchTrackingAsync(q)
-        PushMarkers(points)
+        Try
+            Dim dateString As String = d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
+            Dim url As String = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_ON_DATE}" &
+            $"&user_id={userId}&date={Uri.EscapeDataString(dateString)}"
+            Dim points As List(Of TrackingPoint) = Await FetchTrackingAsync(url)
+            PushRoute(points, name)
+        Catch ex As Exception
+            MessageBox.Show("Failed to load route history: " & ex.Message, "Route History",
+            MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Function
 
     Private Async Function LoadUserAtDateTimeAsync(userId As Integer, name As String, dt As DateTime) As Task
-        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_AT_DATE_TIME}&user_id={userId}&datetime={Uri.EscapeDataString(dt.ToString("yyyy-MM-dd HH:mm:ss",
-                                                                                                                                    CultureInfo.InvariantCulture))}"
-        Dim points = Await FetchTrackingAsync(q)
-        If points Is Nothing OrElse points.Count = 0 Then
-            points = Await FetchTrackingAsync(
-                $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_LAST}&user_id={userId}")
-        End If
-        PushMarkers(points)
+        Try
+            Dim dateTimeString As String = dt.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)
+            Dim url As String = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_AT_DATE_TIME}" &
+            $"&user_id={userId}&datetime={Uri.EscapeDataString(dateTimeString)}"
+            Dim points As List(Of TrackingPoint) = Await FetchTrackingAsync(url)
+            If points Is Nothing OrElse points.Count = 0 Then
+                Await WbMap.CoreWebView2.ExecuteScriptAsync("clearRoute();")
+                MessageBox.Show("No location was recorded for the selected date and time.",
+                "Location History", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Return
+            End If
+            PushMarkers(points)
+        Catch ex As Exception
+            MessageBox.Show("Failed to load location: " & ex.Message, "Location History",
+            MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Function
 
     ' TRACKING HELPERS
@@ -214,7 +241,67 @@ Public Class SalesmanTrackerForm
         UpdateMap(payload)
     End Sub
 
+    Private Sub PushRoute(points As List(Of TrackingPoint), salesmanName As String)
+        If WbMap.CoreWebView2 Is Nothing Then
+            Return
+        End If
+        If points Is Nothing Then
+            points = New List(Of TrackingPoint)()
+        End If
+        Dim icon As String = GetMarkerBase64()
+        Dim routePoints As New List(Of Object())
+        ' Sort by actual timestamp.
+        Dim orderedPoints = points.Where(Function(p) p IsNot Nothing).OrderBy(Function(p) ParseTrackingDate(p.tracked_at)).ToList()
+        For Each p In orderedPoints
+            Dim lat As Double
+            Dim lng As Double
+            If Not Double.TryParse(p.latitude, NumberStyles.Float, CultureInfo.InvariantCulture, lat) Then
+                Continue For
+            End If
+            If Not Double.TryParse(p.longitude, NumberStyles.Float, CultureInfo.InvariantCulture, lng) Then
+                Continue For
+            End If
+            ' Validate coordinate ranges.
+            If lat < -90 OrElse lat > 90 Then Continue For
+            If lng < -180 OrElse lng > 180 Then Continue For
+            ' Ignore empty GPS coordinates.
+            If lat = 0 AndAlso lng = 0 Then Continue For
+            Dim trackedAt As String = If(p.tracked_at, "").ToString()
+            routePoints.Add(New Object() {lat, lng, salesmanName, icon, trackedAt})
+        Next
+        If routePoints.Count = 0 Then
+            WbMap.CoreWebView2.ExecuteScriptAsync("clearRoute();")
+            MessageBox.Show("No tracking locations were found for the selected date.",
+            "Route History", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+        Dim jsArray As String = JsonConvert.SerializeObject(routePoints)
+        Dim jsName As String = JsonConvert.SerializeObject(salesmanName)
+        Dim script As String = $"drawRoute({jsArray}, {jsName});"
+        WbMap.CoreWebView2.ExecuteScriptAsync(script)
+    End Sub
 
+    Private Function ParseTrackingDate(value As String) As DateTime
+        If String.IsNullOrWhiteSpace(value) Then
+            Return DateTime.MinValue
+        End If
+        Dim parsed As DateTime
+        Dim formats As String() = {
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss.fff",
+            "yyyy-MM-ddTHH:mm:ss",
+            "yyyy-MM-ddTHH:mm:ss.fff",
+            "yyyy-MM-ddTHH:mm:ssZ",
+            "yyyy-MM-ddTHH:mm:ss.fffZ"
+        }
+        If DateTime.TryParseExact(value, formats, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces, parsed) Then
+            Return parsed
+        End If
+        If DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces, parsed) Then
+            Return parsed
+        End If
+        Return DateTime.MinValue
+    End Function
 
     Private Sub UpdateMap(payload As List(Of Object()))
         Dim jsArray = JsonConvert.SerializeObject(payload)

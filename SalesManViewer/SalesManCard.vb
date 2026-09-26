@@ -10,10 +10,12 @@ Public Class SalesmanCard
 
     Public ReadOnly Property SalesmanId As Integer
     Public ReadOnly Property SalesmanName As String
+    Public Event CurrentLocationClicked As EventHandler
     Public Event TodayMovementClicked As EventHandler
     Public Event LocationByDateClicked As EventHandler
     Public Event MovementHistoryClicked As EventHandler
     Private ReadOnly _lblName As Label
+    Private ReadOnly _btnCurrent As Button
     Private ReadOnly _btnToday As Button
     Private ReadOnly _btnByDate As Button
     Private ReadOnly _btnHistory As Button
@@ -58,12 +60,15 @@ Public Class SalesmanCard
             .BackColor = Color.Transparent,
             .Margin = New Padding(0)
         }
-        _btnToday = MakeButton("Today", Color.FromArgb(25, 135, 84))
-        _btnByDate = MakeButton("By Date", Color.FromArgb(13, 110, 253))
-        _btnHistory = MakeButton("History", Color.FromArgb(108, 117, 125))
+        _btnCurrent = MakeButton("Find", Color.FromArgb(25, 135, 84))
+        _btnToday = MakeButton("Today's Route", Color.FromArgb(13, 110, 253))
+        _btnByDate = MakeButton("Past Location", Color.FromArgb(255, 160, 0))
+        _btnHistory = MakeButton("Route History", Color.FromArgb(108, 117, 125))
+        AddHandler _btnCurrent.Click, Sub(s, e) RaiseEvent CurrentLocationClicked(Me, EventArgs.Empty)
         AddHandler _btnToday.Click, Sub(s, e) RaiseEvent TodayMovementClicked(Me, EventArgs.Empty)
         AddHandler _btnByDate.Click, Sub(s, e) RaiseEvent LocationByDateClicked(Me, EventArgs.Empty)
         AddHandler _btnHistory.Click, Sub(s, e) RaiseEvent MovementHistoryClicked(Me, EventArgs.Empty)
+        flow.Controls.Add(_btnCurrent)
         flow.Controls.Add(_btnToday)
         flow.Controls.Add(_btnByDate)
         flow.Controls.Add(_btnHistory)
