@@ -32,7 +32,6 @@ Namespace helpers
             Dim mMarkerDataAsText As String = "["
             Dim rows As Integer = mMarkerData.GetLength(0)
             Dim cols As Integer = mMarkerData.GetLength(1)
-
             For i As Integer = 0 To rows - 1
                 If i <> 0 Then mMarkerDataAsText += ","
                 If cols = 2 Then
