@@ -28,15 +28,15 @@ Partial Class SalesmanTrackerForm
         Me.BtnRefreshSm = New System.Windows.Forms.Button()
         Me.TxtSearchSalesMen = New System.Windows.Forms.TextBox()
         Me.flpSalesmen = New System.Windows.Forms.FlowLayoutPanel()
-        Me.WbMap = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.WbMap = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.tblMain.SuspendLayout()
         Me.TableLayoutPanel8.SuspendLayout()
         Me.TableLayoutPanel9.SuspendLayout()
-        CType(Me.WbMap, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
+        CType(Me.WbMap, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'tblMain
@@ -110,24 +110,14 @@ Partial Class SalesmanTrackerForm
         '
         'flpSalesmen
         '
+        Me.flpSalesmen.BackColor = System.Drawing.Color.Honeydew
         Me.flpSalesmen.Dock = System.Windows.Forms.DockStyle.Fill
         Me.flpSalesmen.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
-        Me.flpSalesmen.Location = New System.Drawing.Point(3, 78)
+        Me.flpSalesmen.Location = New System.Drawing.Point(3, 75)
+        Me.flpSalesmen.Margin = New System.Windows.Forms.Padding(3, 0, 3, 0)
         Me.flpSalesmen.Name = "flpSalesmen"
-        Me.flpSalesmen.Size = New System.Drawing.Size(438, 424)
+        Me.flpSalesmen.Size = New System.Drawing.Size(438, 430)
         Me.flpSalesmen.TabIndex = 1
-        '
-        'WbMap
-        '
-        Me.WbMap.AllowExternalDrop = True
-        Me.WbMap.CreationProperties = Nothing
-        Me.WbMap.DefaultBackgroundColor = System.Drawing.Color.White
-        Me.WbMap.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.WbMap.Location = New System.Drawing.Point(453, 3)
-        Me.WbMap.Name = "WbMap"
-        Me.WbMap.Size = New System.Drawing.Size(798, 505)
-        Me.WbMap.TabIndex = 1
-        Me.WbMap.ZoomFactor = 1.0R
         '
         'TableLayoutPanel1
         '
@@ -169,6 +159,18 @@ Partial Class SalesmanTrackerForm
         Me.Label2.Text = "Sales Men"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'WbMap
+        '
+        Me.WbMap.AllowExternalDrop = True
+        Me.WbMap.CreationProperties = Nothing
+        Me.WbMap.DefaultBackgroundColor = System.Drawing.Color.White
+        Me.WbMap.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.WbMap.Location = New System.Drawing.Point(453, 3)
+        Me.WbMap.Name = "WbMap"
+        Me.WbMap.Size = New System.Drawing.Size(798, 505)
+        Me.WbMap.TabIndex = 1
+        Me.WbMap.ZoomFactor = 1.0R
+        '
         'SalesmanTrackerForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -176,15 +178,15 @@ Partial Class SalesmanTrackerForm
         Me.ClientSize = New System.Drawing.Size(1254, 511)
         Me.Controls.Add(Me.tblMain)
         Me.Name = "SalesmanTrackerForm"
-        Me.Text = "Salesman Tracker Form"
+        Me.Text = "Salesman Tracker"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.tblMain.ResumeLayout(False)
         Me.TableLayoutPanel8.ResumeLayout(False)
         Me.TableLayoutPanel9.ResumeLayout(False)
         Me.TableLayoutPanel9.PerformLayout()
-        CType(Me.WbMap, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
+        CType(Me.WbMap, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

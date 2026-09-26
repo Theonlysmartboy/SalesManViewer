@@ -1,4 +1,6 @@
-﻿Public Class SalesmanCard
+﻿Imports System.Drawing.Drawing2D
+
+Public Class SalesmanCard
     Inherits UserControl
 
     Public ReadOnly Property SalesmanId As Integer
@@ -16,18 +18,26 @@
     Private ReadOnly _btnHistory As Button
     Private ReadOnly _toolTip As New ToolTip()
 
-    Private Shared ReadOnly HoverBack As Color = Color.FromArgb(248, 249, 250)
-    Private Shared ReadOnly NormalBack As Color = Color.White
+    ' CARD APPEARANCE
+    Private Shared ReadOnly CardBack As Color = Color.White
+    Private Shared ReadOnly CardHoverBack As Color = Color.FromArgb(250, 248, 253)
+    Private Shared ReadOnly ShadowColor As Color = Color.FromArgb(35, 0, 0, 0)
+
+    Private Const CardRadius As Integer = 8
+    Private Const ShadowSize As Integer = 5
 
     Public Sub New(id As Integer, name As String)
         _SalesmanId = id
         _SalesmanName = If(name, "").Trim()
-        Me.Height = 40
-        Me.Margin = New Padding(0, 0, 0, 6)
-        Me.Padding = New Padding(10, 4, 6, 4)
-        Me.BackColor = NormalBack
-        Me.BorderStyle = BorderStyle.FixedSingle
+        Me.Height = 48
+        Me.Margin = New Padding(4, 3, 4, 8)
+        Me.Padding = New Padding(ShadowSize + 10, ShadowSize + 5, ShadowSize + 10, ShadowSize + 5)
+        Me.BackColor = CardBack
+        Me.BorderStyle = BorderStyle.None
         Me.Cursor = Cursors.Default
+        Me.DoubleBuffered = True
+        Me.ResizeRedraw = True
+        Me.SetStyle(ControlStyles.UserPaint Or ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer Or ControlStyles.ResizeRedraw, True)
         ' TOOLTIP CONFIGURATION
         _toolTip.AutoPopDelay = 5000
         _toolTip.InitialDelay = 400
@@ -67,7 +77,7 @@
             .Padding = New Padding(0)
         }
         ' COMPACT ACTION BUTTONS
-        _btnCurrent = MakeButton("Now", Color.FromArgb(25, 135, 84), "Find Current Location")
+        _btnCurrent = MakeButton("Last", Color.FromArgb(25, 135, 84), "Find Current/last known Location")
         _btnToday = MakeButton("Today", Color.FromArgb(13, 110, 253), "View Today's Route")
         _btnByDate = MakeButton("Date", Color.FromArgb(255, 160, 0), "Find Location by Date")
         _btnHistory = MakeButton("History", Color.FromArgb(108, 117, 125), "View Movement History")
@@ -120,13 +130,64 @@
     ' HOVER EFFECT
     Protected Overrides Sub OnMouseEnter(e As EventArgs)
         MyBase.OnMouseEnter(e)
-        Me.BackColor = HoverBack
+        Me.Invalidate()
     End Sub
 
     Protected Overrides Sub OnMouseLeave(e As EventArgs)
         MyBase.OnMouseLeave(e)
-        If Not Me.ClientRectangle.Contains(Me.PointToClient(Cursor.Position)) Then
-            Me.BackColor = NormalBack
+        Me.Invalidate()
+    End Sub
+
+    ' DRAW ROUNDED RECTANGLE
+    Private Function CreateRoundedPath(rect As RectangleF, radius As Single) As GraphicsPath
+        Dim path As New GraphicsPath()
+        Dim diameter As Single = radius * 2
+        If diameter > rect.Width Then diameter = rect.Width
+        If diameter > rect.Height Then diameter = rect.Height
+        path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90)
+        path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90)
+        path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90)
+        path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90)
+        path.CloseFigure()
+        Return path
+    End Function
+
+    ' PAINT THE BACKGROUND USING THE PARENT'S COLOR
+    Protected Overrides Sub OnPaintBackground(e As PaintEventArgs)
+        If Me.Parent IsNot Nothing Then
+            Using brush As New SolidBrush(Me.Parent.BackColor)
+                e.Graphics.FillRectangle(brush, Me.ClientRectangle)
+            End Using
+        Else
+            e.Graphics.Clear(Color.FromArgb(245, 246, 250))
         End If
+    End Sub
+
+    Protected Overrides Sub OnPaint(e As PaintEventArgs)
+        MyBase.OnPaint(e)
+        Dim g As Graphics = e.Graphics
+        g.SmoothingMode = SmoothingMode.AntiAlias
+        g.PixelOffsetMode = PixelOffsetMode.HighQuality
+        g.CompositingQuality = CompositingQuality.HighQuality
+        ' Card area, leaving room for shadow
+        Dim cardRect As New RectangleF(ShadowSize, ShadowSize, Me.ClientSize.Width - ShadowSize * 2 - 1, Me.ClientSize.Height - ShadowSize * 2 - 1)
+        If cardRect.Width <= 0 OrElse cardRect.Height <= 0 Then Return
+        ' Draw soft shadow
+        For i As Integer = ShadowSize To 1 Step -1
+            Dim shadowRect As New RectangleF(cardRect.X, cardRect.Y + i * 0.4F, cardRect.Width, cardRect.Height)
+            Using shadowPath As GraphicsPath = CreateRoundedPath(shadowRect, CardRadius)
+                Dim alpha As Integer = Math.Max(1, 12 - i)
+                Using shadowBrush As New SolidBrush(ShadowColor)
+                    g.FillPath(shadowBrush, shadowPath)
+                End Using
+            End Using
+        Next
+        ' Draw rounded card background
+        Using cardPath As GraphicsPath = CreateRoundedPath(cardRect, CardRadius)
+            Dim backgroundColor As Color = If(Me.ClientRectangle.Contains(Me.PointToClient(Cursor.Position)), CardHoverBack, CardBack)
+            Using cardBrush As New SolidBrush(backgroundColor)
+                g.FillPath(cardBrush, cardPath)
+            End Using
+        End Using
     End Sub
 End Class

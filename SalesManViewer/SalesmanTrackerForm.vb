@@ -27,6 +27,7 @@ Public Class SalesmanTrackerForm
 
     ' FORM LIFECYCLE
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        'flpSalesmen.BackColor = Color.FromArgb(245, 246, 250)
         SetPlaceholder(TxtSearchSalesMen, "Start typing to search...")
         Await WbMap.EnsureCoreWebView2Async()
         WbMap.CoreWebView2.AddHostObjectToScript("bridge", Me)
