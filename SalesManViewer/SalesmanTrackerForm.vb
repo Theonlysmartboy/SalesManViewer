@@ -15,8 +15,12 @@ Public Class SalesmanTrackerForm
     ' --- Endpoint action names --
     Private Const ACTION_ALL_LAST As String = "all-last"
     Private Const ACTION_USER_LAST As String = "last"
-    Private Const ACTION_USER_BY_DATE As String = "date"
-    Private Const ACTION_USER_BY_DATE_TIME As String = "datetime"
+    Private Const ACTION_USER As String = "user"
+    Private Const ACTION_ALL As String = "all"
+    Private Const ACTION_USER_ON_DATE As String = "date"
+    Private Const ACTION_ALL_ON_DATE As String = "date-all"
+    Private Const ACTION_USER_AT_DATE_TIME As String = "datetime"
+    Private Const ACTION_ALL_AT_DATE_TIME As String = "datetime-all"
     Private ReadOnly _http As New HttpClient()
     Private _markerBase64 As String
     Private _cardsById As New Dictionary(Of Integer, SalesmanCard)
@@ -24,8 +28,6 @@ Public Class SalesmanTrackerForm
     ' FORM LIFECYCLE
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         SetPlaceholder(TxtSearchSalesMen, "Start typing to search...")
-        AddHandler TxtSearchSalesMen.Enter, AddressOf TextBox_Enter
-        AddHandler TxtSearchSalesMen.Leave, AddressOf TextBox_Leave
         Await WbMap.EnsureCoreWebView2Async()
         WbMap.CoreWebView2.AddHostObjectToScript("bridge", Me)
         Dim gmh As New GoogleMapsHelper(WbMap, New String(,) {})
@@ -152,14 +154,14 @@ Public Class SalesmanTrackerForm
     End Function
 
     Private Async Function LoadUserByDateAsync(userId As Integer, name As String, d As DateTime) As Task
-        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_BY_DATE}&user_id={userId}&date={d:yyyy-MM-dd}"
+        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_ON_DATE}&user_id={userId}&date={d:yyyy-MM-dd}"
         Dim points = Await FetchTrackingAsync(q)
         PushMarkers(points)
     End Function
 
     Private Async Function LoadUserAtDateTimeAsync(userId As Integer, name As String, dt As DateTime) As Task
-        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_BY_DATE_TIME}&user_id={userId}&datetime={Uri.EscapeDataString(dt.ToString("yyyy-MM-dd HH:mm:ss",
-                                                                                                                CultureInfo.InvariantCulture))}"
+        Dim q = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_AT_DATE_TIME}&user_id={userId}&datetime={Uri.EscapeDataString(dt.ToString("yyyy-MM-dd HH:mm:ss",
+                                                                                                                                    CultureInfo.InvariantCulture))}"
         Dim points = Await FetchTrackingAsync(q)
         If points Is Nothing OrElse points.Count = 0 Then
             points = Await FetchTrackingAsync(
@@ -212,13 +214,15 @@ Public Class SalesmanTrackerForm
         UpdateMap(payload)
     End Sub
 
+
+
     Private Sub UpdateMap(payload As List(Of Object()))
         Dim jsArray = JsonConvert.SerializeObject(payload)
         WbMap.CoreWebView2.ExecuteScriptAsync($"updateMarkers({jsArray});")
     End Sub
 
     Private Async Function WaitForMapReadyAsync(Optional timeoutMs As Integer = 5000) As Task
-        Dim sw = Diagnostics.Stopwatch.StartNew()
+        Dim sw = Stopwatch.StartNew()
         While sw.ElapsedMilliseconds < timeoutMs
             Try
                 Dim result = Await WbMap.CoreWebView2.ExecuteScriptAsync("typeof updateMarkers === 'function'")
@@ -268,7 +272,7 @@ Public Class SalesmanTrackerForm
         End If
     End Sub
 
-    Private Sub TextBox_Enter(sender As Object, e As EventArgs)
+    Private Sub TextBox_Enter(sender As Object, e As EventArgs) Handles TxtSearchSalesMen.Enter
         Dim txt = DirectCast(sender, TextBox)
         If txt.Text = CStr(txt.Tag) Then
             txt.Text = ""
@@ -276,7 +280,7 @@ Public Class SalesmanTrackerForm
         End If
     End Sub
 
-    Private Sub TextBox_Leave(sender As Object, e As EventArgs)
+    Private Sub TextBox_Leave(sender As Object, e As EventArgs) Handles TxtSearchSalesMen.Leave
         Dim txt = DirectCast(sender, TextBox)
         If txt.Text = "" Then
             txt.ForeColor = Color.Gray
