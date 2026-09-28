@@ -172,7 +172,7 @@ Public Class SalesmanTrackerForm
             Dim url As String = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_ON_DATE}" &
             $"&user_id={userId}&date={Uri.EscapeDataString(dateString)}"
             Dim points As List(Of TrackingPoint) = Await FetchTrackingAsync(url)
-            PushRoute(points, name)
+            Await PushRoute(points, name)
         Catch ex As Exception
             MessageBox.Show("Failed to load route history: " & ex.Message, "Route History",
             MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -242,7 +242,7 @@ Public Class SalesmanTrackerForm
         UpdateMap(payload)
     End Sub
 
-    Private Sub PushRoute(points As List(Of TrackingPoint), salesmanName As String)
+    Private Async Function PushRoute(points As List(Of TrackingPoint), salesmanName As String) As Task
         If WbMap.CoreWebView2 Is Nothing Then
             Return
         End If
@@ -271,7 +271,7 @@ Public Class SalesmanTrackerForm
             routePoints.Add(New Object() {lat, lng, salesmanName, icon, trackedAt})
         Next
         If routePoints.Count = 0 Then
-            WbMap.CoreWebView2.ExecuteScriptAsync("clearRoute();")
+            Await WbMap.CoreWebView2.ExecuteScriptAsync("clearRoute();")
             MessageBox.Show("No tracking locations were found for the selected date.",
             "Route History", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return
@@ -279,8 +279,8 @@ Public Class SalesmanTrackerForm
         Dim jsArray As String = JsonConvert.SerializeObject(routePoints)
         Dim jsName As String = JsonConvert.SerializeObject(salesmanName)
         Dim script As String = $"drawRoute({jsArray}, {jsName});"
-        WbMap.CoreWebView2.ExecuteScriptAsync(script)
-    End Sub
+        Await WbMap.CoreWebView2.ExecuteScriptAsync(script)
+    End Function
 
     Private Function ParseTrackingDate(value As String) As DateTime
         If String.IsNullOrWhiteSpace(value) Then

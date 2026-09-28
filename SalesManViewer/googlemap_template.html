@@ -32,13 +32,14 @@
         src="http://maps.google.com/maps/api/js?sensor=false">
     </script>
     <script type="text/javascript">
-           // GLOBAL MAP OBJECTS
+        // GLOBAL MAP OBJECTS
         window.markers = [];
         window.routeMarkers = [];
         window.routePolyline = null;
         window.marker_data = [];
         window.gmap = null;
         window.infowindow = null;
+        window.geocoder = null;
 
         // HTML HELPERS        
         function escapeHtml(s) {
@@ -51,20 +52,61 @@
                     "'": '&#39;'
                 }[c];
             });
-        }
-
-        function buildBubble(title, when) {
+        }     
+        
+        function buildBubble(title, when, lat, lng, placeName) {
+            var coords = Number(lat).toFixed(8) + ", " +
+                         Number(lng).toFixed(8);
             var html = '<div class="marker-bubble">';
             html += '<div class="mb-name">' +
                 escapeHtml(title || 'Unknown') +
+                '</div>';
+            html += '<div class="mb-place">' +
+                escapeHtml(placeName || 'Location name unavailable') +
                 '</div>';
             if (when) {
                 html += '<div class="mb-time">' +
                     escapeHtml(when) +
                     '</div>';
             }
+            html += '<div class="mb-coordinates">';
+            html += '<div><strong>Latitude:</strong> ' +
+                Number(lat).toFixed(8) + '</div>';
+            html += '<div><strong>Longitude:</strong> ' +
+                Number(lng).toFixed(8) + '</div>';
+            html += '</div>';
+            html += '<button class="copy-coordinates" ' +
+                'onclick="copyCoordinates(' +
+                Number(lat) + ',' + Number(lng) +
+                ', this)">Copy Coordinates</button>';
             html += '</div>';
             return html;
+        }
+
+        async function copyCoordinates(lat, lng, button) {
+            var coords = Number(lat).toFixed(8) + ", " +
+                            Number(lng).toFixed(8);
+            try {
+                await navigator.clipboard.writeText(coords);
+                button.textContent = "Copied!";
+            } catch (e) {
+                // Fallback for WebView2 environments where clipboard
+                // access is restricted.
+                var input = document.createElement("textarea");
+                input.value = coords;
+                document.body.appendChild(input);
+                input.select();
+                try {
+                    document.execCommand("copy");
+                    button.textContent = "Copied!";
+                } catch (copyError) {
+                    button.textContent = "Copy failed";
+                }
+                document.body.removeChild(input);
+            }
+            setTimeout(function () {
+                button.textContent = "Copy Coordinates";
+            }, 2000);
         }
 
         // MAP INITIALIZATION       
@@ -81,6 +123,7 @@
                 window.marker_data[0].length < 2) {
                 return;
             }
+            window.geocoder = new google.maps.Geocoder();
             renderMarkers(window.marker_data, false);
         }
 
@@ -127,18 +170,28 @@
                 bounds.extend(position);
                 (function (marker, title, when) {
                     google.maps.event.addListener(marker, 'click', function () {
-                            window.infowindow.setContent(buildBubble(title, when));
-                            window.infowindow.open(window.gmap, marker);
-                            window.gmap.setZoom(16);
-                            window.gmap.panTo(marker.getPosition());
-                            // Existing VB.NET bridge.
-                            try {
-                                window.chrome.webview.hostObjects.bridge
-                                    .getMarkerDataFromJavascript(title, marker.getPosition().lat(), marker.getPosition().lng());
-                            } catch (e) {
-                                // Bridge may not be available.
+                        var lat = marker.getPosition().lat();
+                        var lng = marker.getPosition().lng();
+                        // Display the popup immediately.
+                        window.infowindow.setContent(buildBubble(title, when, lat, lng, "Resolving location..."));
+                        window.infowindow.open(window.gmap, marker);
+                        window.gmap.setZoom(16);
+                        window.gmap.panTo(marker.getPosition());
+                        // Resolve the address asynchronously.
+                        getLocationName(lat, lng, function (placeName) {
+                            // Ensure the same marker is still selected.
+                            if (window.infowindow.getAnchor() !== marker) {
+                                return;
                             }
+                            window.infowindow.setContent(buildBubble(title, when, lat, lng, placeName));
                         });
+                        // Preserve the existing VB.NET bridge.
+                        try {
+                            window.chrome.webview.hostObjects.bridge.getMarkerDataFromJavascript(title, lat, lng);
+                        } catch (e) {
+                            // Bridge may not be available.
+                        }
+                    });
                 })(marker, title, when);
                 window.markers.push(marker);
             }
@@ -151,6 +204,27 @@
             } else {
                 window.gmap.fitBounds(bounds);
             }
+        }
+
+        function getLocationName(lat, lng, callback) {
+            if (!window.geocoder) {
+                callback("Location name unavailable");
+                return;
+            }
+            window.geocoder.geocode(
+                {
+                    location: {
+                        lat: Number(lat),
+                        lng: Number(lng)
+                    }
+                }, function (results, status) {
+                    if (status === "OK" && results && results.length > 0) {
+                        callback(results[0].formatted_address);
+                    } else {
+                        callback("Location name unavailable");
+                    }
+                }
+            );
         }
 
         // ROUTE MANAGEMENT
