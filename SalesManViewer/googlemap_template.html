@@ -11,20 +11,111 @@
         }
         #gmap {
             height: 100%;
+        }   
+        #route-summary {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            width: 320px;
+            max-width: calc(100% - 30px);
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.20);
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #212529;
+            overflow: hidden;
+            display: none;
+        }
+        #route-summary-header {
+            background: #26256F;
+            color: #ffffff;
+            padding: 14px 16px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        #route-summary-body {
+            padding: 14px 16px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 9px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+        .summary-label {
+            color: #6c757d;
+            font-size: 12px;
+        }
+        .summary-value {
+            font-size: 14px;
+            font-weight: 600;
+            text-align: right;
+        }
+        .summary-detail {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            color: #6c757d;
+            font-weight: normal;
+        }
+        .summary-note {
+            margin-top: 10px;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #6c757d;
+        }
+        .summary-close {
+            float: right;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #ffffff;
+            font-size: 20px;
         }
         .marker-bubble {
             font-family: "Segoe UI", Arial, sans-serif;
             font-size: 12px;
-            line-height: 1.4;
-            min-width: 140px;
+            line-height: 1.5;
+            min-width: 190px;
         }
         .marker-bubble .mb-name {
             font-weight: 600;
             color: #212529;
+            font-size: 14px;
+        }
+        .marker-bubble .mb-place {
+            margin-top: 5px;
+            color: #495057;
         }
         .marker-bubble .mb-time {
             color: #6c757d;
-            margin-top: 2px;
+            margin-top: 5px;
+        }
+        .marker-bubble .mb-coordinates {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #eeeeee;
+            font-family: Consolas, monospace;
+            font-size: 11px;
+        }
+        .copy-coordinates {
+            margin-top: 10px;
+            padding: 7px 12px;
+            border: none;
+            border-radius: 5px;
+            background: #26256F;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-coordinates:hover {
+            background: #5B2C83;
         }
     </style>
     <script
@@ -40,6 +131,8 @@
         window.gmap = null;
         window.infowindow = null;
         window.geocoder = null;
+        window.geocoder = null;
+        window.geocodeCache = new Map();
 
         // HTML HELPERS        
         function escapeHtml(s) {
@@ -55,44 +148,32 @@
         }     
         
         function buildBubble(title, when, lat, lng, placeName) {
-            var coords = Number(lat).toFixed(8) + ", " +
-                         Number(lng).toFixed(8);
-            var html = '<div class="marker-bubble">';
-            html += '<div class="mb-name">' +
-                escapeHtml(title || 'Unknown') +
-                '</div>';
-            html += '<div class="mb-place">' +
-                escapeHtml(placeName || 'Location name unavailable') +
-                '</div>';
+            const latitude = Number(lat).toFixed(8);
+            const longitude = Number(lng).toFixed(8); 
+            let html = '<div class="marker-bubble">';
+            html += '<div class="mb-name">' + escapeHtml(title || "Unknown") + '</div>';
+            html += '<div class="mb-place">' + escapeHtml(placeName || "Location name unavailable") + '</div>';
             if (when) {
-                html += '<div class="mb-time">' +
-                    escapeHtml(when) +
-                    '</div>';
+                html += '<div class="mb-time">' + escapeHtml(when) + '</div>';
             }
-            html += '<div class="mb-coordinates">';
-            html += '<div><strong>Latitude:</strong> ' +
-                Number(lat).toFixed(8) + '</div>';
-            html += '<div><strong>Longitude:</strong> ' +
-                Number(lng).toFixed(8) + '</div>';
-            html += '</div>';
+            html += '<div class="mb-coordinates"> <div><strong>Latitude:</strong> ' +
+                latitude + '</div><div><strong>Longitude:</strong> ' +
+                longitude + '</div> </div>';
             html += '<button class="copy-coordinates" ' +
-                'onclick="copyCoordinates(' +
-                Number(lat) + ',' + Number(lng) +
-                ', this)">Copy Coordinates</button>';
+                'onclick="copyCoordinates(' + latitude + ',' +
+                longitude + ',this)">' + 'Copy Coordinates' +
+                '</button>';
             html += '</div>';
             return html;
         }
 
-        async function copyCoordinates(lat, lng, button) {
-            var coords = Number(lat).toFixed(8) + ", " +
-                            Number(lng).toFixed(8);
+       async function copyCoordinates(lat, lng, button) {
+            const coords = Number(lat).toFixed(8) + ", " + Number(lng).toFixed(8);
             try {
                 await navigator.clipboard.writeText(coords);
                 button.textContent = "Copied!";
             } catch (e) {
-                // Fallback for WebView2 environments where clipboard
-                // access is restricted.
-                var input = document.createElement("textarea");
+                const input = document.createElement("textarea");
                 input.value = coords;
                 document.body.appendChild(input);
                 input.select();
@@ -107,8 +188,7 @@
             setTimeout(function () {
                 button.textContent = "Copy Coordinates";
             }, 2000);
-        }
-
+}
         // MAP INITIALIZATION       
         function initialize() {
             window.marker_data = [[MARKER_DATA]];
@@ -125,11 +205,12 @@
             }
             window.geocoder = new google.maps.Geocoder();
             renderMarkers(window.marker_data, false);
+            window.geocoder = new google.maps.Geocoder();
         }
 
         // MARKER MANAGEMENT     
         function clearMarkers() {
-            for (var i = 0; i < window.markers.length; i++) {
+            for (let i = 0; i < window.markers.length; i++) {
                 window.markers[i].setMap(null);
             }
             window.markers = [];
@@ -143,22 +224,21 @@
 
         function renderMarkers(data, fitAfter) {
             data = data || [];
-            var bounds = new google.maps.LatLngBounds();
-            for (var i = 0; i < data.length; i++) {
-                var lat = Number(data[i][0]);
-                var lng = Number(data[i][1]);
-                if (!isFinite(lat) || !isFinite(lng)) {
+            const bounds = new google.maps.LatLngBounds();
+            for (let i = 0; i < data.length; i++) {
+                const lat = Number(data[i][0]);
+                const lng = Number(data[i][1]);
+                if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
                     continue;
                 }
-                if (lat < -90 || lat > 90 ||
-                    lng < -180 || lng > 180) {
+                if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
                     continue;
                 }
-                var title = data[i][2] || 'Unknown';
-                var icon = data[i][3];
-                var when = data[i][4] || '';
-                var position = new google.maps.LatLng(lat, lng);
-                var markerOptions = {
+                const title = data[i][2] || "Unknown";
+                const icon = data[i][3];
+                const when = data[i][4] || "";
+                const position = new google.maps.LatLng(lat, lng);
+                const markerOptions = {
                     position: position,
                     map: window.gmap,
                     title: title
@@ -166,33 +246,9 @@
                 if (icon) {
                     markerOptions.icon = icon;
                 }
-                var marker = new google.maps.Marker(markerOptions);
+                const marker = new google.maps.Marker(markerOptions);
+                attachMarkerInfoWindow(marker, title, when);
                 bounds.extend(position);
-                (function (marker, title, when) {
-                    google.maps.event.addListener(marker, 'click', function () {
-                        var lat = marker.getPosition().lat();
-                        var lng = marker.getPosition().lng();
-                        // Display the popup immediately.
-                        window.infowindow.setContent(buildBubble(title, when, lat, lng, "Resolving location..."));
-                        window.infowindow.open(window.gmap, marker);
-                        window.gmap.setZoom(16);
-                        window.gmap.panTo(marker.getPosition());
-                        // Resolve the address asynchronously.
-                        getLocationName(lat, lng, function (placeName) {
-                            // Ensure the same marker is still selected.
-                            if (window.infowindow.getAnchor() !== marker) {
-                                return;
-                            }
-                            window.infowindow.setContent(buildBubble(title, when, lat, lng, placeName));
-                        });
-                        // Preserve the existing VB.NET bridge.
-                        try {
-                            window.chrome.webview.hostObjects.bridge.getMarkerDataFromJavascript(title, lat, lng);
-                        } catch (e) {
-                            // Bridge may not be available.
-                        }
-                    });
-                })(marker, title, when);
                 window.markers.push(marker);
             }
             if (!fitAfter || window.markers.length === 0) {
@@ -206,40 +262,90 @@
             }
         }
 
-        function getLocationName(lat, lng, callback) {
+        function renderRouteSummary(summary, salesmanName) {
+            const panel = document.getElementById("route-summary");
+            const body = document.getElementById("route-summary-body");
+            const title = document.getElementById("summary-title");
+            title.textContent = "Recorded Movement Summary \u2014 " + (salesmanName || "Unknown");
+            function row(label, value, detail) {
+                return `<div class="summary-row">
+                        <div>
+                            <div class="summary-label">
+                                ${escapeHtml(label)}
+                            </div>
+                            ${
+                                detail
+                                    ? `<span class="summary-detail">
+                                        ${escapeHtml(detail)}
+                                       </span>`
+                                    : ""
+                            }
+                        </div>
+                        <div class="summary-value">
+                            ${escapeHtml(value)}
+                        </div>
+                    </div>`;
+            }
+
+            function visitDetail(visit) {
+                if (!visit) {
+                    return "No measurable visit";
+                }
+                return formatTime(visit.start.trackedAt) + " \u2014 " + formatTime(visit.end.trackedAt);
+            }
+            let html = "";
+            html += row("Distance Covered", formatDistance(summary.distanceMeters));
+            html += row("Locations Visited", String(summary.totalVisits));
+            html += row("Average Stay", summary.averageStayMs == null ? "Unavailable" : formatDuration(summary.averageStayMs),
+                summary.measurableVisits + " visits with measurable duration");
+            html += row("Longest Stay", summary.longestVisit ? formatDuration(summary.longestVisit.durationMs) : "Unavailable",
+                visitDetail(summary.longestVisit));
+            html += row("Shortest Stay", summary.shortestVisit ? formatDuration(summary.shortestVisit.durationMs) : "Unavailable",
+                visitDetail(summary.shortestVisit));
+            html += `<div class="summary-note">
+                    Stay durations are estimates based on recorded GPS points. Tracking gaps may affect accuracy.
+                    ${
+                        summary.excludedSegments > 0 ? "<br>" + summary.excludedSegments + " distance segments excluded due to tracking gaps." : ""
+                    }
+                </div>`;
+            body.innerHTML = html;
+            panel.style.display = "block";
+        }
+
+       function getLocationName(lat, lng, callback) {
+            const key = Number(lat).toFixed(6) + "," + Number(lng).toFixed(6);
+            if (window.geocodeCache.has(key)) {
+                callback(window.geocodeCache.get(key));
+                return;
+            }
             if (!window.geocoder) {
                 callback("Location name unavailable");
                 return;
             }
-            window.geocoder.geocode(
-                {
-                    location: {
-                        lat: Number(lat),
-                        lng: Number(lng)
-                    }
-                }, function (results, status) {
-                    if (status === "OK" && results && results.length > 0) {
-                        callback(results[0].formatted_address);
-                    } else {
-                        callback("Location name unavailable");
-                    }
+            window.geocoder.geocode({
+                location: {
+                    lat: Number(lat),
+                    lng: Number(lng)
                 }
-            );
+            }, function (results, status) {
+                let placeName = "Location name unavailable";
+                if (status === "OK" && results && results.length > 0) {
+                    placeName = results[0].formatted_address;
+                }
+                window.geocodeCache.set(key, placeName);
+                callback(placeName);
+            });
         }
-
         // ROUTE MANAGEMENT
         function clearRoute() {
-            // Remove the previous route line.
             if (window.routePolyline) {
                 window.routePolyline.setMap(null);
                 window.routePolyline = null;
             }
-            // Remove route-specific markers.
-            for (var i = 0; i < window.routeMarkers.length; i++) {
+            for (let i = 0; i < window.routeMarkers.length; i++) {
                 window.routeMarkers[i].setMap(null);
             }
             window.routeMarkers = [];
-            // Close any open information window.
             if (window.infowindow) {
                 window.infowindow.close();
             }
@@ -253,128 +359,335 @@
             clearRoute();
             clearMarkers();
             data = data || [];
-            if (data.length === 0) {
+            const points = normalizeRoutePoints(data);
+            if (points.length === 0) {
+                hideRouteSummary();
                 return;
             }
-            var routePath = [];
-            var routeBounds = new google.maps.LatLngBounds();
-            var validPoints = [];            
-            // Validate and prepare route coordinates.
-            for (var i = 0; i < data.length; i++) {
-                var lat = Number(data[i][0]);
-                var lng = Number(data[i][1]);
-                if (!isFinite(lat) || !isFinite(lng)) {
-                    continue;
-                }
-                if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-                    continue;
-                }
-                if (lat === 0 && lng === 0) {
-                    continue;
-                }
-                var position = new google.maps.LatLng(lat, lng);
+            // Calculate and display route summary.
+            const summary = calculateRouteSummary(points);
+            renderRouteSummary(summary, salesmanName);
+            const routePath = [];
+            const routeBounds = new google.maps.LatLngBounds();
+            // Prepare route coordinates.
+            for (let i = 0; i < points.length; i++) {
+                const point = points[i];
+                const position = new google.maps.LatLng(point.lat, point.lng);
                 routePath.push(position);
                 routeBounds.extend(position);
-                validPoints.push({
-                    position: position,
-                    title: data[i][2] || salesmanName || 'Unknown',
-                    icon: data[i][3],
-                    when: data[i][4] || ''
-                });
             }
-            if (validPoints.length === 0) {
-                return;
-            }
-            // Draw route line.           
+            // Draw route line.
             if (routePath.length >= 2) {
-                window.routePolyline = new google.maps.Polyline({
-                    path: routePath,
-                    geodesic: true,
-                    strokeColor: '#1976D2',
-                    strokeOpacity: 0.9,
-                    strokeWeight: 5,
-                    map: window.gmap,
-                    clickable: false
-                });
+                window.routePolyline =
+                    new google.maps.Polyline({
+                        path: routePath,
+                        geodesic: true,
+                        strokeColor: "#1976D2",
+                        strokeOpacity: 0.9,
+                        strokeWeight: 5,
+                        map: window.gmap,
+                        clickable: false
+                    });
             }
-            // ---------------------------------------------
-            for (var j = 0; j < validPoints.length; j++) {
-                var point = validPoints[j];
-                var markerTitle = point.title;
-                var markerWhen = point.when;
-                var markerIcon = point.icon;
-                var markerOptions = {
-                    position: point.position,
+            // Render route markers.
+            for (let j = 0; j < points.length; j++) {
+                const point = points[j];
+                const position = new google.maps.LatLng(point.lat, point.lng);
+                const markerOptions = {
+                    position: position,
                     map: window.gmap,
-                    title: markerTitle
+                    title: point.title
                 };
-                // Use the configured icon for intermediate points.
-                if (markerIcon) {
-                    markerOptions.icon = markerIcon;
+                // Intermediate marker icon.
+                if (point.icon) {
+                    markerOptions.icon = point.icon;
                 }
-                // First and last points get dedicated markers.
+                // Start marker.
                 if (j === 0) {
-                    markerOptions.label = {
-                        text: 'S',
-                        color: '#FFFFFF',
-                        fontWeight: 'bold'
-                    };
-                    markerOptions.icon = undefined;
-                } else if (j === validPoints.length - 1) {
-                    markerOptions.label = {
-                        text: 'E',
-                        color: '#FFFFFF',
-                        fontWeight: 'bold'
-                    };
-                    markerOptions.icon = undefined;
-                }
-                var marker = new google.maps.Marker(markerOptions);
-                // Use colored circular markers for start/end.
-                if (j === 0 || j === validPoints.length - 1) {
-                    marker.setIcon({
+                    markerOptions.icon = {
                         path: google.maps.SymbolPath.CIRCLE,
                         scale: 9,
-                        fillColor: j === 0 ? '#198754' : '#DC3545',
+                        fillColor: "#198754",
                         fillOpacity: 1,
-                        strokeColor: '#FFFFFF',
+                        strokeColor: "#FFFFFF",
                         strokeWeight: 2
-                    });
-                    marker.setLabel({
-                        text: j === 0 ? 'S' : 'E',
-                        color: '#FFFFFF',
-                        fontWeight: 'bold',
-                        fontSize: '10px' 
-                    });
+                    };
+                    markerOptions.label = {
+                        text: "S",
+                        color: "#FFFFFF",
+                        fontWeight: "bold",
+                        fontSize: "10px"
+                    };
                 }
-
-                (function (marker, title, when) {
-                    google.maps.event.addListener(marker, 'click', function () {
-                            window.infowindow.setContent(buildBubble(title, when));
-                            window.infowindow.open(window.gmap, marker);
-                            window.gmap.panTo(marker.getPosition());
-                            // Keep the existing bridge behavior.
-                            try {
-                                window.chrome.webview.hostObjects.bridge.getMarkerDataFromJavascript(title, marker.getPosition().lat(), marker.getPosition().lng());
-                            } catch (e) {
-                                // Bridge may not be available.
-                            }
-                        });
-                })(marker, markerTitle, markerWhen);
+                // End marker.
+                else if (j === points.length - 1) {
+                    markerOptions.icon = {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 9,
+                        fillColor: "#DC3545",
+                        fillOpacity: 1,
+                        strokeColor: "#FFFFFF",
+                        strokeWeight: 2
+                    };
+                    markerOptions.label = {
+                        text: "E",
+                        color: "#FFFFFF",
+                        fontWeight: "bold",
+                        fontSize: "10px"
+                    };
+                }
+                const marker = new google.maps.Marker(markerOptions);
+                attachMarkerInfoWindow(marker, point.title || salesmanName, point.trackedAtText);
                 window.routeMarkers.push(marker);
             }
-                // Fit map to route.
-                if (validPoints.length === 1) {
-                window.gmap.setCenter(validPoints[0].position);
+            // Fit map to route.
+            if (points.length === 1) {
+                window.gmap.setCenter(new google.maps.LatLng(points[0].lat, points[0].lng));
                 window.gmap.setZoom(16);
             } else {
                 window.gmap.fitBounds(routeBounds);
             }
+        }
+
+        // ROUTE SUMMARY CONFIGURATION      
+        const ROUTE_CONFIG = {
+            visitRadiusMeters: 50,
+            maxContinuousGapMinutes: 10,
+            minPointsForStay: 2
+        };    
+        
+        // DISTANCE CALCULATION
+        function haversineDistanceMeters(a, b) {
+            const R = 6371000;
+            const lat1 = Number(a.lat) * Math.PI / 180;
+            const lat2 = Number(b.lat) * Math.PI / 180;
+            const deltaLat = (Number(b.lat) - Number(a.lat)) * Math.PI / 180;
+            const deltaLng = (Number(b.lng) - Number(a.lng)) * Math.PI / 180;
+            const sinLat = Math.sin(deltaLat / 2);
+            const sinLng = Math.sin(deltaLng / 2);
+            const h = sinLat * sinLat + Math.cos(lat1) * Math.cos(lat2) * sinLng * sinLng;
+            return 2 * R * Math.asin(Math.sqrt(Math.min(1, h)));
+        }
+
+        function parseTrackingTimestamp(value) {
+            if (!value) return null;
+            const date = new Date(String(value).replace(" ", "T"));
+            if (isNaN(date.getTime())) {
+                return null;
+            }
+            return date;
+        }
+
+        function normalizeRoutePoints(data) {
+            return (data || []).map(function (item) {
+                    const lat = Number(item[0]);
+                    const lng = Number(item[1]);
+                    const trackedAt = parseTrackingTimestamp(item[4]);
+                    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+                        return null;
+                    }
+                    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+                        return null;
+                    }
+                    if (lat === 0 && lng === 0) {
+                        return null;
+                    }
+                    if (!trackedAt) {
+                        return null;
+                    }
+                    return {
+                        lat: lat,
+                        lng: lng,
+                        title: item[2] || "Unknown",
+                        icon: item[3] || "",
+                        trackedAt: trackedAt,
+                        trackedAtText: String(item[4])
+                    };
+                })
+                .filter(Boolean).sort(function (a, b) {
+                    return a.trackedAt - b.trackedAt;
+                });
+        }
+
+        function calculateRouteDistance(points) {
+            let totalMeters = 0;
+            let excludedSegments = 0;
+            const maxGapMs = ROUTE_CONFIG.maxContinuousGapMinutes * 60 * 1000;
+            for (let i = 1; i < points.length; i++) {
+                const previous = points[i - 1];
+                const current = points[i];
+                const gap = current.trackedAt.getTime() - previous.trackedAt.getTime();
+                if (gap <= 0 || gap > maxGapMs) {
+                    excludedSegments++;
+                    continue;
+                }
+                totalMeters += haversineDistanceMeters(previous, current);
+            }
+            return {
+                meters: totalMeters,
+                excludedSegments: excludedSegments
+            };
+        }
+
+        function detectLocationVisits(points) {
+            const visits = [];
+            if (!points || points.length === 0) {
+                return visits;
+            }
+            const maxGapMs = ROUTE_CONFIG.maxContinuousGapMinutes * 60 * 1000;
+            let currentVisit = null;
+            function createVisit(point) {
+                return {
+                    start: point,
+                    end: point,
+                    anchor: {
+                        lat: point.lat,
+                        lng: point.lng
+                    },
+                    points: [point],
+                    uncertain: false
+                };
+            }
+
+            function finishVisit() {
+                if (!currentVisit) return;
+                const durationMs = currentVisit.end.trackedAt.getTime() - currentVisit.start.trackedAt.getTime();
+                const measurable = currentVisit.points.length >= ROUTE_CONFIG.minPointsForStay && durationMs >= 0 && !currentVisit.uncertain;
+                visits.push({
+                    start: currentVisit.start,
+                    end: currentVisit.end,
+                    points: currentVisit.points,
+                    durationMs: durationMs,
+                    measurable: measurable,
+                    uncertain: currentVisit.uncertain
+                });
+                currentVisit = null;
+            }
+            for (let i = 0; i < points.length; i++) {
+                const point = points[i];
+                if (!currentVisit) {
+                    currentVisit = createVisit(point);
+                    continue;
+                }
+                const previous = currentVisit.end;
+                const gap = point.trackedAt.getTime() - previous.trackedAt.getTime();
+                const distanceFromAnchor = haversineDistanceMeters(currentVisit.anchor, point);
+                const gapExceeded = gap <= 0 || gap > maxGapMs;
+                const outsideRadius = distanceFromAnchor > ROUTE_CONFIG.visitRadiusMeters;
+                if (gapExceeded || outsideRadius) {
+                    finishVisit();
+                    currentVisit = createVisit(point);
+                    continue;
+                }
+                currentVisit.points.push(point);
+                currentVisit.end = point;
+            }
+            finishVisit();
+            return visits;
+        }
+
+        function calculateRouteSummary(points) {
+            const distanceResult = calculateRouteDistance(points);
+            const visits = detectLocationVisits(points);
+            const measurableVisits = visits.filter(function (visit) {
+                    return visit.measurable;
+                });
+            const totalStayMs = measurableVisits.reduce(function (sum, visit) {
+                        return sum + visit.durationMs;
+                    }, 0);
+            const averageStayMs = measurableVisits.length > 0 ? totalStayMs / measurableVisits.length : null;
+            const longestVisit = measurableVisits.length > 0 ? measurableVisits.reduce(function (longest, visit) {
+                            return visit.durationMs > longest.durationMs ? visit : longest;
+                        }) : null;
+            const shortestVisit = measurableVisits.length > 0 ? measurableVisits.reduce(function (shortest, visit) {
+                            return visit.durationMs < shortest.durationMs ? visit : shortest;
+                        }) : null;
+            return {
+                distanceMeters: distanceResult.meters,
+                excludedSegments: distanceResult.excludedSegments,
+                totalVisits: visits.length,
+                measurableVisits: measurableVisits.length,
+                averageStayMs: averageStayMs,
+                longestVisit: longestVisit,
+                shortestVisit: shortestVisit,
+                visits: visits
+            };
+        }
+
+        function formatDistance(meters) {
+            if (meters >= 1000) {
+                return (meters / 1000).toFixed(2) + " km";
+            }
+            return Math.round(meters) + " m";
+        }
+
+        function formatDuration(milliseconds) {
+            if (milliseconds == null || !Number.isFinite(milliseconds)) {
+                return "Unavailable";
+            }
+            const totalMinutes = Math.round(milliseconds / 60000);
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            if (hours > 0) {
+                return hours + " hr " + minutes + " min";
+            }
+            return minutes + " min";
+        }
+
+        function formatTime(date) {
+            if (!date) return "Unavailable";
+            return date.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }        
+
+        function hideRouteSummary() {
+            const panel = document.getElementById("route-summary");
+            if (panel) {
+                panel.style.display = "none";
+            }
+        }
+
+        function attachMarkerInfoWindow(marker, title, when) {
+            google.maps.event.addListener(marker, "click", function () {
+                    const lat = marker.getPosition().lat();
+                    const lng = marker.getPosition().lng();
+                    window.infowindow.setContent(buildBubble(title, when, lat, lng, "Resolving location..."));
+                    window.infowindow.open(window.gmap, marker);
+                    window.gmap.setZoom(16);
+                    window.gmap.panTo(marker.getPosition());
+                    getLocationName(lat, lng, function (placeName) {
+                            if (window.infowindow.getAnchor() !== marker) {
+                                return;
+                            }
+                            window.infowindow.setContent(buildBubble(title, when, lat, lng, placeName));
+                        });
+                    try {
+                        window.chrome.webview.hostObjects.bridge
+                            .getMarkerDataFromJavascript(title, lat, lng);
+                    } catch (e) {
+                        // Bridge may not be available.
+                    }
+                });
         }
         // INITIALIZE MAP
         google.maps.event.addDomListener(window,'load', initialize);
     </script>
 </head>
 <body>
-    <div id="gmap"></div>
+<div id="route-summary">
+    <div id="route-summary-header">
+        <span id="summary-title">Recorded Movement Summary</span>
+        <button
+            class="summary-close"
+            onclick="hideRouteSummary()"
+            title="Close summary">
+            &times;
+        </button>
+    </div>
+    <div id="route-summary-body"></div>
+</div>
+<div id="gmap"></div>
 </body>
 </html>

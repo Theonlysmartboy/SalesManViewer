@@ -172,10 +172,10 @@ Public Class SalesmanTrackerForm
             Dim url As String = $"{SERVER_URL}/api/tracking.php?action={ACTION_USER_ON_DATE}" &
             $"&user_id={userId}&date={Uri.EscapeDataString(dateString)}"
             Dim points As List(Of TrackingPoint) = Await FetchTrackingAsync(url)
-            Await PushRoute(points, name)
+            Await PushRouteAsync(points, name)
         Catch ex As Exception
-            MessageBox.Show("Failed to load route history: " & ex.Message, "Route History",
-            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Failed to load route history: " & ex.Message,
+            "Route History", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Function
 
@@ -242,36 +242,34 @@ Public Class SalesmanTrackerForm
         UpdateMap(payload)
     End Sub
 
-    Private Async Function PushRoute(points As List(Of TrackingPoint), salesmanName As String) As Task
-        If WbMap.CoreWebView2 Is Nothing Then
-            Return
-        End If
+    Private Async Function PushRouteAsync(points As List(Of TrackingPoint), salesmanName As String) As Task
+        If WbMap.CoreWebView2 Is Nothing Then Return
         If points Is Nothing Then
             points = New List(Of TrackingPoint)()
         End If
         Dim icon As String = GetMarkerBase64()
         Dim routePoints As New List(Of Object())
-        ' Sort by actual timestamp.
-        Dim orderedPoints = points.Where(Function(p) p IsNot Nothing).OrderBy(Function(p) ParseTrackingDate(p.tracked_at)).ToList()
+        Dim orderedPoints = points.Where(Function(p) p IsNot Nothing).
+        OrderBy(Function(p) ParseTrackingDate(p.tracked_at)).ToList()
         For Each p In orderedPoints
             Dim lat As Double
             Dim lng As Double
-            If Not Double.TryParse(p.latitude, NumberStyles.Float, CultureInfo.InvariantCulture, lat) Then
-                Continue For
-            End If
-            If Not Double.TryParse(p.longitude, NumberStyles.Float, CultureInfo.InvariantCulture, lng) Then
-                Continue For
-            End If
-            ' Validate coordinate ranges.
+            If Not Double.TryParse(p.latitude, NumberStyles.Float, CultureInfo.InvariantCulture, lat) Then Continue For
+            If Not Double.TryParse(p.longitude, NumberStyles.Float, CultureInfo.InvariantCulture, lng) Then Continue For
             If lat < -90 OrElse lat > 90 Then Continue For
             If lng < -180 OrElse lng > 180 Then Continue For
-            ' Ignore empty GPS coordinates.
             If lat = 0 AndAlso lng = 0 Then Continue For
             Dim trackedAt As String = If(p.tracked_at, "").ToString()
-            routePoints.Add(New Object() {lat, lng, salesmanName, icon, trackedAt})
+            routePoints.Add(New Object() {
+                lat,
+                lng,
+                salesmanName,
+                icon,
+                trackedAt
+            })
         Next
         If routePoints.Count = 0 Then
-            Await WbMap.CoreWebView2.ExecuteScriptAsync("clearRoute();")
+            Await WbMap.CoreWebView2.ExecuteScriptAsync("clearRoute(); clearMarkers(); hideRouteSummary();")
             MessageBox.Show("No tracking locations were found for the selected date.",
             "Route History", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return
