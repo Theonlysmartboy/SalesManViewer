@@ -312,7 +312,7 @@
             panel.style.display = "block";
         }
 
-       function getLocationName(lat, lng, callback) {
+        function getLocationName(lat, lng, callback) {
             const key = Number(lat).toFixed(6) + "," + Number(lng).toFixed(6);
             if (window.geocodeCache.has(key)) {
                 callback(window.geocodeCache.get(key));
@@ -451,7 +451,7 @@
 
         // ROUTE SUMMARY CONFIGURATION      
         const ROUTE_CONFIG = {
-            visitRadiusMeters: 50,
+            visitRadiusMeters: 10,
             maxContinuousGapMinutes: 10,
             minPointsForStay: 2
         };    
