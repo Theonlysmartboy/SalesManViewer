@@ -1,6 +1,6 @@
 ﻿Imports System.Drawing.Drawing2D
 
-Public Class SalesmanCard
+Public Class SalesManCard
     Inherits UserControl
 
     Public ReadOnly Property SalesmanId As Integer

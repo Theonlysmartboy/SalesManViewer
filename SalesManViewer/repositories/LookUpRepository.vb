@@ -2,7 +2,7 @@
 Imports Newtonsoft.Json
 
 Namespace repositories
-    Public Class LookupRepository
+    Public Class LookUpRepository
         Private serverUrl As String
 
         Public Sub New(serverUrl As String)

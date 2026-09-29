@@ -171,11 +171,11 @@
     <Compile Include="Forms\SplashScreen.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="models\ProductModel.vb" />
-    <Compile Include="models\SalesmanModel.vb" />
-    <Compile Include="models\TrackingPoint.vb" />
-    <Compile Include="models\TrackingResponseList.vb" />
-    <Compile Include="models\TrackingResponseSingle.vb" />
+    <Compile Include="Models\ProductModel.vb" />
+    <Compile Include="Models\SalesmanModel.vb" />
+    <Compile Include="Models\TrackingPoint.vb" />
+    <Compile Include="Models\TrackingResponseList.vb" />
+    <Compile Include="Models\TrackingResponseSingle.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -192,10 +192,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="repositories\LookUpRepository.vb" />
-    <Compile Include="repositories\OrderRepository.vb" />
-    <Compile Include="repositories\ProductRepository.vb" />
-    <Compile Include="views\SalesManCard.vb">
+    <Compile Include="Repositories\LookUpRepository.vb" />
+    <Compile Include="Repositories\OrderRepository.vb" />
+    <Compile Include="Repositories\ProductRepository.vb" />
+    <Compile Include="Views\SalesManCard.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\SalesmanTrackerForm.Designer.vb">

@@ -23,7 +23,7 @@ Public Class SalesmanTrackerForm
     Private Const ACTION_ALL_AT_DATE_TIME As String = "datetime-all"
     Private ReadOnly _http As New HttpClient()
     Private _markerBase64 As String
-    Private _cardsById As New Dictionary(Of Integer, SalesmanCard)
+    Private _cardsById As New Dictionary(Of Integer, SalesManCard)
 
     ' FORM LIFECYCLE
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -45,7 +45,7 @@ Public Class SalesmanTrackerForm
     Private Sub ResizeCards()
         Dim w = flpSalesmen.ClientSize.Width - flpSalesmen.Padding.Horizontal - 20
         If w < 200 Then w = 200
-        For Each c In flpSalesmen.Controls.OfType(Of SalesmanCard)()
+        For Each c In flpSalesmen.Controls.OfType(Of SalesManCard)()
             c.Width = w
         Next
     End Sub
@@ -80,7 +80,7 @@ Public Class SalesmanTrackerForm
         For Each u In users
             Dim id = CInt(u.GetType().GetProperty("id").GetValue(u))
             Dim name = CStr(u.GetType().GetProperty("full_name").GetValue(u))
-            Dim card As New SalesmanCard(id, name)
+            Dim card As New SalesManCard(id, name)
             AddHandler card.CurrentLocationClicked, AddressOf OnCurrentLocation
             AddHandler card.TodayMovementClicked, AddressOf OnTodayMovement
             AddHandler card.LocationByDateClicked, AddressOf OnLocationByDate
@@ -100,7 +100,7 @@ Public Class SalesmanTrackerForm
 
     Private Sub ApplySearchFilter()
         Dim s = GetSearchText().ToLowerInvariant()
-        For Each c In flpSalesmen.Controls.OfType(Of SalesmanCard)()
+        For Each c In flpSalesmen.Controls.OfType(Of SalesManCard)()
             c.Visible = String.IsNullOrEmpty(s) OrElse c.SalesmanName.ToLowerInvariant().Contains(s)
         Next
     End Sub
@@ -113,18 +113,18 @@ Public Class SalesmanTrackerForm
 
     ' CARD BUTTON HANDLERS
     Private Async Sub OnCurrentLocation(sender As Object, e As EventArgs)
-        Dim card = TryCast(sender, SalesmanCard)
+        Dim card = TryCast(sender, SalesManCard)
         If card Is Nothing Then Return
         Await LoadUserLastAsync(card.SalesmanId)
     End Sub
     Private Async Sub OnTodayMovement(sender As Object, e As EventArgs)
-        Dim card = TryCast(sender, SalesmanCard)
+        Dim card = TryCast(sender, SalesManCard)
         If card Is Nothing Then Return
         Await LoadUserByDateAsync(card.SalesmanId, card.SalesmanName, DateTime.Now)
     End Sub
 
     Private Async Sub OnLocationByDate(sender As Object, e As EventArgs)
-        Dim card = TryCast(sender, SalesmanCard)
+        Dim card = TryCast(sender, SalesManCard)
         If card Is Nothing Then Return
         Using dlg As New DateTimePickerDialog(
                 $"Location for {card.SalesmanName}",
@@ -136,7 +136,7 @@ Public Class SalesmanTrackerForm
     End Sub
 
     Private Async Sub OnMovementHistory(sender As Object, e As EventArgs)
-        Dim card = TryCast(sender, SalesmanCard)
+        Dim card = TryCast(sender, SalesManCard)
         If card Is Nothing Then Return
         Using dlg As New DateTimePickerDialog(
                 $"Movement history for {card.SalesmanName}",
