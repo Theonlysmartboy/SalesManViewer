@@ -146,10 +146,10 @@
     <Compile Include="Forms\HomeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\LoginForm.Designer.vb">
+    <Compile Include="Forms\Auth\LoginForm.Designer.vb">
       <DependentUpon>LoginForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\LoginForm.vb">
+    <Compile Include="Forms\Auth\LoginForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\SettingsForm.Designer.vb">
@@ -158,6 +158,7 @@
     <Compile Include="Forms\SettingsForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Handlers\IShortcutHandler.vb" />
     <Compile Include="Helpers\ChunkingUtility.vb" />
     <Compile Include="Helpers\Cryptography\Encorder.vb" />
     <Compile Include="Helpers\Cryptography\PasswordHasher.vb" />
@@ -171,6 +172,8 @@
     <Compile Include="Forms\SplashScreen.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Helpers\Security\SecurityHelper.vb" />
+    <Compile Include="Models\Auth\UserContext.vb" />
     <Compile Include="Models\ProductModel.vb" />
     <Compile Include="Models\SalesmanModel.vb" />
     <Compile Include="Models\TrackingPoint.vb" />
@@ -208,6 +211,9 @@
   <ItemGroup>
     <EmbeddedResource Include="CustomControls\Alert\JsAlertDialog.resx">
       <DependentUpon>JsAlertDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HomeForm.resx">
+      <DependentUpon>HomeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -261,9 +267,7 @@
   <ItemGroup>
     <None Include="Resources\eye-open-outline.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\Auth\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.3856.49\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.3856.49\build\Microsoft.Web.WebView2.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

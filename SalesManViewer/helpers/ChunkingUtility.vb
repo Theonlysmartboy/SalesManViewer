@@ -1,4 +1,4 @@
-﻿Namespace helpers
+﻿Namespace Helpers
     Public Class ChunkingUtility
         Public Shared Function Chunk(Of T)(list As List(Of T), size As Integer) As List(Of List(Of T))
             Dim result As New List(Of List(Of T))
