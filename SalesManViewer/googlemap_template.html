@@ -295,7 +295,7 @@
             }
             let html = "";
             html += row("Distance Covered", formatDistance(summary.distanceMeters));
-            html += row("Locations Visited", String(summary.totalVisits));
+            html += row("Customers Visited", String(summary.totalVisits));
             html += row("Average Stay", summary.averageStayMs == null ? "Unavailable" : formatDuration(summary.averageStayMs),
                 summary.measurableVisits + " visits with measurable duration");
             html += row("Longest Stay", summary.longestVisit ? formatDuration(summary.longestVisit.durationMs) : "Unavailable",
@@ -451,7 +451,7 @@
 
         // ROUTE SUMMARY CONFIGURATION      
         const ROUTE_CONFIG = {
-            visitRadiusMeters: 10,
+            visitRadiusMeters: 20,
             maxContinuousGapMinutes: 10,
             minPointsForStay: 2
         };    

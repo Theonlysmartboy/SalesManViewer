@@ -3,7 +3,7 @@ Imports System.Reflection
 Imports System.Text
 Imports Microsoft.Web.WebView2.WinForms
 
-Namespace helpers
+Namespace Helpers
     Public Class GoogleMapsHelper
         Private Const ICON_FOLDER As String = "marker_icons/"
         Private Const MAP_TEMPLATE As String = "SalesManViewer.googlemap_template.html"
