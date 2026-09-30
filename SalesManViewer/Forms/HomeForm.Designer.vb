@@ -31,13 +31,15 @@ Partial Class HomeForm
         Me.ToolStripDateLabel = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.MasterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SalesmanTrackerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripStatusLabelBreadcrumb = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripUserLabel = New System.Windows.Forms.ToolStripLabel()
         Me.DashboardPanel = New System.Windows.Forms.Panel()
-        Me.MasterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SalesmanTrackerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripLogoutLabel = New System.Windows.Forms.ToolStripLabel()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.TableLayoutPanelMain.SuspendLayout()
         Me.TableLayoutPanelContent.SuspendLayout()
         Me.TableLayoutPanelHeader.SuspendLayout()
@@ -96,7 +98,7 @@ Partial Class HomeForm
         'ToolStrip1
         '
         Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripTimeLabel, Me.ToolStripSeparator7, Me.ToolStripDateLabel, Me.ToolStripSeparator8})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLogoutLabel, Me.ToolStripSeparator1, Me.ToolStripTimeLabel, Me.ToolStripSeparator7, Me.ToolStripDateLabel, Me.ToolStripSeparator8})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 20)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1073, 20)
@@ -143,6 +145,18 @@ Partial Class HomeForm
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
+        'MasterToolStripMenuItem
+        '
+        Me.MasterToolStripMenuItem.Name = "MasterToolStripMenuItem"
+        Me.MasterToolStripMenuItem.Size = New System.Drawing.Size(55, 16)
+        Me.MasterToolStripMenuItem.Text = "Master"
+        '
+        'SalesmanTrackerToolStripMenuItem
+        '
+        Me.SalesmanTrackerToolStripMenuItem.Name = "SalesmanTrackerToolStripMenuItem"
+        Me.SalesmanTrackerToolStripMenuItem.Size = New System.Drawing.Size(109, 16)
+        Me.SalesmanTrackerToolStripMenuItem.Text = "Salesman Tracker"
+        '
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.ColumnCount = 1
@@ -188,17 +202,19 @@ Partial Class HomeForm
         Me.DashboardPanel.Size = New System.Drawing.Size(1073, 387)
         Me.DashboardPanel.TabIndex = 2
         '
-        'MasterToolStripMenuItem
+        'ToolStripLogoutLabel
         '
-        Me.MasterToolStripMenuItem.Name = "MasterToolStripMenuItem"
-        Me.MasterToolStripMenuItem.Size = New System.Drawing.Size(55, 16)
-        Me.MasterToolStripMenuItem.Text = "Master"
+        Me.ToolStripLogoutLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripLogoutLabel.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ToolStripLogoutLabel.Name = "ToolStripLogoutLabel"
+        Me.ToolStripLogoutLabel.Size = New System.Drawing.Size(51, 17)
+        Me.ToolStripLogoutLabel.Text = "Log Out"
         '
-        'SalesmanTrackerToolStripMenuItem
+        'ToolStripSeparator1
         '
-        Me.SalesmanTrackerToolStripMenuItem.Name = "SalesmanTrackerToolStripMenuItem"
-        Me.SalesmanTrackerToolStripMenuItem.Size = New System.Drawing.Size(109, 16)
-        Me.SalesmanTrackerToolStripMenuItem.Text = "Salesman Tracker"
+        Me.ToolStripSeparator1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 20)
         '
         'HomeForm
         '
@@ -243,4 +259,6 @@ Partial Class HomeForm
     Friend WithEvents ToolStripUserLabel As ToolStripLabel
     Friend WithEvents MasterToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SalesmanTrackerToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripLogoutLabel As ToolStripLabel
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
 End Class

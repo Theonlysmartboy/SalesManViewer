@@ -28,6 +28,9 @@
         Public Property Permissions As List(Of String)
         Public Property FullName As String
         Public Property LoginTime As DateTime
+        Public Property Token As String
+        Public Property Role As String
+        Public Property HasPin As Boolean
 
         ' Lifecycle Control
         Public Shared Sub Clear()

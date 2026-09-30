@@ -14,7 +14,8 @@ Public Class SettingsForm
         If Not String.IsNullOrWhiteSpace(connectionString) Then
             _settingsManager = New SettingsManager(connectionString)
         Else
-            _settingsManager = Nothing ' No DB until settings exist
+            Dim built = BuildConnectionStringFromMySettings()
+            _settingsManager = If(String.IsNullOrWhiteSpace(built), Nothing, New SettingsManager(built))
         End If
     End Sub
 
@@ -290,16 +291,16 @@ Public Class SettingsForm
     ' --- Load DB Settings into DataGridView ---
     Private Async Function LoadDBSettings() As Task
         dgvSettings.Rows.Clear()
-        ' Skip DB load if no connection is configured
+        ' --- No manager → ask the user to configure the DB first ---
         If _settingsManager Is Nothing Then
-            ' Optionally, disable the DB tab until a connection is set
-            TabPageDB.Enabled = False
+            dgvSettings.Enabled = False
             Return
         End If
+        dgvSettings.Enabled = True
         Try
             Dim allSettings = Await _settingsManager.GetAllSettings()
             ' Predefined default keys
-            Dim defaultKeys = {"base_url", "pin", "branch_id", "device_serial", "timeout"}
+            Dim defaultKeys = {"api_base_url", "shop_latitude", "shop_longitude", "timeout"}
             For Each keyName In defaultKeys
                 Dim value As String = If(allSettings.ContainsKey(keyName), allSettings(keyName), "")
                 dgvSettings.Rows.Add(keyName, value)
@@ -336,6 +337,7 @@ Public Class SettingsForm
         dgvSettings.ColumnHeadersHeight = 30
         dgvSettings.EnableHeadersVisualStyles = False
     End Function
+
     ' --- For exposing system settings to core application ---
     Public Function GetSystemSetting(key As String) As String
         Return CStr(My.Settings(key))
@@ -441,5 +443,44 @@ Public Class SettingsForm
 
     Private Shared Function IsKeyDown(key As Keys) As Boolean
         Return (GetAsyncKeyState(key) And &H8000) <> 0
+    End Function
+
+    Private Function BuildConnectionStringFromMySettings() As String
+        Dim server = TryCast(My.Settings("db_server"), String)
+        Dim user = TryCast(My.Settings("db_user"), String)
+        Dim db = TryCast(My.Settings("db_name"), String)
+        Dim encPwd = TryCast(My.Settings("db_password"), String)
+        Dim portStr = TryCast(My.Settings("db_port"), String)
+        ' --- Required fields ---
+        If String.IsNullOrWhiteSpace(server) Then
+            Return Nothing
+        End If
+        If String.IsNullOrWhiteSpace(user) Then
+            Return Nothing
+        End If
+        If String.IsNullOrWhiteSpace(db) Then
+            Return Nothing
+        End If
+        ' --- Password is OPTIONAL (root with no password is legal) ---
+        Dim pwd As String = ""
+        If Not String.IsNullOrWhiteSpace(encPwd) Then
+            Try
+                pwd = Encorder.Decrypt(encPwd)
+                If pwd Is Nothing Then pwd = ""
+            Catch ex As Exception
+                Return Nothing
+            End Try
+        End If
+        Dim builder As New MySqlConnectionStringBuilder With {
+            .Server = server,
+            .UserID = user,
+            .Password = pwd,
+            .Database = db
+        }
+        Dim port As UInteger
+        If UInteger.TryParse(portStr, port) AndAlso port > 0 Then
+            builder.Port = port
+        End If
+        Return builder.ConnectionString
     End Function
 End Class

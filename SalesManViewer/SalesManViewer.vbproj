@@ -140,6 +140,18 @@
     <Compile Include="Dialogues\DateTimePickerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Auth\ForgotPasswordForm.Designer.vb">
+      <DependentUpon>ForgotPasswordForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Auth\ForgotPasswordForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Auth\ResetPasswordForm.Designer.vb">
+      <DependentUpon>ResetPasswordForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Auth\ResetPasswordForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\HomeForm.Designer.vb">
       <DependentUpon>HomeForm.vb</DependentUpon>
     </Compile>
@@ -173,6 +185,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Helpers\Security\SecurityHelper.vb" />
+    <Compile Include="Models\Auth\LoginData.vb" />
+    <Compile Include="Models\Auth\LoginResponse.vb" />
+    <Compile Include="Models\Auth\LoginUser.vb" />
     <Compile Include="Models\Auth\UserContext.vb" />
     <Compile Include="Models\ProductModel.vb" />
     <Compile Include="Models\SalesmanModel.vb" />
@@ -198,6 +213,7 @@
     <Compile Include="Repositories\LookUpRepository.vb" />
     <Compile Include="Repositories\OrderRepository.vb" />
     <Compile Include="Repositories\ProductRepository.vb" />
+    <Compile Include="Services\Auth\AuthService.vb" />
     <Compile Include="Views\SalesManCard.vb">
       <SubType>UserControl</SubType>
     </Compile>
@@ -211,6 +227,15 @@
   <ItemGroup>
     <EmbeddedResource Include="CustomControls\Alert\JsAlertDialog.resx">
       <DependentUpon>JsAlertDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Auth\ForgotPasswordForm.resx">
+      <DependentUpon>ForgotPasswordForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Auth\LoginForm.resx">
+      <DependentUpon>LoginForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Auth\ResetPasswordForm.resx">
+      <DependentUpon>ResetPasswordForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\HomeForm.resx">
       <DependentUpon>HomeForm.vb</DependentUpon>

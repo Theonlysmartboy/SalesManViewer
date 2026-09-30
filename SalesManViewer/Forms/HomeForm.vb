@@ -186,4 +186,8 @@ Public Class HomeForm
                                 JsAlertDialog.ButtonType.OK, True, 20)
         End If
     End Sub
+
+    Private Sub ToolStripLogoutLabel_Click(sender As Object, e As EventArgs) Handles ToolStripLogoutLabel.Click
+        Logout()
+    End Sub
 End Class
