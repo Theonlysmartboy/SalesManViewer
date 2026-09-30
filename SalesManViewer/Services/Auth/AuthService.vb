@@ -6,8 +6,6 @@ Imports SalesManViewer.Models.Auth
 Namespace Services.Auth
 
     Public Class AuthService
-
-        ' A single, shared HttpClient — correct practice for modern .NET.
         Private Shared ReadOnly _http As HttpClient = CreateHttpClient()
         Private ReadOnly _baseUrl As String
 
@@ -26,8 +24,7 @@ Namespace Services.Auth
         End Function
 
         ''' <summary>
-        ''' POST /api/auth.php?action=login with form fields userName and password.
-        ''' Returns the parsed response, or Nothing if the body was empty.
+        ''' POST /api/auth.php?action=login with form fields userName and password. Returns the parsed response, or Nothing if the body was empty.
         ''' </summary>
 
         Public Async Function LoginAsync(userName As String, password As String) As Task(Of LoginResponse)
@@ -40,8 +37,6 @@ Namespace Services.Auth
             Using content As New StringContent(payload, Encoding.UTF8, "application/json")
                 Dim response = Await _http.PostAsync(url, content)
                 Dim json = Await response.Content.ReadAsStringAsync()
-                Debug.WriteLine("LOGIN REQ: " & payload)
-                Debug.WriteLine("LOGIN RES: " & json)
                 If String.IsNullOrWhiteSpace(json) OrElse json.TrimStart().StartsWith("<") Then
                     Return New LoginResponse With {
                         .Success = False,
@@ -57,6 +52,63 @@ Namespace Services.Auth
                         .Code = CInt(response.StatusCode),
                         .Message = "Unexpected response from server: " & ex.Message
                     }
+                End Try
+            End Using
+        End Function
+
+        ''' <summary>
+        ''' POST /api/auth.php?action=request-reset Sends an OTP to the user's registered email, if the account exists.
+        ''' Server always returns success — this prevents username enumeration.
+        ''' </summary>
+        Public Async Function RequestPasswordResetAsync(userName As String) As Task(Of AuthApiResponse)
+            Dim url = $"{_baseUrl}/api/auth.php?action=request-reset"
+            Dim payload = JsonConvert.SerializeObject(New With {.username = userName})
+            Return Await PostJsonAsync(Of AuthApiResponse)(url, payload)
+        End Function
+
+        ''' <summary>
+        ''' POST /api/auth.php?action=reset-password-otp Validates the OTP and sets the new password.
+        ''' </summary>
+        Public Async Function ResetPasswordWithOtpAsync(userName As String, otp As String, newPassword As String) As Task(Of AuthApiResponse)
+            Dim url = $"{_baseUrl}/api/auth.php?action=reset-password-otp"
+            Dim payload = JsonConvert.SerializeObject(New With {
+                .userName = userName,
+                .otp = otp,
+                .newPassword = newPassword
+            })
+            Return Await PostJsonAsync(Of AuthApiResponse)(url, payload)
+        End Function
+
+        ''' <summary>
+        ''' Shared POST-with-JSON helper. Handles HTML error pages and JSON parse failures .
+        ''' </summary>
+        Private Async Function PostJsonAsync(Of T)(url As String, jsonPayload As String) As Task(Of T)
+            Using content As New StringContent(jsonPayload, Encoding.UTF8, "application/json")
+                Dim response = Await _http.PostAsync(url, content)
+                Dim body = Await response.Content.ReadAsStringAsync()
+#If DEBUG Then
+                Debug.WriteLine($"POST {url}")
+                Debug.WriteLine($"  → {jsonPayload}")
+                Debug.WriteLine($"  ← {body}")
+#End If
+                ' Guard: HTML error page (404, 500, WAF, etc.)
+                If String.IsNullOrWhiteSpace(body) OrElse body.TrimStart().StartsWith("<") Then
+                    Return JsonConvert.DeserializeObject(Of T)(
+                        JsonConvert.SerializeObject(New With {
+                            .code = CInt(response.StatusCode),
+                            .success = False,
+                            .message = $"Server returned {CInt(response.StatusCode)}."
+                        }))
+                End If
+                Try
+                    Return JsonConvert.DeserializeObject(Of T)(body)
+                Catch ex As JsonException
+                    Return JsonConvert.DeserializeObject(Of T)(
+                        JsonConvert.SerializeObject(New With {
+                            .code = CInt(response.StatusCode),
+                            .success = False,
+                            .message = "Unexpected response from server: " & ex.Message
+                        }))
                 End Try
             End Using
         End Function

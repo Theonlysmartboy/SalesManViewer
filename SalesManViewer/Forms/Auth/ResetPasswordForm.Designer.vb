@@ -29,7 +29,7 @@ Partial Class ResetPasswordForm
         Me.TxtOldPassword = New System.Windows.Forms.TextBox()
         Me.PicToggleOldPassword = New System.Windows.Forms.PictureBox()
         Me.TxtUserName = New System.Windows.Forms.TextBox()
-        Me.Spinner = New JsToolBox.Loaders.TrailingDotsLoader()
+        Me.Loader = New JsToolBox.Loaders.TrailingDotsLoader()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.LblConfirmPassword = New System.Windows.Forms.Label()
         Me.PanelConfirmPassword = New System.Windows.Forms.Panel()
@@ -115,21 +115,21 @@ Partial Class ResetPasswordForm
         Me.TxtUserName.Size = New System.Drawing.Size(226, 20)
         Me.TxtUserName.TabIndex = 0
         '
-        'Spinner
+        'Loader
         '
-        Me.Spinner.DotCount = 12
-        Me.Spinner.DotSize = 6
-        Me.Spinner.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Spinner.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.Spinner.LoaderColor = System.Drawing.Color.Green
-        Me.Spinner.Location = New System.Drawing.Point(266, 121)
-        Me.Spinner.Name = "Spinner"
-        Me.Spinner.Radius = 32
-        Me.Spinner.Size = New System.Drawing.Size(75, 75)
-        Me.Spinner.Speed = 100
-        Me.Spinner.TabIndex = 7
-        Me.Spinner.Text = "Processing"
-        Me.Spinner.Visible = False
+        Me.Loader.DotCount = 12
+        Me.Loader.DotSize = 6
+        Me.Loader.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Loader.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.Loader.LoaderColor = System.Drawing.Color.Green
+        Me.Loader.Location = New System.Drawing.Point(266, 121)
+        Me.Loader.Name = "Loader"
+        Me.Loader.Radius = 32
+        Me.Loader.Size = New System.Drawing.Size(75, 75)
+        Me.Loader.Speed = 100
+        Me.Loader.TabIndex = 7
+        Me.Loader.Text = "Processing"
+        Me.Loader.Visible = False
         '
         'Panel1
         '
@@ -141,7 +141,7 @@ Partial Class ResetPasswordForm
         Me.Panel1.Controls.Add(Me.TxtUserName)
         Me.Panel1.Controls.Add(Me.LblNewPassword)
         Me.Panel1.Controls.Add(Me.PanelOldPassword)
-        Me.Panel1.Controls.Add(Me.Spinner)
+        Me.Panel1.Controls.Add(Me.Loader)
         Me.Panel1.Controls.Add(Me.PanelNewPassword)
         Me.Panel1.Controls.Add(Me.BtnReset)
         Me.Panel1.Controls.Add(Me.BtnLoginInstead)
@@ -287,7 +287,7 @@ Partial Class ResetPasswordForm
     Friend WithEvents PanelOldPassword As Panel
     Friend WithEvents TxtOldPassword As TextBox
     Friend WithEvents PicToggleOldPassword As PictureBox
-    Friend WithEvents Spinner As JsToolBox.Loaders.TrailingDotsLoader
+    Friend WithEvents Loader As JsToolBox.Loaders.TrailingDotsLoader
     Friend WithEvents Panel1 As Panel
     Friend WithEvents BtnReset As CustomControls.JsButton
     Friend WithEvents LblNewPassword As Label

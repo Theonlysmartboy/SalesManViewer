@@ -185,6 +185,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Helpers\Security\SecurityHelper.vb" />
+    <Compile Include="Models\Auth\AuthApiResponse.vb" />
     <Compile Include="Models\Auth\LoginData.vb" />
     <Compile Include="Models\Auth\LoginResponse.vb" />
     <Compile Include="Models\Auth\LoginUser.vb" />
