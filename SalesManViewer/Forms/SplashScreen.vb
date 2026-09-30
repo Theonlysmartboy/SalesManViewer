@@ -1,7 +1,7 @@
 ﻿Imports System.Text
 Imports MySql.Data.MySqlClient
 Imports SalesManViewer.CustomControls.Alert
-Imports SalesManViewer.Helpers.Db
+Imports SalesManViewer.Helpers.Database
 
 Public Class SplashScreen
     Private loadingDots As Integer = 0

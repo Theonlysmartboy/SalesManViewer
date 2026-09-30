@@ -1,5 +1,5 @@
-﻿Imports SalesManViewer.Helpers.Db
-Imports SalesManViewer.models
+﻿Imports SalesManViewer.Helpers.Database
+Imports SalesManViewer.Models
 
 Namespace repositories
     Public Class ProductRepository

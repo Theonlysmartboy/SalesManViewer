@@ -1,7 +1,7 @@
 ﻿Imports System.Runtime.InteropServices
 Imports MySql.Data.MySqlClient
-Imports SalesManViewer.Config
 Imports SalesManViewer.CustomControls.Alert
+Imports SalesManViewer.Helpers.Config
 Imports SalesManViewer.Helpers.Cryptography
 
 Public Class SettingsForm

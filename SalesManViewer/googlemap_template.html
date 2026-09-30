@@ -167,7 +167,7 @@
             return html;
         }
 
-       async function copyCoordinates(lat, lng, button) {
+        async function copyCoordinates(lat, lng, button) {
             const coords = Number(lat).toFixed(8) + ", " + Number(lng).toFixed(8);
             try {
                 await navigator.clipboard.writeText(coords);
@@ -451,8 +451,8 @@
 
         // ROUTE SUMMARY CONFIGURATION      
         const ROUTE_CONFIG = {
-            visitRadiusMeters: 20,
-            maxContinuousGapMinutes: 10,
+            visitRadiusMeters: 50,
+            maxContinuousGapMinutes: 20,
             minPointsForStay: 2
         };    
         

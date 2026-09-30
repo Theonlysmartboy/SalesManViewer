@@ -1,5 +1,5 @@
 ﻿Imports MySql.Data.MySqlClient
-Namespace Helpers.Db
+Namespace Helpers.Database
 
     Public Class DbTransactionContext
         Public Property Connection As MySqlConnection

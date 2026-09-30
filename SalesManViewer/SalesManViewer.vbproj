@@ -17,6 +17,21 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -174,9 +189,9 @@
     <Compile Include="Helpers\ChunkingUtility.vb" />
     <Compile Include="Helpers\Cryptography\Encorder.vb" />
     <Compile Include="Helpers\Cryptography\PasswordHasher.vb" />
-    <Compile Include="Helpers\databases\DbHelper.vb" />
-    <Compile Include="Helpers\databases\GlobalConnectionString.vb" />
-    <Compile Include="Helpers\databases\SettingsManager.vb" />
+    <Compile Include="Helpers\Database\DbHelper.vb" />
+    <Compile Include="Helpers\Database\GlobalConnectionString.vb" />
+    <Compile Include="Helpers\Config\SettingsManager.vb" />
     <Compile Include="Helpers\GoogleMapsHelper.vb" />
     <Compile Include="Forms\SplashScreen.Designer.vb">
       <DependentUpon>SplashScreen.vb</DependentUpon>
@@ -293,7 +308,18 @@
   <ItemGroup>
     <None Include="Resources\eye-open-outline.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.3856.49\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.3856.49\build\Microsoft.Web.WebView2.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

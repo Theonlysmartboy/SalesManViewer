@@ -1,6 +1,6 @@
-﻿Imports SalesManViewer.Helpers.Db
+﻿Imports SalesManViewer.Helpers.Database
 
-Namespace Config
+Namespace Helpers.Config
     Public Class SettingsManager
 
         Private ReadOnly _connectionString As String

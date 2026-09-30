@@ -3,17 +3,13 @@ Imports System.IO
 Imports System.Net.Http
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
-Imports SalesManViewer.Config
 Imports SalesManViewer.CustomControls.Alert
 Imports SalesManViewer.Helpers
-Imports SalesManViewer.Helpers.Db
+Imports SalesManViewer.Helpers.Config
+Imports SalesManViewer.Helpers.Database
 Imports SalesManViewer.Models
 Imports SalesManViewer.Models.tracking
 
-''' <summary>
-''' Salesman tracking dashboard: salesman list on the left, live map on the right.
-''' Requires an authenticated session (UserContext.Instance must be populated).
-''' </summary>
 <System.Runtime.InteropServices.ComVisible(True)>
 Public Class SalesmanTrackerForm
     ' CONSTANTS

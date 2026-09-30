@@ -1,4 +1,4 @@
-﻿Namespace models
+﻿Namespace Models
     Public Class RemoteProduct
         Public Property ProductCode As String
         Public Property ProductName As String

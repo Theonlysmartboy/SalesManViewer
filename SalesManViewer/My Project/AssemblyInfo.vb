@@ -8,9 +8,9 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("SalesManViewer")>
+<Assembly: AssemblyTitle("Sales Man Viewer")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyCompany("Cybene Technologies")>
 <Assembly: AssemblyProduct("SalesManViewer")>
 <Assembly: AssemblyCopyright("Copyright ©  2026")>
 <Assembly: AssemblyTrademark("")>

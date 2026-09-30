@@ -1,7 +1,7 @@
 ﻿Imports System.Net.Http
-Imports SalesManViewer.Config
 Imports SalesManViewer.CustomControls.Alert
-Imports SalesManViewer.Helpers.Db
+Imports SalesManViewer.Helpers.Config
+Imports SalesManViewer.Helpers.Database
 Imports SalesManViewer.Models.Auth
 Imports SalesManViewer.Services.Auth
 
@@ -26,12 +26,40 @@ Public Class LoginForm
     End Sub
 
     Private Sub PicTogglePassword_Click(sender As Object, e As EventArgs) Handles PicTogglePassword.Click
-        TxtPassword.UseSystemPasswordChar = Not TxtPassword.UseSystemPasswordChar
-        Try
-            PicTogglePassword.Image = If(TxtPassword.UseSystemPasswordChar, My.Resources.eye_closed_outline, My.Resources.eye_open_outline)
-        Catch
-            ' Icon resource not present — leave as-is.
-        End Try
+        TogglePasswordVisibility()
+    End Sub
+
+    Private Sub LoginForm_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            Dim confirm = JsAlertDialog.ShowAlert(Me, "Are you sure you want to cancel the login process?",
+            "Cancel", JsAlertDialog.AlertType.Confirm, JsAlertDialog.ButtonType.YesNo)
+            If confirm = DialogResult.Yes Then
+                Me.DialogResult = DialogResult.Cancel
+                Me.Close()
+            End If
+            e.SuppressKeyPress = True
+            e.Handled = True
+            Return
+        End If
+        If e.Control AndAlso e.KeyCode = Keys.F Then
+            HandleForgotPassword()
+            e.SuppressKeyPress = True
+            e.Handled = True
+        ElseIf e.Control AndAlso e.KeyCode = Keys.H Then
+            TogglePasswordVisibility()
+            e.SuppressKeyPress = True
+            e.Handled = True
+        ElseIf e.Control AndAlso e.KeyCode = Keys.L Then
+            TxtUserName.Focus()
+            TxtUserName.SelectAll()
+            e.SuppressKeyPress = True
+            e.Handled = True
+        ElseIf e.Control AndAlso e.KeyCode = Keys.P Then
+            TxtPassword.Focus()
+            TxtPassword.SelectAll()
+            e.SuppressKeyPress = True
+            e.Handled = True
+        End If
     End Sub
 
     Private Sub TxtUserName_KeyDown(sender As Object, e As KeyEventArgs) Handles TxtUserName.KeyDown
@@ -196,5 +224,14 @@ Public Class LoginForm
             TxtUserName.Focus()
             TxtUserName.SelectAll()
         End If
+    End Sub
+
+    Private Sub TogglePasswordVisibility()
+        TxtPassword.UseSystemPasswordChar = Not TxtPassword.UseSystemPasswordChar
+        Try
+            PicTogglePassword.Image = If(TxtPassword.UseSystemPasswordChar, My.Resources.eye_closed_outline, My.Resources.eye_open_outline)
+        Catch
+            ' Icon resource not present — leave as-is.
+        End Try
     End Sub
 End Class

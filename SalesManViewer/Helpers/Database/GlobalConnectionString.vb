@@ -1,7 +1,7 @@
 ﻿Imports SalesManViewer.CustomControls.Alert
 Imports SalesManViewer.Helpers.Cryptography
 
-Namespace Helpers.Db
+Namespace Helpers.Database
 
     Public Class GlobalConnectionString
 

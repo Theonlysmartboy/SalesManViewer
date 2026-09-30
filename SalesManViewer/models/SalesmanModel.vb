@@ -1,4 +1,4 @@
-﻿Namespace models
+﻿Namespace Models
     Public Class Salesman
         Public Property id As Integer
         Public Property username As String

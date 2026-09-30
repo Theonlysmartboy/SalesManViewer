@@ -1,6 +1,6 @@
 ﻿Imports SalesManViewer.CustomControls.Alert
 Imports SalesManViewer.Handlers
-Imports SalesManViewer.Helpers.Db
+Imports SalesManViewer.Helpers.Database
 Imports SalesManViewer.Helpers.Security
 Imports SalesManViewer.Models.Auth
 

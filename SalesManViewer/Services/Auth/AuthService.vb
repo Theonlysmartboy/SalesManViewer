@@ -24,7 +24,8 @@ Namespace Services.Auth
         End Function
 
         ''' <summary>
-        ''' POST /api/auth.php?action=login with form fields userName and password. Returns the parsed response, or Nothing if the body was empty.
+        ''' POST /api/auth.php?action=login with form fields userName and password. Returns the parsed response, 
+        ''' or Nothing if the body was empty.
         ''' </summary>
         Public Async Function LoginAsync(userName As String, password As String) As Task(Of LoginResponse)
             Dim url = $"{_baseUrl}/api/auth.php?action=login"
@@ -56,8 +57,8 @@ Namespace Services.Auth
         End Function
 
         ''' <summary>
-        ''' POST /api/auth.php?action=request-reset Sends an OTP to the user's registered email, if the account exists.
-        ''' Server always returns success — this prevents username enumeration.
+        ''' POST /api/auth.php?action=request-reset Sends an OTP to the user's registered email, 
+        ''' if the account exists. Server always returns success — this prevents username enumeration.
         ''' </summary>
         Public Async Function RequestPasswordResetAsync(userName As String) As Task(Of AuthApiResponse)
             Dim url = $"{_baseUrl}/api/auth.php?action=request-reset"

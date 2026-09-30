@@ -1,7 +1,7 @@
 ﻿Imports System.Net.Http
-Imports SalesManViewer.Config
 Imports SalesManViewer.CustomControls.Alert
-Imports SalesManViewer.Helpers.Db
+Imports SalesManViewer.Helpers.Config
+Imports SalesManViewer.Helpers.Database
 Imports SalesManViewer.Helpers.Security
 Imports SalesManViewer.Services.Auth
 
