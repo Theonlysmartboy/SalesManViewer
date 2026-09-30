@@ -1,7 +1,7 @@
 ﻿Imports System.Net.Http
 Imports System.Text
 Imports Newtonsoft.Json
-Imports SalesManViewer.Models.Auth
+Imports SalesManViewer.Models.ApiResponse
 
 Namespace Services.Auth
 

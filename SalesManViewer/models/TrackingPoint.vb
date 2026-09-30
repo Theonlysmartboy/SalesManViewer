@@ -1,4 +1,4 @@
-﻿Namespace models.tracking
+﻿Namespace Models
     Public Class TrackingPoint
         Public Property id As Integer
         Public Property user_id As Integer

@@ -1,4 +1,4 @@
-﻿Namespace models.tracking
+﻿Namespace Models.ApiResponse
     Public Class TrackingResponseList
         Public Property success As Boolean
         Public Property data As List(Of TrackingPoint)

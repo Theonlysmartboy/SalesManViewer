@@ -200,16 +200,21 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Helpers\Security\SecurityHelper.vb" />
-    <Compile Include="Models\Auth\AuthApiResponse.vb" />
+    <Compile Include="Models\AlternetUnit.vb" />
+    <Compile Include="Models\ApiResponse\AuthApiResponse.vb" />
+    <Compile Include="Models\ApiResponse\ProductApiResponse.vb" />
+    <Compile Include="Models\ApiResponse\SalesManApiResponse.vb" />
     <Compile Include="Models\Auth\LoginData.vb" />
-    <Compile Include="Models\Auth\LoginResponse.vb" />
+    <Compile Include="Models\ApiResponse\LoginResponse.vb" />
     <Compile Include="Models\Auth\LoginUser.vb" />
     <Compile Include="Models\Auth\UserContext.vb" />
     <Compile Include="Models\ProductModel.vb" />
+    <Compile Include="Models\RemoteProduct.vb" />
     <Compile Include="Models\SalesmanModel.vb" />
+    <Compile Include="Models\SyncPayload.vb" />
     <Compile Include="Models\TrackingPoint.vb" />
-    <Compile Include="Models\TrackingResponseList.vb" />
-    <Compile Include="Models\TrackingResponseSingle.vb" />
+    <Compile Include="Models\ApiResponse\TrackingResponseList.vb" />
+    <Compile Include="Models\ApiResponse\TrackingResponseSingle.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -230,14 +235,14 @@
     <Compile Include="Repositories\OrderRepository.vb" />
     <Compile Include="Repositories\ProductRepository.vb" />
     <Compile Include="Services\Auth\AuthService.vb" />
-    <Compile Include="Views\SalesManCard.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Forms\SalesmanTrackerForm.Designer.vb">
       <DependentUpon>SalesmanTrackerForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\SalesmanTrackerForm.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\SalesManCard.vb">
+      <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>

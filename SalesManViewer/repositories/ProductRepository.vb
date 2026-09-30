@@ -1,7 +1,7 @@
 ﻿Imports SalesManViewer.Helpers.Database
 Imports SalesManViewer.Models
 
-Namespace repositories
+Namespace Repositories
     Public Class ProductRepository
 
         Private ReadOnly _db As DbHelper

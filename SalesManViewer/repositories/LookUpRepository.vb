@@ -1,7 +1,7 @@
 ﻿Imports System.Net.Http
 Imports Newtonsoft.Json
 
-Namespace repositories
+Namespace Repositories
     Public Class LookUpRepository
         Private serverUrl As String
 

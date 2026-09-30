@@ -8,7 +8,8 @@ Imports SalesManViewer.Helpers
 Imports SalesManViewer.Helpers.Config
 Imports SalesManViewer.Helpers.Database
 Imports SalesManViewer.Models
-Imports SalesManViewer.Models.tracking
+Imports SalesManViewer.Models.ApiResponse
+Imports SalesManViewer.Views
 
 <System.Runtime.InteropServices.ComVisible(True)>
 Public Class SalesmanTrackerForm

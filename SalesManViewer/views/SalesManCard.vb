@@ -5,24 +5,20 @@ Public Class SalesManCard
 
     Public ReadOnly Property SalesmanId As Integer
     Public ReadOnly Property SalesmanName As String
-
     Public Event CurrentLocationClicked As EventHandler
     Public Event TodayMovementClicked As EventHandler
     Public Event LocationByDateClicked As EventHandler
     Public Event MovementHistoryClicked As EventHandler
-
     Private ReadOnly _lblName As Label
     Private ReadOnly _btnCurrent As Button
     Private ReadOnly _btnToday As Button
     Private ReadOnly _btnByDate As Button
     Private ReadOnly _btnHistory As Button
     Private ReadOnly _toolTip As New ToolTip()
-
     ' CARD APPEARANCE
     Private Shared ReadOnly CardBack As Color = Color.White
     Private Shared ReadOnly CardHoverBack As Color = Color.FromArgb(250, 248, 253)
     Private Shared ReadOnly ShadowColor As Color = Color.FromArgb(35, 0, 0, 0)
-
     Private Const CardRadius As Integer = 8
     Private Const ShadowSize As Integer = 5
 

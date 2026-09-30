@@ -2,7 +2,7 @@
 Imports Newtonsoft.Json
 Imports System.Text
 
-Namespace repositories
+Namespace Repositories
     Public Class OrderRepository
         Private serverUrl As String
 
