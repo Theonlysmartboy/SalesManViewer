@@ -182,8 +182,8 @@ Public Class LoginForm
     End Sub
 
     Private Sub ShowError(msg As String)
-        JsAlertDialog.ShowAlert(Me, msg, "Login",
-            JsAlertDialog.AlertType.Error, JsAlertDialog.ButtonType.OK, True, 20)
+        JsAlertDialog.ShowAlert(Me, msg, "Login", JsAlertDialog.AlertType.Error,
+                                JsAlertDialog.ButtonType.OK, True, 20)
     End Sub
 
     Private Sub HandleForgotPassword()

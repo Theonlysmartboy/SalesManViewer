@@ -26,7 +26,6 @@ Namespace Services.Auth
         ''' <summary>
         ''' POST /api/auth.php?action=login with form fields userName and password. Returns the parsed response, or Nothing if the body was empty.
         ''' </summary>
-
         Public Async Function LoginAsync(userName As String, password As String) As Task(Of LoginResponse)
             Dim url = $"{_baseUrl}/api/auth.php?action=login"
             ' --- JSON payload instead of form-encoded ---
@@ -86,11 +85,6 @@ Namespace Services.Auth
             Using content As New StringContent(jsonPayload, Encoding.UTF8, "application/json")
                 Dim response = Await _http.PostAsync(url, content)
                 Dim body = Await response.Content.ReadAsStringAsync()
-#If DEBUG Then
-                Debug.WriteLine($"POST {url}")
-                Debug.WriteLine($"  → {jsonPayload}")
-                Debug.WriteLine($"  ← {body}")
-#End If
                 ' Guard: HTML error page (404, 500, WAF, etc.)
                 If String.IsNullOrWhiteSpace(body) OrElse body.TrimStart().StartsWith("<") Then
                     Return JsonConvert.DeserializeObject(Of T)(
