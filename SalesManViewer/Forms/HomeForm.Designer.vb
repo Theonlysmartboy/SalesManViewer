@@ -26,6 +26,8 @@ Partial Class HomeForm
         Me.TableLayoutPanelContent = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanelHeader = New System.Windows.Forms.TableLayoutPanel()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+        Me.ToolStripLogoutLabel = New System.Windows.Forms.ToolStripLabel()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripTimeLabel = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripDateLabel = New System.Windows.Forms.ToolStripLabel()
@@ -38,8 +40,6 @@ Partial Class HomeForm
         Me.ToolStripStatusLabelBreadcrumb = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripUserLabel = New System.Windows.Forms.ToolStripLabel()
         Me.DashboardPanel = New System.Windows.Forms.Panel()
-        Me.ToolStripLogoutLabel = New System.Windows.Forms.ToolStripLabel()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.TableLayoutPanelMain.SuspendLayout()
         Me.TableLayoutPanelContent.SuspendLayout()
         Me.TableLayoutPanelHeader.SuspendLayout()
@@ -97,6 +97,7 @@ Partial Class HomeForm
         '
         'ToolStrip1
         '
+        Me.ToolStrip1.BackColor = System.Drawing.Color.Honeydew
         Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLogoutLabel, Me.ToolStripSeparator1, Me.ToolStripTimeLabel, Me.ToolStripSeparator7, Me.ToolStripDateLabel, Me.ToolStripSeparator8})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 20)
@@ -104,6 +105,20 @@ Partial Class HomeForm
         Me.ToolStrip1.Size = New System.Drawing.Size(1073, 20)
         Me.ToolStrip1.TabIndex = 1
         Me.ToolStrip1.Text = "ToolStrip1"
+        '
+        'ToolStripLogoutLabel
+        '
+        Me.ToolStripLogoutLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripLogoutLabel.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ToolStripLogoutLabel.Name = "ToolStripLogoutLabel"
+        Me.ToolStripLogoutLabel.Size = New System.Drawing.Size(51, 17)
+        Me.ToolStripLogoutLabel.Text = "Log Out"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 20)
         '
         'ToolStripTimeLabel
         '
@@ -172,6 +187,7 @@ Partial Class HomeForm
         '
         'ToolStrip2
         '
+        Me.ToolStrip2.BackColor = System.Drawing.Color.Honeydew
         Me.ToolStrip2.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelBreadcrumb, Me.ToolStripUserLabel})
         Me.ToolStrip2.Location = New System.Drawing.Point(0, 0)
@@ -201,20 +217,6 @@ Partial Class HomeForm
         Me.DashboardPanel.Name = "DashboardPanel"
         Me.DashboardPanel.Size = New System.Drawing.Size(1073, 387)
         Me.DashboardPanel.TabIndex = 2
-        '
-        'ToolStripLogoutLabel
-        '
-        Me.ToolStripLogoutLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripLogoutLabel.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ToolStripLogoutLabel.Name = "ToolStripLogoutLabel"
-        Me.ToolStripLogoutLabel.Size = New System.Drawing.Size(51, 17)
-        Me.ToolStripLogoutLabel.Text = "Log Out"
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 20)
         '
         'HomeForm
         '
